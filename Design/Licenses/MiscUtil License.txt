@@ -1,0 +1,6 @@
+From 
+http://jonskeet.uk/csharp/miscutil/
+
+License: http://jonskeet.uk/csharp/miscutil/licence.txt
+
+This software is licensed under the Apache licence. The specific licence for this library is available here and is also included in the zipped up versions of the library. Essentially, you're free to use any part of it in commercial software, provided you include a little acknowledgement. It may also, of course, be used in open source projects with a compatible licence.

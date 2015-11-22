@@ -1,0 +1,7 @@
+C:\GitHub\Cush\Source\~unitTests\Cush.ResourceSystem.Tests\bin\Debug\Cush.ResourceSystem.Tests.dll
+C:\GitHub\Cush\Source\~unitTests\Cush.ResourceSystem.Tests\bin\Debug\Cush.ResourceSystem.Tests.pdb
+C:\GitHub\Cush\Source\~unitTests\Cush.ResourceSystem.Tests\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+C:\GitHub\Cush\Source\~unitTests\Cush.ResourceSystem.Tests\bin\Debug\nunit.framework.dll
+C:\GitHub\Cush\Source\~unitTests\Cush.ResourceSystem.Tests\bin\Debug\nunit.framework.xml
+C:\GitHub\Cush\Source\~unitTests\Cush.ResourceSystem.Tests\obj\Debug\Cush.ResourceSystem.Tests.dll
+C:\GitHub\Cush\Source\~unitTests\Cush.ResourceSystem.Tests\obj\Debug\Cush.ResourceSystem.Tests.pdb

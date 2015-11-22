@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{9ECBBD7C-85F2-41FC-8035-E336DEEAD5AB}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Cush.TestHarness.ConsoleApp</RootNamespace>
+    <AssemblyName>Cush.TestHarness.ConsoleApp</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <Import Project="$(SolutionDir)Build\Unified.props" Condition="Exists('$(SolutionDir)Build\Unified.props')" />
+  <PropertyGroup>
+    <StartupObject>Cush.TestHarness.ConsoleApp.Infrastructure.SingleInstanceEntryPoint</StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Infrastructure\SingleInstanceEntryPoint.cs" />
+    <Compile Include="Logging\DebugLogger.cs" />
+    <Compile Include="Infrastructure\Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Infrastructure\TestMethods.cs" />
+    <Compile Include="Infrastructure\UserInteractionDialogs.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Cush.Common\Cush.Common.csproj">
+      <Project>{59bfb945-62f7-4675-a9e4-a5577efd7ec8}</Project>
+      <Name>Cush.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Cush.CLI\Cush.CommandLine.csproj">
+      <Project>{5939c465-1d8e-4fc4-89ae-b0626fa938ca}</Project>
+      <Name>Cush.CommandLine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Cush.Windows\Cush.Windows.csproj">
+      <Project>{085fd5e5-18be-407f-a625-6280155b1481}</Project>
+      <Name>Cush.Windows</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

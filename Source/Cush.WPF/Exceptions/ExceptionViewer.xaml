@@ -1,0 +1,81 @@
+﻿<Window x:Class="Cush.WPF.Exceptions.ExceptionViewer"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:exceptions="clr-namespace:Cush.WPF.Exceptions"
+
+        Height="300" Width="750"
+        MinHeight="200" MinWidth="500"
+        WindowStartupLocation="CenterOwner"
+        Loaded="ExceptionViewer_OnLoaded"
+        SizeChanged="ExceptionViewer_OnSizeChanged"
+        x:Name="ExceptionViewerWindow"
+        Closing="OnClosing"
+        Title="{x:Static exceptions:Strings.Header_ExceptionViewer}">
+
+    <!--<Window.Icon>/Views/Resources/Images/ApplicationIcon.ico</Window.Icon>-->
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <!--<ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/ServiceSentry.Extensibility;component/Themes/Styles/Colors.xaml" />
+            </ResourceDictionary.MergedDictionaries>-->
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <!--<Window.Background>
+        <StaticResource ResourceKey="WindowBackgroundColor"/>
+    </Window.Background>-->
+
+    <Grid Name="GridRoot">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" Name="TreeColumn" MaxWidth="250" MinWidth="90" />
+            <ColumnDefinition Width="*" Name="TextColumn" MinWidth="90" />
+        </Grid.ColumnDefinitions>
+
+        <TreeView Name="Tree" Margin="5" SelectedItemChanged="TreeView_OnSelectedItemChanged" />
+
+        <GridSplitter Width="5" Margin="0,5" Grid.Row="0" Grid.Column="0"  ResizeBehavior="CurrentAndNext" />
+
+        <Border Grid.Row="0" Grid.Column="1" Margin="0,5,5,5"
+                BorderThickness="{Binding ElementName=TreeView, Path=BorderThickness}"
+                BorderBrush="{Binding ElementName=TreeView, Path=BorderBrush}" >
+
+            <FlowDocumentScrollViewer Name="Viewer"
+                                      Background="{Binding Background, ElementName=TreeView}"
+                                      HorizontalScrollBarVisibility="Auto"
+                                      VerticalScrollBarVisibility="Auto" />
+
+        </Border>
+
+        <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Right" Orientation="Horizontal"
+                    Margin="0,0,0,5">
+
+            <CheckBox Content="{x:Static exceptions:Strings.Verb_WrapText}" Name="WrapText" IsChecked="True"
+                      VerticalAlignment="Center"
+                      Margin="5"
+                      Checked="WrapText_OnChecked"
+                      Unchecked="WrapText_OnChecked"
+                      IsThreeState="False"/>
+
+            <Button Name="CopyToClipboard"
+                    Padding="15,0"
+                    Margin="5"
+                    VerticalAlignment="Center"
+                    Content="{x:Static exceptions:Strings.Verb_CopyAllToClipboard}" 
+                    Click="CopyToClipboard_OnClick"
+                    />
+
+            <Button Name="CloseButton"
+                    Padding="15,0"
+                    Margin="5"
+                    VerticalAlignment="Center"
+                    Content="{x:Static exceptions:Strings.Verb_Close}" 
+                    Click="CloseButton_OnClick" />
+
+        </StackPanel>
+    </Grid>
+</Window>
