@@ -1,9 +1,0 @@
-C:\GitHub\Cush\Source\~unitTests\Cush.Exceptions.Tests\bin\Debug\Cush.Exceptions.Tests.dll
-C:\GitHub\Cush\Source\~unitTests\Cush.Exceptions.Tests\bin\Debug\Cush.Exceptions.Tests.pdb
-C:\GitHub\Cush\Source\~unitTests\Cush.Exceptions.Tests\bin\Debug\Cush.Common.dll
-C:\GitHub\Cush\Source\~unitTests\Cush.Exceptions.Tests\bin\Debug\nunit.framework.dll
-C:\GitHub\Cush\Source\~unitTests\Cush.Exceptions.Tests\bin\Debug\Cush.Common.pdb
-C:\GitHub\Cush\Source\~unitTests\Cush.Exceptions.Tests\bin\Debug\nunit.framework.xml
-C:\GitHub\Cush\Source\~unitTests\Cush.Exceptions.Tests\obj\Debug\Cush.Exceptions.Tests.csprojResolveAssemblyReference.cache
-C:\GitHub\Cush\Source\~unitTests\Cush.Exceptions.Tests\obj\Debug\Cush.Exceptions.Tests.dll
-C:\GitHub\Cush\Source\~unitTests\Cush.Exceptions.Tests\obj\Debug\Cush.Exceptions.Tests.pdb

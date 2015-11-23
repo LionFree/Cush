@@ -1,3 +1,0 @@
-﻿Having trouble integrating this with WPF in a successful way.
-Application seems to hang after catching the exception.
-e.Handled doesn't prevent the crash.
