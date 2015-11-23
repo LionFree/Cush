@@ -1,36 +1,72 @@
-
-
-Cush Ideas
+CUSH IDEAS - Implement Top Items First
+(** implement when needed / problem domain is better understood)
+(?? consider)
 ==========================================================================================
 
-Cush.Exceptions
-	Exception Handler
-	Exception Thrower
-
-Cush.ResourceSystem
-	FileSystem
+Cush.Testing
+	(done) Get a random value of any numeric type T
+	(done) Method timing code.
+	** Verify a data object doesn't throw an exception when being hammered by multiple threads
+		** Get Framework Version (Only really helps if compiled on the latest version of the Framework)
+		** Get Messagebox Content
+		** Provide strongly typed access to a compile-time string representing the name of a variable, field, property, method, event, enum value, or type. 
+		** Collection equality assertions : Assert.AreEqual(ExpectedCollection, ActualCollection)
+		Assert.AreEqual(ExpectedCollection, ActualCollection)
 
 Cush.Common
-	Base Classes (Disposable, EquatableDisposable, PropertyChangedBase, BoundedList<T>)
-	Logging (adapters for log4net or nLog - do NOT recreate the wheel)
-	IO
-	Async (AsyncWorker)
+	Base Classes
+		(done) Disposable, 
+		(done) EquatableDisposable, 
+		(done) PropertyChangedBase, 
+		(done) BoundedList<T>,
+	Common Interfaces
+		(done) ILogger (to pass around to ResourceSystem)
+	Exceptions
+		Exception Handler
+		Exception Thrower
+	Exceptions (Exception handler)  
+	** Async (AsyncWorker)
+	** Bootstrapping (CompositionRoot) 
+		- OR - use this as a pattern, make the static GetInstance class the Composition Root
 	?? DependencyInjection
 		A generic factory class
 		GetInstance<IFactoryCreateable>(params object[] args);  SLOW???  
 		(see http://geekswithblogs.net/mrsteve/archive/2012/02/19/a-fast-c-sharp-extension-method-using-expression-trees-create-instance-from-type-again.aspx)
 
+Cush.ResourceSystem - Wrapped Resource- or File-System
+	Add ILogger to constructors
+	IO (serialization)
+	
+Cush.CommandLine
+	Parser
+	ConsoleProxy
+	
 Cush.Windows
-	CLI
 	Single Instance
 
 Cush.Windows.Services
 	Cush.Services (Windows Service Framework, GenericHost)
 	
-Cush.Extensibility
-	Cush.Plugins
-	Cush.Extensions (Under Cush namespace?)
+Cush.Composition (MEF)
+	Resources
+	?? AutoConfig?
 
+Cush.WPF (WPF specific)
+	In-app Logging dialog
+	Exception dialog
+	Controls
+	?? MVVM (WPF-specific)
+
+Cush.Windows.Forms
+	
+Cush.Communication
+	Cush.REST
+	Cush.Email
+
+
+	
+MVVM Ideas
+==========================================================================================
 
 Cush.MVVM	(MVVM - AVOID using WPF-specific methods here, so that WinForms folks can use it too)
 	View only knows about the shape of the ViewModel; binds to properties on VM
@@ -51,29 +87,7 @@ Cush.MVVM	(MVVM - AVOID using WPF-specific methods here, so that WinForms folks 
 	EventToCommand behavior - Careful not to use WPF-specific assemblies
 
 
-Cush.Windows.Forms
 
-
-Cush.WPF (WPF specific)
-	In-app Logging dialog
-	Exception dialog
-	Controls
-	?? MVVM (WPF-specific)
-
-
-Cush.Communication
-	Cush.REST
-	Cush.Email
-
-
-Cush.Testing
-	(done) Get a random value of any numeric type T
-	(done) Method timing code.
-	Verify a data object doesn't throw an exception when being hammered by multiple threads
-	?? Get Framework Version (Only really helps if compiled on the latest version of the Framework)
-	?? Get Messagebox Content
-	?? Provide strongly typed access to a compile-time string representing the name of a variable, field, property, method, event, enum value, or type. 
-	Assert.AreEqual(ExpectedCollection, ActualCollection)
 
 NOTES
 ==========================================================================================
@@ -91,26 +105,15 @@ NOTES
 		The "Service Layer" part of the model can be called "Business Logic Layer" (Service is a weasel word.)
 
 
-	
-
 MAYBE
 ==========================================================================================
 	Cush.Eventing ?? WeakEvents?
 	Cush.AutoConfig ??
 	Generic Rest Mediator??  Can this happen? Easily? Worth it?
 
-Running PerfMonitor on my computer reports that 43% of the total run time is spent in GC. 
-If you rewrite your code to use fewer temporary objects, you should see the desired 4x speedup. 
-
+"Running PerfMonitor on my computer reports that 43% of the total run time is spent in GC. 
+If you rewrite your code to use fewer temporary objects, you should see the desired 4x speedup."
 	
-
-	Look @ PeanutButter
-		https://github.com/fluffynuts/PeanutButter
-			Randoms
-			DecimalDecorator
-			XElementExtensions
-			ServiceShell
-
 	Look @ plugins for Fody
 		Fody.AsyncErrorHandler (Integrates error handling into async and TPL code.)
 		AutoDependencyProperty (Generates WPF DependencyProperty boilerplate from automatic C# properties.)
