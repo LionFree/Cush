@@ -1,0 +1,134 @@
+
+
+Cush Ideas
+==========================================================================================
+
+Cush.Exceptions
+	Exception Handler
+	Exception Thrower
+
+Cush.ResourceSystem
+	FileSystem
+
+Cush.Common
+	Base Classes (Disposable, EquatableDisposable, PropertyChangedBase, BoundedList<T>)
+	Logging (adapters for log4net or nLog - do NOT recreate the wheel)
+	IO
+	Async (AsyncWorker)
+	?? DependencyInjection
+		A generic factory class
+		GetInstance<IFactoryCreateable>(params object[] args);  SLOW???  
+		(see http://geekswithblogs.net/mrsteve/archive/2012/02/19/a-fast-c-sharp-extension-method-using-expression-trees-create-instance-from-type-again.aspx)
+
+Cush.Windows
+	CLI
+	Single Instance
+
+Cush.Windows.Services
+	Cush.Services (Windows Service Framework, GenericHost)
+	
+Cush.Extensibility
+	Cush.Plugins
+	Cush.Extensions (Under Cush namespace?)
+
+
+Cush.MVVM	(MVVM - AVOID using WPF-specific methods here, so that WinForms folks can use it too)
+	View only knows about the shape of the ViewModel; binds to properties on VM
+	ViewModel only knows about the shape of the Model; binds to properties on Model
+	Model just holds and manipulates its own data
+
+	Must support View-First and ViewModel-First
+
+	ViewModel (the ViewModel should ideally be kept ignorant of the view)
+		?? ViewModel.RequestDialog<TDialog>(params object[] args)
+		?? 	Extension for requesting a view on the fly (i.e., show this dialog, please)
+		?? 	This should really be done on the view, responding to some bound property
+
+	View
+		?? TViewModel ViewModel {get{return (TViewModel)DataContext;}} where TViewModel:ViewModel
+
+	RelayCommand - Careful not to use WPF-specific assemblies
+	EventToCommand behavior - Careful not to use WPF-specific assemblies
+
+
+Cush.Windows.Forms
+
+
+Cush.WPF (WPF specific)
+	In-app Logging dialog
+	Exception dialog
+	Controls
+	?? MVVM (WPF-specific)
+
+
+Cush.Communication
+	Cush.REST
+	Cush.Email
+
+
+Cush.Testing
+	(done) Get a random value of any numeric type T
+	(done) Method timing code.
+	Verify a data object doesn't throw an exception when being hammered by multiple threads
+	?? Get Framework Version (Only really helps if compiled on the latest version of the Framework)
+	?? Get Messagebox Content
+	?? Provide strongly typed access to a compile-time string representing the name of a variable, field, property, method, event, enum value, or type. 
+	Assert.AreEqual(ExpectedCollection, ActualCollection)
+
+NOTES
+==========================================================================================
+
+	Library classes should be defined with Constructor Injection throughout.
+		Simple DI Facade
+		Property Injection vs Constructor Injection
+
+	Use abstract factory when 
+	DI Friendly Library: 	http://blog.ploeh.dk/2014/05/19/di-friendly-library/
+	DI Friendly Framework:	http://blog.ploeh.dk/2014/05/19/di-friendly-framework/
+
+	Domain model 
+		Contains objects that the business expects,  i.e., shopping cart, NOT Giraffe
+		The "Service Layer" part of the model can be called "Business Logic Layer" (Service is a weasel word.)
+
+
+	
+
+MAYBE
+==========================================================================================
+	Cush.Eventing ?? WeakEvents?
+	Cush.AutoConfig ??
+	Generic Rest Mediator??  Can this happen? Easily? Worth it?
+
+Running PerfMonitor on my computer reports that 43% of the total run time is spent in GC. 
+If you rewrite your code to use fewer temporary objects, you should see the desired 4x speedup. 
+
+	
+
+	Look @ PeanutButter
+		https://github.com/fluffynuts/PeanutButter
+			Randoms
+			DecimalDecorator
+			XElementExtensions
+			ServiceShell
+
+	Look @ plugins for Fody
+		Fody.AsyncErrorHandler (Integrates error handling into async and TPL code.)
+		AutoDependencyProperty (Generates WPF DependencyProperty boilerplate from automatic C# properties.)
+		Caseless (Change string comparisons to be case insensitive.)
+		Commander (Injects ICommand properties and implementations for use in MVVM applications.)
+
+		EmptyStringGuard (Adds empty string argument checks to an assembly.)
+		EnableFaking (Allows faking your types without writing interfaces for testing purposes only.)
+		Equals (Generate Equals, GetHashCode and operators methods from properties.)
+		MethodTimer (Injects method timing code.)
+		ReactiveUI (Generates ReactiveUI RaisePropertyChange notifications for properties and ObservableAsPropertyHelper properties.)
+
+
+	dw = DWORD = 32bit unsigned integer (range: 0 through 4,294,967,295 decimal)
+				 Used extensively by Windows 
+				 Currently DWORD = UInt32 (not CLS compliant)
+				 	Use int and do the conversion  
+				 		int x;
+				 		uint y = unchecked((uint) x);
+				 	OR make the method internal
+

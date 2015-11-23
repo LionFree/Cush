@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<!-- Make sure that TargetFrameworkVersion is ALSO in the first PropertyGroup 
+	of each Project file.  This will make sure that the VS IDE knows which 
+	version of the .NET Framework to call. -->
+	<PropertyGroup Label="FrameworkVersion">
+		<TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+	</PropertyGroup>
+		
+	<!-- This is the drive where the combined obj folder will be created. -->
+	<PropertyGroup Label="Drive Root">
+		<DriveRoot>C:</DriveRoot>
+	</PropertyGroup>	
+		
+		
+	
+	<!-- No need to modify below this point unless you REALLY want to change things. -->
+	<!-- DO NOT REARRANGE ANYTHING BELOW THIS POINT: MAKE CHANGES IN-PLACE -->
+	
+	
+	<!-- Front Matter and Macros -->
+	<PropertyGroup Label="FrontMatterAndMacros">
+		<FileAlignment>512</FileAlignment>
+		<AppDesignerFolder>Properties</AppDesignerFolder>
+			
+		<ProjectOrAssemblyName Condition="'$(AssemblyName)'==''">$(ProjectName)</ProjectOrAssemblyName>
+		<ProjectOrAssemblyName Condition="'$(ProjectName)'==''">$(AssemblyName)</ProjectOrAssemblyName>
+    
+		<ShortPlatform>x86</ShortPlatform>
+		<ShortPlatform Condition="'$(Platform)'=='Any CPU'">x86</ShortPlatform>
+		<ShortPlatform Condition="'$(Platform)'=='x64'">x64</ShortPlatform>
+	</PropertyGroup>
+  
+	<PropertyGroup Label="IntermediateOutputFilePaths">
+		<BasePath>$(DriveRoot)\Temp.VS\$(SolutionName)\$(ShortPlatform)\</BasePath>
+		<BuildPath>$(BasePath)Build\</BuildPath>
+		<TestPath>$(BasePath)UnitTests\</TestPath>
+		<DistroPath>$(BasePath)Distro\</DistroPath>
+	</PropertyGroup>
+  
+	<PropertyGroup Label="IntermediateOutputSettings">
+		<OutputPath>$(BuildPath)</OutputPath>
+		<OutputPath Condition =" '$(OutputType)' == 'Library' ">$(BuildPath)</OutputPath>
+		<OutputPath Condition =" '$(OutputType)' == 'Exe' ">$(BuildPath)</OutputPath>
+		<OutputPath Condition =" '$(OutputType)' == 'WinExe' ">$(BuildPath)</OutputPath>
+		<OutputPath Condition =" '$(OutputType)' == 'Package' ">$(DistroPath)</OutputPath>
+		<OutputPath Condition =" '$(TestProjectType)' == 'UnitTest' ">$(TestPath)</OutputPath>
+
+		<!-- Leave this last -->
+		<BaseIntermediateOutputPath>$(OutputPath)obj\$(AssemblyName)\</BaseIntermediateOutputPath>
+		<IntermediateOutputPath Condition=" '$(PlatformName)' == 'AnyCPU' ">$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
+		<IntermediateOutputPath Condition=" '$(PlatformName)' != 'AnyCPU' ">$(BaseIntermediateOutputPath)$(PlatformName)\</IntermediateOutputPath>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+		<DebugType>full</DebugType>
+		<DebugSymbols>true</DebugSymbols>
+		<Optimize>false</Optimize>
+		<ErrorReport>prompt</ErrorReport>
+		<WarningLevel>4</WarningLevel>
+		<DefineConstants>DEBUG;TRACE</DefineConstants>
+		<Prefer32Bit>false</Prefer32Bit>
+		<UseVSHostingProcess>true</UseVSHostingProcess>
+		<GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+	</PropertyGroup>
+	
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<DebugType>pdbonly</DebugType>
+		<DebugSymbols>true</DebugSymbols>
+		<Optimize>true</Optimize>
+		<ErrorReport>prompt</ErrorReport>
+		<WarningLevel>4</WarningLevel>
+		<DefineConstants>TRACE</DefineConstants>
+		<Prefer32Bit>false</Prefer32Bit>
+		<GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+	</PropertyGroup>
+
+	<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+	<PropertyGroup Label="PreBuildEvents">
+		<PreBuildEvent>rem echo f | xcopy /Y /f "$(SolutionDir)..\Included Files\*.xml" "$(TargetDir)*.xml" &gt;nul
+		</PreBuildEvent>
+	</PropertyGroup>
+	<PropertyGroup Label="PostBuildEvents">
+		<RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+		<PostBuildEvent  Condition =" '$(TestProjectType)' != 'UnitTest' ">echo f | xcopy /Y /f "$(TargetPath)" "$(SolutionDir)build\$(ConfigurationName)" &gt;nul
+		</PostBuildEvent>
+	</PropertyGroup>
+	
+</Project>
