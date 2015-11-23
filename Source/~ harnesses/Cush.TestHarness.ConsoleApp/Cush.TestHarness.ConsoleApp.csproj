@@ -35,7 +35,7 @@
       <Project>{59bfb945-62f7-4675-a9e4-a5577efd7ec8}</Project>
       <Name>Cush.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Cush.CLI\Cush.CommandLine.csproj">
+    <ProjectReference Include="..\..\Cush.CommandLine\Cush.CommandLine.csproj">
       <Project>{5939c465-1d8e-4fc4-89ae-b0626fa938ca}</Project>
       <Name>Cush.CommandLine</Name>
     </ProjectReference>

@@ -34,8 +34,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.Composition", "Cush.Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.Common.Tests", "~unitTests\Cush.Common.Tests\Cush.Common.Tests.csproj", "{A6CCA652-5D54-4ED6-A26A-326E568074B2}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "meh", "meh", "{D6B03C8F-E4DD-4493-9F55-C07E51354C61}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test Harnesses", "Test Harnesses", "{80A4C4BE-6F7A-496D-AB5C-986CE677A207}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.TestHarness.WPF", "~ harnesses\Cush.TestHarness.WPF\Cush.TestHarness.WPF.csproj", "{08EB340A-ADB1-44E3-A593-E6F5B5CD270B}"
@@ -46,7 +44,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.TestHarness.ConsoleApp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.Windows.Forms", "Cush.Windows.Forms\Cush.Windows.Forms.csproj", "{C0189268-24F7-4490-BE74-F8F563F88F5A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.CommandLine", "Cush.CLI\Cush.CommandLine.csproj", "{5939C465-1D8E-4FC4-89AE-B0626FA938CA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.CommandLine", "Cush.CommandLine\Cush.CommandLine.csproj", "{5939C465-1D8E-4FC4-89AE-B0626FA938CA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.Windows.Services.Tests", "~unitTests\Cush.Windows.Services.Tests\Cush.Windows.Services.Tests.csproj", "{B359D575-B059-438F-A3F3-819A2375F316}"
 EndProject
@@ -61,71 +59,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.Exceptions.Tests", "~unitTests\Cush.Exceptions.Tests\Cush.Exceptions.Tests.csproj", "{C389C72B-32F8-4D02-82B8-A9178B85AA5C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.Windows.Tests", "~unitTests\Cush.Windows.Tests\Cush.Windows.Tests.csproj", "{D119E7EA-C134-44D6-9A1F-F4D896E7D4C0}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DummyApp", "DummyApp", "{BAA2B9FF-0A78-4CBD-8421-665EF8C5B601}"
-	ProjectSection(SolutionItems) = preProject
-		~ removed\meh\DummyApp\AbstractDummyApp.cs = ~ removed\meh\DummyApp\AbstractDummyApp.cs
-		~ removed\meh\DummyApp\CompRoot.cs = ~ removed\meh\DummyApp\CompRoot.cs
-		~ removed\meh\DummyApp\Dummies.cs = ~ removed\meh\DummyApp\Dummies.cs
-		~ removed\meh\DummyApp\DummyApp1.cs = ~ removed\meh\DummyApp\DummyApp1.cs
-		~ removed\meh\DummyApp\DummyApp2.cs = ~ removed\meh\DummyApp\DummyApp2.cs
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Exceptions", "Exceptions", "{AC2B7E16-CC99-4634-876B-1B27959B0C5A}"
-	ProjectSection(SolutionItems) = preProject
-		~ removed\meh\Exceptions\ConsoleExceptionHandlerImpl.cs = ~ removed\meh\Exceptions\ConsoleExceptionHandlerImpl.cs
-		~ removed\meh\Exceptions\ExceptionContext.cs = ~ removed\meh\Exceptions\ExceptionContext.cs
-		~ removed\meh\Exceptions\ExceptionExtensions.cs = ~ removed\meh\Exceptions\ExceptionExtensions.cs
-		~ removed\meh\Exceptions\ExceptionHandler.cs = ~ removed\meh\Exceptions\ExceptionHandler.cs
-		~ removed\meh\Exceptions\IUserFriendlyException.cs = ~ removed\meh\Exceptions\IUserFriendlyException.cs
-		~ removed\meh\Exceptions\Why It's Here.txt = ~ removed\meh\Exceptions\Why It's Here.txt
-		~ removed\meh\Exceptions\WinFormsExceptionHandler.cs = ~ removed\meh\Exceptions\WinFormsExceptionHandler.cs
-		~ removed\meh\Exceptions\WinFormsExceptionHandlerImpl.cs = ~ removed\meh\Exceptions\WinFormsExceptionHandlerImpl.cs
-		~ removed\meh\Exceptions\WPFExceptionHandler.cs = ~ removed\meh\Exceptions\WPFExceptionHandler.cs
-		~ removed\meh\Exceptions\WPFExceptionHandlerImpl.cs = ~ removed\meh\Exceptions\WPFExceptionHandlerImpl.cs
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{CD0979CC-78B1-4E29-ADA3-9C1D06E46FA9}"
-	ProjectSection(SolutionItems) = preProject
-		~ removed\meh\Infrastructure\AppDomainFinder.cs = ~ removed\meh\Infrastructure\AppDomainFinder.cs
-		~ removed\meh\Infrastructure\Bootstrapper.cs = ~ removed\meh\Infrastructure\Bootstrapper.cs
-		~ removed\meh\Infrastructure\CompositionRoot.cs = ~ removed\meh\Infrastructure\CompositionRoot.cs
-		~ removed\meh\Infrastructure\IApplication.cs = ~ removed\meh\Infrastructure\IApplication.cs
-		~ removed\meh\Program.cs = ~ removed\meh\Program.cs
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Interfaces", "Interfaces", "{DD59DC6D-99D7-45F4-986C-1E1BF31F0969}"
-	ProjectSection(SolutionItems) = preProject
-		~ removed\meh\Interfaces\IItemsCollection.cs = ~ removed\meh\Interfaces\IItemsCollection.cs
-		~ removed\meh\Interfaces\IItemsCollection`1.cs = ~ removed\meh\Interfaces\IItemsCollection`1.cs
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Logging", "Logging", "{7323577D-2AB1-4A93-A947-F793D196E4A1}"
-	ProjectSection(SolutionItems) = preProject
-		~ removed\meh\Logging\ILog4NetLogger.cs = ~ removed\meh\Logging\ILog4NetLogger.cs
-		~ removed\meh\Logging\ILogger-RemovedFromCush.cs = ~ removed\meh\Logging\ILogger-RemovedFromCush.cs
-		~ removed\meh\Logging\INLogLogger.cs = ~ removed\meh\Logging\INLogLogger.cs
-		~ removed\meh\Logging\LoggingAttributes.cs = ~ removed\meh\Logging\LoggingAttributes.cs
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OldFiles", "OldFiles", "{896CFEEE-498C-4642-B8E2-C7A53DE620B0}"
-	ProjectSection(SolutionItems) = preProject
-		~ removed\meh\meh\ChannelWrapper.cs = ~ removed\meh\meh\ChannelWrapper.cs
-		~ removed\meh\meh\ExceptionHandler.cs = ~ removed\meh\meh\ExceptionHandler.cs
-		~ removed\meh\meh\Factory.cs = ~ removed\meh\meh\Factory.cs
-		~ removed\meh\meh\IpcChannelFactory.cs = ~ removed\meh\meh\IpcChannelFactory.cs
-		~ removed\meh\meh\Logger-NeverBrowsable.cs = ~ removed\meh\meh\Logger-NeverBrowsable.cs
-		~ removed\meh\meh\LoggerFactory.cs = ~ removed\meh\meh\LoggerFactory.cs
-		~ removed\meh\meh\SingleInstanceWPF.cs = ~ removed\meh\meh\SingleInstanceWPF.cs
-		~ removed\meh\meh\WPFApplication.cs = ~ removed\meh\meh\WPFApplication.cs
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Parser", "Parser", "{9114F6E4-0FE3-4829-97B7-8B19F3F18F07}"
-	ProjectSection(SolutionItems) = preProject
-		~ removed\meh\Parser\CommandLineArgument.cs = ~ removed\meh\Parser\CommandLineArgument.cs
-		~ removed\meh\Parser\CommandLineParser.cs = ~ removed\meh\Parser\CommandLineParser.cs
-		~ removed\meh\Parser\ICommandLineParser.cs = ~ removed\meh\Parser\ICommandLineParser.cs
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

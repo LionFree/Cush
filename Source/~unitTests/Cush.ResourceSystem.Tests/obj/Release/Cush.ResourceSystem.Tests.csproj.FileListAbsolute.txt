@@ -19,3 +19,4 @@ C:\GitHub\Cush\Source\~unitTests\Cush.ResourceSystem.Tests\obj\Release\Cush.Reso
 C:\GitHub\Cush\Source\~unitTests\Cush.ResourceSystem.Tests\obj\Release\Cush.ResourceSystem.Tests.pdb
 C:\GitHub\Cush\Source\~unitTests\Cush.ResourceSystem.Tests\bin\Release\nunit.framework.dll
 C:\GitHub\Cush\Source\~unitTests\Cush.ResourceSystem.Tests\bin\Release\nunit.framework.xml
+C:\GitHub\Cush\Source\~unitTests\Cush.ResourceSystem.Tests\obj\Release\Cush.ResourceSystem.Tests.csprojResolveAssemblyReference.cache
