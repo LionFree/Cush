@@ -11,8 +11,9 @@
     <AssemblyName>Cush.Windows.Forms</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+  	<BuildProperties>$(SolutionDir)~ Build\Unified.props</BuildProperties>
   </PropertyGroup>
-  <Import Project="$(SolutionDir)Build\Unified.props" Condition="Exists('$(SolutionDir)Build\Unified.props')" />
+  <Import Project="$(BuildProperties)" Condition="Exists('$(BuildProperties)')" />
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />

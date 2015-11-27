@@ -8,11 +8,21 @@
 		<TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
 	</PropertyGroup>
 		
-	<!-- This is the drive where the combined obj folder will be created. -->
-	<PropertyGroup Label="Drive Root">
-		<DriveRoot>C:</DriveRoot>
-	</PropertyGroup>	
+	
+	<PropertyGroup Label="Additional Locations">
+	
+		<!-- This is the drive where the combined obj folder will be created. -->
+		<TargetDriveRoot>C:</TargetDriveRoot>
 		
+		<!-- This is the folder where the final, built objects will be copied to. -->
+		<SolutionOutputFolder>$(SolutionDir)Build\$(ConfigurationName)</SolutionOutputFolder>	
+		
+		<!-- This is another folder where the final, built objects will be copied to. -->
+		<NonSolutionOutputFolder>$(SolutionDir)..\Build\$(ConfigurationName)</NonSolutionOutputFolder>	
+	</PropertyGroup>	
+
+
+
 		
 	
 	<!-- No need to modify below this point unless you REALLY want to change things. -->
@@ -33,7 +43,7 @@
 	</PropertyGroup>
   
 	<PropertyGroup Label="IntermediateOutputFilePaths">
-		<BasePath>$(DriveRoot)\Temp.VS\$(SolutionName)\$(ShortPlatform)\</BasePath>
+		<BasePath>$(TargetDriveRoot)\Temp.VS\$(SolutionName)\$(ShortPlatform)\</BasePath>
 		<BuildPath>$(BasePath)Build\</BuildPath>
 		<TestPath>$(BasePath)UnitTests\</TestPath>
 		<DistroPath>$(BasePath)Distro\</DistroPath>
@@ -83,7 +93,9 @@
 	</PropertyGroup>
 	<PropertyGroup Label="PostBuildEvents">
 		<RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
-		<PostBuildEvent  Condition =" '$(TestProjectType)' != 'UnitTest' ">echo f | xcopy /Y /f "$(TargetPath)" "$(SolutionDir)build\$(ConfigurationName)" &gt;nul
+		<PostBuildEvent  Condition =" '$(TestProjectType)' != 'UnitTest' ">echo f | xcopy /Y /f "$(TargetPath)" "$(SolutionOutputFolder)" &gt;nul
+		</PostBuildEvent>
+		<PostBuildEvent  Condition =" '$(TestProjectType)' != 'UnitTest' ">echo f | xcopy /Y /f "$(TargetPath)" "$(NonSolutionOutputFolder)" &gt;nul
 		</PostBuildEvent>
 	</PropertyGroup>
 	
