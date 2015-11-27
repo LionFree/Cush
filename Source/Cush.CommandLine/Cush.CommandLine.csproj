@@ -11,9 +11,10 @@
     <AssemblyName>Cush.CommandLine</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-	<BuildProperties>$(SolutionDir)~ Build\Unified.props</BuildProperties>
   </PropertyGroup>
-  <Import Project="$(BuildProperties)" Condition="Exists('$(BuildProperties)')" />
+
+  <Import Project="$(SolutionDir)Build.props" Condition="Exists('$(SolutionDir)Build.props')" />
+
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -44,11 +45,5 @@
       <Name>Cush.Common</Name>
     </ProjectReference>
   </ItemGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  
 </Project>

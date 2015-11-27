@@ -11,7 +11,9 @@
     <AssemblyName>Cush.Testing</AssemblyName>
   	<BuildProperties>$(SolutionDir)~ Build\Unified.props</BuildProperties>
   </PropertyGroup>
-  <Import Project="$(BuildProperties)" Condition="Exists('$(BuildProperties)')" />
+  
+  <Import Project="$(SolutionDir)Build.props" Condition="Exists('$(SolutionDir)Build.props')" />
+  
   <ItemGroup>
     <Compile Include="Annotations\Annotations.cs" />
     <Compile Include="AssemblyInspector.cs" />

@@ -11,9 +11,10 @@
     <RootNamespace>Cush.MVVM</RootNamespace>
     <AssemblyName>Cush.MVVM</AssemblyName>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <BuildProperties>$(SolutionDir)~ Build\Unified.props</BuildProperties>
   </PropertyGroup>
-  <Import Project="$(BuildProperties)" Condition="Exists('$(BuildProperties)')" />
+  
+  <Import Project="$(SolutionDir)Build.props" Condition="Exists('$(SolutionDir)Build.props')" />
+  
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>

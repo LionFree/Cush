@@ -11,7 +11,9 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <Import Project="$(SolutionDir)Build\Unified.props" Condition="Exists('$(SolutionDir)Build\Unified.props')" />
+  
+  <Import Project="$(SolutionDir)Build.props" Condition="Exists('$(SolutionDir)Build.props')" />
+  
   <PropertyGroup>
     <StartupObject>Cush.TestHarness.ConsoleApp.Infrastructure.SingleInstanceEntryPoint</StartupObject>
   </PropertyGroup>

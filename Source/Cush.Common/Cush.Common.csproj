@@ -11,9 +11,10 @@
     <AssemblyName>Cush.Common</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-	<BuildProperties>$(SolutionDir)~ Build\Unified.props</BuildProperties>
   </PropertyGroup>
-  <Import Project="$(BuildProperties)" Condition="Exists('$(BuildProperties)')" />
+
+  <Import Project="$(SolutionDir)Build.props" Condition="Exists('$(SolutionDir)Build.props')" />
+
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
