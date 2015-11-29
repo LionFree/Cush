@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using Cush.Common.Attributes;
 
 namespace Cush.Common
 {
@@ -10,7 +9,7 @@ namespace Cush.Common
     /// <typeparam name="T">The type of elements in the list.</typeparam>
     /// <filterpriority>1</filterpriority>
     //[TypeDependency("System.SZArrayHelper")]
-    [__DynamicallyInvokable]
+    
     internal interface IBoundedList<T> : IList<T>, ICollection<T>, IEnumerable<T>, IEnumerable
     {
         /// <summary>
@@ -23,8 +22,7 @@ namespace Cush.Common
         ///     <see cref="P:Capacity" /> is set to a value that is less than <see cref="P:Count" />.
         /// </exception>
         /// <exception cref="T:System.OutOfMemoryException">There is not enough memory available on the system.</exception>
-        [__DynamicallyInvokable]
-        int Capacity { [__DynamicallyInvokable] get; [__DynamicallyInvokable] set; }
+        int Capacity {  get;  set; }
 
         /// <summary>
         ///     Copies the elements of the <see cref="T:Cush.Common.IBoundedList" /> to a new array.
@@ -32,7 +30,6 @@ namespace Cush.Common
         /// <returns>
         ///     An array containing copies of the elements of the <see cref="T:Cush.Common.IBoundedList" />.
         /// </returns>
-        [__DynamicallyInvokable]
         T[] ToArray();
     }
 }

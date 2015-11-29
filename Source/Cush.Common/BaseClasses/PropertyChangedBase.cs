@@ -4,14 +4,11 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Runtime;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
-using Cush.Common.Attributes;
-using Cush.Common.Helpers;
 using Cush.Common.Annotations;
-
-using ThrowHelper = Cush.Common.Exceptions.ThrowHelper;
+using Cush.Common.Exceptions;
+using Cush.Common.Helpers;
 
 #pragma warning disable 1685
 
@@ -21,7 +18,7 @@ namespace Cush.Common
     ///     Simple base class that provides a solid implementation
     ///     of the <see cref="T:System.ComponentModel.INotifyPropertyChanged" /> event.
     /// </summary>
-    [DataContract, __DynamicallyInvokable, Serializable]
+    [DataContract, Serializable]
     [SuppressMessage("ReSharper", "ExplicitCallerInfoArgument")]
     public abstract class PropertyChangedBase : INotifyPropertyChanged
     {
@@ -30,11 +27,11 @@ namespace Cush.Common
         /// <summary>
         ///     Occurs when a property value changes.
         /// </summary>
-        [SuppressMessage("ReSharper", "DelegateSubtraction"), __DynamicallyInvokable]
+        [SuppressMessage("ReSharper", "DelegateSubtraction")]
         public virtual event PropertyChangedEventHandler PropertyChanged
         {
-            [MethodImpl(MethodImplOptions.Synchronized), DebuggerStepThrough, __DynamicallyInvokable, TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")] add { _propertyChanged += value; }
-            [MethodImpl(MethodImplOptions.Synchronized), DebuggerStepThrough, __DynamicallyInvokable, TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")] remove { _propertyChanged -= value; }
+            [MethodImpl(MethodImplOptions.Synchronized), DebuggerStepThrough] add { _propertyChanged += value; }
+            [MethodImpl(MethodImplOptions.Synchronized), DebuggerStepThrough] remove { _propertyChanged -= value; }
         }
 
         /// <summary>
@@ -42,8 +39,8 @@ namespace Cush.Common
         ///     event for a set of properties.
         /// </summary>
         /// <param name="propertyNames">Provides the names of the changed properties.</param>
-        [NotifyPropertyChangedInvocator, DebuggerStepThrough, __DynamicallyInvokable]
-        public void OnPropertyChanged(params string[] propertyNames)
+        [NotifyPropertyChangedInvocator, DebuggerStepThrough]
+        protected void OnPropertyChanged(params string[] propertyNames)
         {
             ThrowHelper.IfNullThenThrow(() => propertyNames);
             foreach (var propertyName in propertyNames)
@@ -61,8 +58,8 @@ namespace Cush.Common
         /// <param name="propertyExpression">
         ///     Expression pointing to a given property.
         /// </param>
-        [NotifyPropertyChangedInvocator, DebuggerStepThrough, __DynamicallyInvokable]
-        public virtual void OnPropertyChanged<T>(Expression<Func<T>> propertyExpression)
+        [NotifyPropertyChangedInvocator, DebuggerStepThrough]
+        protected void OnPropertyChanged<T>(Expression<Func<T>> propertyExpression)
         {
             ThrowHelper.IfNullThenThrow(() => propertyExpression);
             OnPropertyChanged(Expressions.GetPropertyName(propertyExpression));
@@ -73,8 +70,8 @@ namespace Cush.Common
         ///     event for a given property.
         /// </summary>
         /// <param name="propertyName">The name of the changed property.</param>
-        [NotifyPropertyChangedInvocator, DebuggerStepThrough, __DynamicallyInvokable]
-        public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        [NotifyPropertyChangedInvocator, DebuggerStepThrough]
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             OnPropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
@@ -85,8 +82,8 @@ namespace Cush.Common
         /// </summary>
         /// <param name="sender">The object where the property exists.</param>
         /// <param name="e">The arguments to pass to the event.</param>
-        [NotifyPropertyChangedInvocator, DebuggerStepThrough, __DynamicallyInvokable]
-        public virtual void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        [NotifyPropertyChangedInvocator, DebuggerStepThrough]
+        protected void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             // Use a variable to prevent race conditions.
             var handler = _propertyChanged;
@@ -105,7 +102,7 @@ namespace Cush.Common
         /// </param>
         /// <param name="field">The backing field for the property.</param>
         /// <param name="value">The value to set.</param>
-        [NotifyPropertyChangedInvocator, DebuggerStepThrough, __DynamicallyInvokable]
+        [NotifyPropertyChangedInvocator, DebuggerStepThrough]
         protected void SetNotifyingProperty<T>(ref T field, T value, Expression<Func<T>> expression)
         {
             if ((null != field) && field.Equals(value)) return;
@@ -130,7 +127,7 @@ namespace Cush.Common
         /// <param name="additionalProperties">
         ///     An array of expressions that should also raise the PropertyChanged event.
         /// </param>
-        [NotifyPropertyChangedInvocator, DebuggerStepThrough, __DynamicallyInvokable]
+        [NotifyPropertyChangedInvocator, DebuggerStepThrough]
         protected void SetNotifyingProperty<T>(ref T field, T value, Expression<Func<T>> property,
             Expression<Func<object>>[] additionalProperties)
         {
@@ -145,7 +142,6 @@ namespace Cush.Common
         ///     Determines whether a given delegate is subscribed to the PropertyChanged event.
         /// </summary>
         /// <param name="del">The delegate to check for.</param>
-        [__DynamicallyInvokable]
         public bool IsSubscribedToNotification(Delegate del)
         {
             return (null != _propertyChanged) && _propertyChanged.GetInvocationList().Contains(del);

@@ -44,7 +44,7 @@ namespace Cush.TestHarness.WPF.Infrastructure
         public static Application ComposeObjectGraph()
         {
             return new ApplicationImplementation(
-                new TestExceptionHandler(new Dialogs(), NullLogger.Default),
+                new TestExceptionHandler(new Dialogs(), new NullLogger()),
                 new MainView(new MainViewModel())
                 );
         }

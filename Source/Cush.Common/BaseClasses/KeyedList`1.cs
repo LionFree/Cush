@@ -3,9 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using Cush.Common.Attributes;
-
-using ThrowHelper = Cush.Common.Exceptions.ThrowHelper;
+using Cush.Common.Exceptions;
 
 namespace Cush.Common
 {
@@ -14,7 +12,7 @@ namespace Cush.Common
     /// </summary>
     /// <typeparam name="T">The type of values in the collection.</typeparam>
     /// <filterpriority>1</filterpriority>
-    [DataContract, __DynamicallyInvokable, Serializable]
+    [DataContract, Serializable]
     public sealed class KeyedList<T> : IEnumerable
     {
         private readonly Dictionary<string, T> _funcs = new Dictionary<string, T>();
@@ -26,10 +24,8 @@ namespace Cush.Common
         /// <returns>
         ///     A <see cref="T:Dictionary" /> containing the names and values of the <see cref="T:KeyedList" />.
         /// </returns>
-        [__DynamicallyInvokable]
         public Dictionary<string, T> Items
         {
-            [__DynamicallyInvokable]
             get { return _funcs; }
         }
 
@@ -48,10 +44,8 @@ namespace Cush.Common
         ///     The property is retrieved and
         ///     <paramref name="key" /> does not exist in the collection.
         /// </exception>
-        [__DynamicallyInvokable]
         public T this[string key]
         {
-            [__DynamicallyInvokable]
             get
             {
                 var upperKey = key.ToUpper();
@@ -61,7 +55,7 @@ namespace Cush.Common
                 }
                 throw new KeyNotFoundException("Key not found: " + key);
             }
-            [__DynamicallyInvokable]
+
             set
             {
                 var upperKey = key.ToUpper();
@@ -84,30 +78,25 @@ namespace Cush.Common
         ///     Retrieving the value of this property is an O(1) operation.
         /// </returns>
         /// <filterpriority>2</filterpriority>
-        [__DynamicallyInvokable]
         public int Count
         {
-            [__DynamicallyInvokable]
             get { return _funcs.Count; }
         }
-
-        [__DynamicallyInvokable]
-        public IEnumerator GetEnumerator()
-        {
-            return _funcs.GetEnumerator();
-        }
-
-        [__DynamicallyInvokable]
+        
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+        
+        public IEnumerator GetEnumerator()
+        {
+            return _funcs.GetEnumerator();
         }
 
         /// <summary>
         ///     Determines whether an item is in the <see cref="T:KeyedList" />.
         /// </summary>
         /// <param name="key">The name of the item to locate in the <see cref="T:KeyedList" />.</param>
-        [__DynamicallyInvokable]
         public bool Contains(string key)
         {
             return _funcs.Any(item => item.Key == key.ToUpper());
@@ -119,7 +108,6 @@ namespace Cush.Common
         /// <param name="key">The name of the item to add.</param>
         /// <param name="value">The item to add to the list.</param>
         /// <returns>The item added to the <see cref="T:KeyedList" />.</returns>
-        [__DynamicallyInvokable]
         public T Add(string key, T value)
         {
             ThrowHelper.IfNullOrEmptyThenThrow(() => key, Strings.EXCEPTION_KeyCannotBeNull);
@@ -141,7 +129,6 @@ namespace Cush.Common
         ///     Removes an item from the <see cref="T:KeyedList" />.
         /// </summary>
         /// <param name="key">The name of the item to remove.</param>
-        [__DynamicallyInvokable]
         public void Remove(string key)
         {
             if (string.IsNullOrEmpty(key)) return;
@@ -155,7 +142,6 @@ namespace Cush.Common
         /// </summary>
         /// <exception cref="T:System.NotSupportedException">The <see cref="T:KeyedList" /> is read-only. </exception>
         /// <filterpriority>2</filterpriority>
-        [__DynamicallyInvokable]
         public void Clear()
         {
             _funcs.Clear();

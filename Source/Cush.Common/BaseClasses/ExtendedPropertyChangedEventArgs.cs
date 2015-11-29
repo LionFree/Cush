@@ -11,7 +11,7 @@ namespace Cush.Common
             NewValue = newValue;
         }
 
-        public virtual T OldValue { get; private set; }
-        public virtual T NewValue { get; private set; }
+        public T OldValue { get; private set; }
+        public T NewValue { get; private set; }
     }
 }

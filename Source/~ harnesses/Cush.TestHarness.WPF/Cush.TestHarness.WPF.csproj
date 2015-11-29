@@ -116,5 +116,5 @@
       <Project>{a2bfe50d-7c6d-4d64-8e9d-5f0490020748}</Project>
       <Name>Cush.Windows.Services</Name>
     </ProjectReference>
-  
+  </ItemGroup>
 </Project>

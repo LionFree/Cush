@@ -117,77 +117,23 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Error_AnotherInstanceRunning" xml:space="preserve">
-    <value>Another instance of {0} is already running.</value>
-    <comment>0 = application name</comment>
+  <data name="AddingAssembly" xml:space="preserve">
+    <value>Adding assembly {{{0}}}</value>
   </data>
-  <data name="EXCEPTION_CapacityMustBeAtLeastAsLongAsArray" xml:space="preserve">
-    <value>Capacity must be at least the length of the initial array.</value>
+  <data name="AddingDirectories" xml:space="preserve">
+    <value>Adding directory {{{0}}}</value>
   </data>
-  <data name="EXCEPTION_CapacityMustBeAtLeastOne" xml:space="preserve">
-    <value>Capacity must be at least one.</value>
-  </data>
-  <data name="EXCEPTION_EnumerationFailedVersion" xml:space="preserve">
-    <value>Enumeration failed version.</value>
-  </data>
-  <data name="EXCEPTION_EnumerationOperationCannotHappen" xml:space="preserve">
-    <value>Enumeration operation cannot happen.</value>
-  </data>
-  <data name="EXCEPTION_KeyCannotBeNull" xml:space="preserve">
-    <value>Key cannot be null.</value>
-  </data>
-  <data name="HeaderedProperty" xml:space="preserve">
-    <value>{0}: {1}</value>
-    <comment>PropertyName: value</comment>
-  </data>
-  <data name="Header_AnotherInstanceRunning" xml:space="preserve">
-    <value>{0} already running</value>
-    <comment>0 = application name</comment>
-  </data>
-  <data name="Header_Exception" xml:space="preserve">
-    <value>EXCEPTION</value>
-  </data>
-  <data name="Header_Message" xml:space="preserve">
-    <value>Message</value>
-    <comment>exception message</comment>
-  </data>
-  <data name="Header_StackTrace" xml:space="preserve">
-    <value>Stack Trace</value>
-  </data>
-  <data name="CustomName" xml:space="preserve">
-    <value>CustomName</value>
-    <comment>FileNameFormattingOption.CustomName</comment>
-  </data>
-  <data name="FileLogEntryFormat" xml:space="preserve">
-    <value>{0:yyyy'-'MM'-'dd HH':'mm':'ss} [{1}]\t{2}</value>
-    <comment>Log Entry format with short time.  
-{0}=time, {1}=log level, {2}=message</comment>
+  <data name="ComposingTypes" xml:space="preserve">
+    <value>Composing the following types:</value>
   </data>
   <data name="logDivider" xml:space="preserve">
     <value>======================================================================</value>
   </data>
-  <data name="LogEntryToString" xml:space="preserve">
-    <value>Log Event: Level={0} Message='{1}' SequenceId={2}</value>
+  <data name="StartingImport" xml:space="preserve">
+    <value>Starting import.</value>
   </data>
-  <data name="SortableDate" xml:space="preserve">
-    <value>SortableDate</value>
-    <comment>FileNameFormattingOption.SortableDate</comment>
-  </data>
-  <data name="SortableDateFormat" xml:space="preserve">
-    <value>{0:yyyy-MM-dd}</value>
-    <comment>FileNameFormattingOption.SortableDate</comment>
-  </data>
-  <data name="TraceLogEntryFormat" xml:space="preserve">
-    <value>{0:yyyy'-'MM'-'dd HH':'mm':'ss'.'fffffff} [{1}]\t{2}</value>
-    <comment>Log Entry format with more precise time.  
-{0}=time, {1}=log level, {2}=message</comment>
-  </data>
-  <data name="UTCOffset" xml:space="preserve">
-    <value>UTCOffset</value>
-    <comment>FileNameFormattingOption.UTCOffset</comment>
-  </data>
-  <data name="UTCOffsetFormat" xml:space="preserve">
-    <value>{0:zzz}</value>
-    <comment>FileNameFormattingOption.UTCOffset</comment>
+  <data name="typeBeingComposed" xml:space="preserve">
+    <value>      {{{0}}}</value>
+    <comment>System.Type being composed</comment>
   </data>
 </root>

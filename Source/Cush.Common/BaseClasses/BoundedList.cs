@@ -3,11 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Runtime;
-using Cush.Common.Attributes;
-
-using ThrowHelper = Cush.Common.Exceptions.ThrowHelper;
+using Cush.Common.Exceptions;
 
 namespace Cush.Common
 {
@@ -21,7 +17,6 @@ namespace Cush.Common
     /// <filterpriority>1</filterpriority>
     [DebuggerTypeProxy(typeof (CollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
-    [__DynamicallyInvokable]
     [Serializable]
     public class BoundedList<T> : IBoundedList<T>, IList, IReadOnlyList<T>
     {
@@ -35,8 +30,6 @@ namespace Cush.Common
         ///     Initializes a new instance of the <see cref="T:Cush.Common.BoundedList" /> class
         ///     that is empty and has the default initial capacity.
         /// </summary>
-        [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        [__DynamicallyInvokable]
         public BoundedList() : this(EmptyList, 1)
         {
         }
@@ -48,8 +41,6 @@ namespace Cush.Common
         /// </summary>
         /// <param name="capacity">The number of elements that the new list can store before trimming the excess.</param>
         /// <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="capacity" /> is less than 1. </exception>
-        [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        [__DynamicallyInvokable]
         public BoundedList(int capacity) : this(new T[capacity], capacity)
         {
         }
@@ -61,9 +52,7 @@ namespace Cush.Common
         /// </summary>
         /// <param name="collection">The collection whose elements are copied to the new list.</param>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="collection" /> is null.</exception>
-        [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        [__DynamicallyInvokable]
-        public BoundedList(ICollection<T> collection) : this(collection, Math.Max(1, collection.Count()))
+        public BoundedList(ICollection<T> collection) : this(collection, Math.Max(1, collection.Count))
         {
         }
 
@@ -80,8 +69,6 @@ namespace Cush.Common
         ///     <paramref name="capacity" /> is less than the length of the
         ///     given array.
         /// </exception>
-        [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        [__DynamicallyInvokable]
         public BoundedList(ICollection<T> collection, int capacity)
         {
             if (null == collection) ThrowHelper.ThrowArgumentNullException(() => collection);
@@ -117,17 +104,10 @@ namespace Cush.Common
         ///     <see cref="P:Cush.Common.BoundedList.Count" />.
         /// </exception>
         /// <exception cref="T:System.OutOfMemoryException">There is not enough memory available on the system.</exception>
-        [__DynamicallyInvokable]
         public int Capacity
         {
-            [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries"),
-             __DynamicallyInvokable] get
-            {
-                return _capacity;
-            }
+            get { return _capacity; }
 
-            [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries"),
-             __DynamicallyInvokable]
             set
             {
                 if (_capacity == value) return;
@@ -142,24 +122,15 @@ namespace Cush.Common
         /// <returns>
         ///     The number of elements actually contained in the <see cref="T:Cush.Common.BoundedList" />.
         /// </returns>
-        [__DynamicallyInvokable]
         public int Count
         {
-            [__DynamicallyInvokable,
-             TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")] get
-            {
-                return _items.Count;
-            }
+            get { return _items.Count; }
         }
 
-        [__DynamicallyInvokable]
+
         bool ICollection<T>.IsReadOnly
         {
-            [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries"),
-             __DynamicallyInvokable] get
-            {
-                return false;
-            }
+            get { return false; }
         }
 
         /// <summary>
@@ -173,17 +144,10 @@ namespace Cush.Common
         ///     <paramref name="index" /> is less than 0
         ///     -or- <paramref name="index" /> is equal to or greater than <see cref="P:Cush.Common.BoundedList.Count" />.
         /// </exception>
-        [__DynamicallyInvokable]
         public T this[int index]
         {
-            [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries"),
-             __DynamicallyInvokable] get
-            {
-                return _items[index];
-            }
+            get { return _items[index]; }
 
-            [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries"),
-             __DynamicallyInvokable]
             set
             {
                 _items[index] = value;
@@ -191,7 +155,7 @@ namespace Cush.Common
             }
         }
 
-        [__DynamicallyInvokable]
+
         void ICollection<T>.Add(T item)
         {
             Add(item);
@@ -205,8 +169,6 @@ namespace Cush.Common
         ///     The object to remove from the <see cref="T:Cush.Common.BoundedList" />.
         ///     The value can be null for reference types.
         /// </param>
-        [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        [__DynamicallyInvokable]
         public bool Remove(T item)
         {
             ThrowHelper.IfNullThenThrow(() => item);
@@ -216,15 +178,13 @@ namespace Cush.Common
             return true;
         }
 
-        [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        [__DynamicallyInvokable]
+
         IEnumerator IEnumerable.GetEnumerator()
         {
             return new Enumerator(this);
         }
 
-        [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        [__DynamicallyInvokable]
+
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
             return new Enumerator(this);
@@ -240,7 +200,6 @@ namespace Cush.Common
         ///     The object to locate in the <see cref="T:Cush.Common.BoundedList" />.
         ///     The value can be null for reference types.
         /// </param>
-        [__DynamicallyInvokable]
         public bool Contains(T item)
         {
             return _items.Contains(item);
@@ -262,8 +221,6 @@ namespace Cush.Common
         ///     greater than the available space from <paramref name="arrayIndex" /> to the end of the destination
         ///     <paramref name="array" />.
         /// </exception>
-        [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        [__DynamicallyInvokable]
         public void CopyTo(T[] array, int arrayIndex)
         {
             _items.CopyTo(array, arrayIndex);
@@ -281,8 +238,6 @@ namespace Cush.Common
         ///     The object to locate in the <see cref="T:Cush.Common.BoundedList" />.
         ///     The value can be null for reference types.
         /// </param>
-        [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        [__DynamicallyInvokable]
         public int IndexOf(T item)
         {
             return _items.IndexOf(item);
@@ -291,7 +246,6 @@ namespace Cush.Common
         /// <summary>
         ///     Removes all elements from the <see cref="T:BoundedList" />.
         /// </summary>
-        [__DynamicallyInvokable]
         public void Clear()
         {
             lock (_syncRoot)
@@ -307,7 +261,6 @@ namespace Cush.Common
         /// <returns>
         ///     An array containing copies of the elements of the <see cref="T:Cush.Common.BoundedList" />.
         /// </returns>
-        [__DynamicallyInvokable]
         public T[] ToArray()
         {
             return _items.ToArray();
@@ -324,7 +277,6 @@ namespace Cush.Common
         ///     <paramref name="index" /> is less than 0.-or-<paramref name="index" />
         ///     is greater than <see cref="P:Cush.Common.BoundedList.Count" />.
         /// </exception>
-        [__DynamicallyInvokable]
         public void Insert(int index, T item)
         {
             var capacity = _items.Capacity;
@@ -355,7 +307,6 @@ namespace Cush.Common
         ///     <paramref name="index" /> is less than 0. -or-
         ///     <paramref name="index" /> is equal to or greater than <see cref="P:BoundedList.Count" />.
         /// </exception>
-        [__DynamicallyInvokable]
         public void RemoveAt(int index)
         {
             lock (_syncRoot)
@@ -365,7 +316,7 @@ namespace Cush.Common
             }
         }
 
-        [__DynamicallyInvokable]
+
         void IList.Insert(int index, object item)
         {
             ThrowHelper.IfNullAndNullsAreIllegalThenThrow<T>(item, "item");
@@ -380,7 +331,7 @@ namespace Cush.Common
             }
         }
 
-        [__DynamicallyInvokable]
+
         int IList.Add(object item)
         {
             ThrowHelper.IfNullAndNullsAreIllegalThenThrow<T>(item, "item");
@@ -388,36 +339,34 @@ namespace Cush.Common
             {
                 Add((T) item);
             }
-            catch (InvalidCastException) { ThrowHelper.ThrowWrongValueTypeArgumentException(() => item, typeof (T)); }
+            catch (InvalidCastException)
+            {
+                ThrowHelper.ThrowWrongValueTypeArgumentException(() => item, typeof (T));
+            }
             return Count - 1;
         }
 
-        [__DynamicallyInvokable]
+
         bool IList.IsFixedSize
         {
-            [__DynamicallyInvokable] get { return false; }
+            get { return false; }
         }
 
-        [__DynamicallyInvokable]
+
         bool IList.IsReadOnly
         {
-            [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries"),
-             __DynamicallyInvokable] get
-            {
-                return false;
-            }
+            get { return false; }
         }
 
-        [__DynamicallyInvokable]
+
         bool ICollection.IsSynchronized
         {
-            [__DynamicallyInvokable] get { return false; }
+            get { return false; }
         }
 
-        [__DynamicallyInvokable]
+
         object ICollection.SyncRoot
         {
-            [__DynamicallyInvokable]
             get
             {
                 //if (_syncRoot == null)
@@ -426,12 +375,12 @@ namespace Cush.Common
             }
         }
 
-        [__DynamicallyInvokable]
+
         object IList.this[int index]
         {
-            [__DynamicallyInvokable] get { return this[index]; }
+            get { return this[index]; }
 
-            [__DynamicallyInvokable]
+
             set
             {
                 ThrowHelper.IfNullAndNullsAreIllegalThenThrow<T>(value, "value");
@@ -440,32 +389,33 @@ namespace Cush.Common
                 {
                     this[index] = (T) value;
                 }
-                catch (InvalidCastException) {ThrowHelper.ThrowWrongValueTypeArgumentException(() => value, typeof (T));} 
+                catch (InvalidCastException)
+                {
+                    ThrowHelper.ThrowWrongValueTypeArgumentException(() => value, typeof (T));
+                }
             }
         }
 
-        [__DynamicallyInvokable]
+
         void IList.Remove(object item)
         {
             if (!IsCompatibleObject(item)) return;
             Remove((T) item);
         }
 
-        [__DynamicallyInvokable]
+
         bool IList.Contains(object item)
         {
             return IsCompatibleObject(item) && Contains((T) item);
         }
 
-        [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        [__DynamicallyInvokable]
+
         void ICollection.CopyTo(Array array, int index)
         {
             ((ICollection) _items).CopyTo(array, index);
         }
 
-        [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        [__DynamicallyInvokable]
+
         int IList.IndexOf(object value)
         {
             return ((IList) _items).IndexOf(value);
@@ -484,7 +434,6 @@ namespace Cush.Common
         ///     The <see cref="T:item" /> is read-only.-or- The <see cref="T:item" /> has a fixed size.
         /// </exception>
         /// <filterpriority>2</filterpriority>
-        [__DynamicallyInvokable]
         public int Add(T item)
         {
             ThrowHelper.IfNullThenThrow(() => item);
@@ -515,8 +464,7 @@ namespace Cush.Common
             return new ReadOnlyCollection<T>(this);
         }
 
-        [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        [__DynamicallyInvokable]
+
         public IEnumerator GetEnumerator()
         {
             return new Enumerator(this);
@@ -541,7 +489,6 @@ namespace Cush.Common
         ///     <paramref name="index" /> is outside the range of valid indexes
         ///     for the <see cref="T:Cush.Common.BoundedList" />.
         /// </exception>
-        [__DynamicallyInvokable]
         public int IndexOf(T item, int index)
         {
             if (index >= _capacity) ThrowHelper.ThrowArgumentOutOfRangeException(() => index);
@@ -570,7 +517,6 @@ namespace Cush.Common
         ///     <paramref name="index" /> and <paramref name="count" /> do not specify a valid section in the
         ///     <see cref="T:Cush.Common.BoundedList" />.
         /// </exception>
-        [__DynamicallyInvokable]
         public int IndexOf(T item, int index, int count)
         {
             return _items.IndexOf(item, index, count);
@@ -586,7 +532,6 @@ namespace Cush.Common
         ///     reference type.
         /// </param>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="collection" /> is null.</exception>
-        [__DynamicallyInvokable]
         public void AddRange(IEnumerable<T> collection)
         {
             // ReSharper disable once PossibleMultipleEnumeration
@@ -626,7 +571,6 @@ namespace Cush.Common
         ///     <see cref="T:System.IComparable`1" /> generic interface or the <see cref="T:System.IComparable" /> interface for
         ///     type <typeparamref name="T" />.
         /// </exception>
-        [__DynamicallyInvokable]
         public void Sort(int index, int count, IComparer<T> comparer)
         {
             _items.Sort(index, count, comparer);
@@ -643,7 +587,6 @@ namespace Cush.Common
         ///     The implementation of <paramref name="comparison" /> caused an error
         ///     during the sort. For example, <paramref name="comparison" /> might not return 0 when comparing an item with itself.
         /// </exception>
-        [__DynamicallyInvokable]
         public void Sort(Comparison<T> comparison)
         {
             _items.Sort(comparison);
@@ -666,7 +609,6 @@ namespace Cush.Common
         ///     The implementation of <paramref name="comparer" /> caused an error during
         ///     the sort. For example, <paramref name="comparer" /> might not return 0 when comparing an item with itself.
         /// </exception>
-        [__DynamicallyInvokable]
         public void Sort(IComparer<T> comparer)
         {
             Sort(0, Count, comparer);
@@ -681,7 +623,6 @@ namespace Cush.Common
         ///     <see cref="T:System.IComparable`1" /> generic interface or the <see cref="T:System.IComparable" /> interface for
         ///     type <typeparamref name="T" />.
         /// </exception>
-        [__DynamicallyInvokable]
         public void Sort()
         {
             Sort(0, Count, null);
@@ -694,7 +635,6 @@ namespace Cush.Common
         ///     A <see cref="T:System.Collections.Generic.List`1" /> that contains elements from the
         ///     <see cref="T:Cush.Common.BoundedList" />.
         /// </returns>
-        [__DynamicallyInvokable]
         public List<T> ToList()
         {
             return new List<T>(_items);
@@ -728,22 +668,14 @@ namespace Cush.Common
             /// <returns>
             ///     The element in the <see cref="T:Cush.Common.BoundedList" /> at the current position of the enumerator.
             /// </returns>
-            [__DynamicallyInvokable]
             public T Current
             {
-                [__DynamicallyInvokable,
-                 TargetedPatchingOptOut(
-                     "Performance critical to inline this type of method across NGen image boundaries")]
-                get
-                {
-                    return _current;
-                }
+                get { return _current; }
             }
 
-            [__DynamicallyInvokable]
+
             object IEnumerator.Current
             {
-                [__DynamicallyInvokable]
                 get
                 {
                     if (_index == 0 || _index == _list.Count + 1)
@@ -755,8 +687,6 @@ namespace Cush.Common
             /// <summary>
             ///     Releases all resources used by the <see cref="T:Cush.Common.BoundedList.Enumerator" />.
             /// </summary>
-            [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-            [__DynamicallyInvokable]
             public void Dispose()
             {
             }
@@ -769,7 +699,6 @@ namespace Cush.Common
             ///     the collection.
             /// </returns>
             /// <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. </exception>
-            [__DynamicallyInvokable]
             public bool MoveNext()
             {
                 var list = _list;
@@ -780,7 +709,7 @@ namespace Cush.Common
                 return true;
             }
 
-            [__DynamicallyInvokable]
+
             void IEnumerator.Reset()
             {
                 if (_version != _list._version)

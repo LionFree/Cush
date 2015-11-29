@@ -24,7 +24,7 @@ namespace Cush.Windows.Services
         protected WindowsService()
             : this(Environment.UserInteractive,
                 ServiceWrapper.Default,
-                NullLogger.Default,
+                new NullLogger(),
                 new ConsoleHarness(),
                 AssemblyProxy.Default,
                 new ServiceMetadata())

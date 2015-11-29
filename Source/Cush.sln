@@ -9,13 +9,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.MVVM", "Cush.MVVM\Cush
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unit Tests", "Unit Tests", "{9198F4B5-C5A8-41FE-8381-87B2F4CCCF1F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.Testing.Tests", "~unitTests\Cush.Testing.Tests\Cush.Testing.Tests.csproj", "{0D2FDAF3-026F-4A37-B9F2-C8F1F00B9DA2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.Testing.Tests", "~ unitTests\Cush.Testing.Tests\Cush.Testing.Tests.csproj", "{0D2FDAF3-026F-4A37-B9F2-C8F1F00B9DA2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.MVVM.Tests", "~unitTests\Cush.MVVM.Tests\Cush.MVVM.Tests.csproj", "{737851CE-7AB2-469E-B5E8-079AF9568089}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.MVVM.Tests", "~ unitTests\Cush.MVVM.Tests\Cush.MVVM.Tests.csproj", "{737851CE-7AB2-469E-B5E8-079AF9568089}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.WPF", "Cush.WPF\Cush.WPF.csproj", "{9CFA0F6D-0D08-4BE7-9C37-CA4B7696C6B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.WPF.Tests", "~unitTests\Cush.WPF.Tests\Cush.WPF.Tests.csproj", "{F675F83F-FAEA-4F29-A632-6405928BF3C9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.WPF.Tests", "~ unitTests\Cush.WPF.Tests\Cush.WPF.Tests.csproj", "{F675F83F-FAEA-4F29-A632-6405928BF3C9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.Windows.Services", "Cush.Windows.Services\Cush.Windows.Services.csproj", "{A2BFE50D-7C6D-4D64-8E9D-5F0490020748}"
 EndProject
@@ -32,7 +32,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.Common", "Cush.Common\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.Composition", "Cush.Composition\Cush.Composition.csproj", "{2A49E35F-55E8-4327-9EF3-FA26049DCAD4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.Common.Tests", "~unitTests\Cush.Common.Tests\Cush.Common.Tests.csproj", "{A6CCA652-5D54-4ED6-A26A-326E568074B2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.Common.Tests", "~ unitTests\Cush.Common.Tests\Cush.Common.Tests.csproj", "{A6CCA652-5D54-4ED6-A26A-326E568074B2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test Harnesses", "Test Harnesses", "{80A4C4BE-6F7A-496D-AB5C-986CE677A207}"
 EndProject
@@ -46,7 +46,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.Windows.Forms", "Cush.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.CommandLine", "Cush.CommandLine\Cush.CommandLine.csproj", "{5939C465-1D8E-4FC4-89AE-B0626FA938CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.Windows.Services.Tests", "~unitTests\Cush.Windows.Services.Tests\Cush.Windows.Services.Tests.csproj", "{B359D575-B059-438F-A3F3-819A2375F316}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.Windows.Services.Tests", "~ unitTests\Cush.Windows.Services.Tests\Cush.Windows.Services.Tests.csproj", "{B359D575-B059-438F-A3F3-819A2375F316}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.TestHarness.WinService", "~ harnesses\Cush.TestHarness.WindowsService\Cush.TestHarness.WinService.csproj", "{398DFB38-053B-4D37-AA11-C626E74276CF}"
 EndProject
@@ -54,11 +54,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.ResourceSystem", "Cush
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.Windows", "Cush.Windows\Cush.Windows.csproj", "{085FD5E5-18BE-407F-A625-6280155B1481}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.ResourceSystem.Tests", "~unitTests\Cush.ResourceSystem.Tests\Cush.ResourceSystem.Tests.csproj", "{EA0E6435-D036-420A-95E9-A0DE0102CF5E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.ResourceSystem.Tests", "~ unitTests\Cush.ResourceSystem.Tests\Cush.ResourceSystem.Tests.csproj", "{EA0E6435-D036-420A-95E9-A0DE0102CF5E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.Exceptions.Tests", "~unitTests\Cush.Exceptions.Tests\Cush.Exceptions.Tests.csproj", "{C389C72B-32F8-4D02-82B8-A9178B85AA5C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.Exceptions.Tests", "~ unitTests\Cush.Exceptions.Tests\Cush.Exceptions.Tests.csproj", "{C389C72B-32F8-4D02-82B8-A9178B85AA5C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.Windows.Tests", "~unitTests\Cush.Windows.Tests\Cush.Windows.Tests.csproj", "{D119E7EA-C134-44D6-9A1F-F4D896E7D4C0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cush.Windows.Tests", "~ unitTests\Cush.Windows.Tests\Cush.Windows.Tests.csproj", "{D119E7EA-C134-44D6-9A1F-F4D896E7D4C0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

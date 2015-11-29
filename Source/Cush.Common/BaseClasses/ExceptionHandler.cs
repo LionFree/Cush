@@ -45,26 +45,12 @@ namespace Cush.Common
         /// <summary>
         ///     The dialogs to use for user interaction.
         /// </summary>
-        protected IDialogs Dialogs {
-            //[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries"),
-            // __DynamicallyInvokable] 
-            get;
-
-            //[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries"),
-            // __DynamicallyInvokable] 
-            set; }
+        protected IDialogs Dialogs { get; set; }
 
         /// <summary>
         ///     The logger to use when logging messages and exceptions.
         /// </summary>
-        protected ILogger Logger {
-            //[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries"),
-            // __DynamicallyInvokable] 
-            get;
-
-            //[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries"),
-            // __DynamicallyInvokable] 
-            set; }
+        protected ILogger Logger { get; set; }
 
         /// <summary>
         ///     Catch unhandled exceptions not thrown by the main UI thread.

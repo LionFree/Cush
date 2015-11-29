@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition.Hosting;
-using System.Diagnostics;
+using System.ComponentModel.Composition.Primitives;
+using System.Linq;
 using System.Reflection;
+using Cush.Common.Logging;
 using Cush.Composition.Interfaces;
 
 namespace Cush.Composition
@@ -14,14 +16,35 @@ namespace Cush.Composition
     /// </summary>
     public sealed class ImportCollector : IImportCollector
     {
+        private readonly ILogger _logger;
         private bool _disposed;
 
         /// <summary>
         ///     Creates a new instance of the ImportCollector class.
         /// </summary>
-        public ImportCollector()
+        public ImportCollector() : this(Loggers.Null)
         {
-            Container = new CompositionContainer();
+        }
+
+        /// <summary>
+        ///     Creates a new instance of the ImportCollector class
+        ///     using the given <see cref="Cush.Common.Logging.ILogger" />
+        ///     .
+        /// </summary>
+        public ImportCollector(ILogger logger) : this(logger, new CompositionContainer())
+        {
+        }
+
+        /// <summary>
+        ///     Creates a new instance of the ImportCollector class
+        ///     using the given <see cref="Cush.Common.Logging.ILogger" />
+        ///     and <see cref="CompositionContainer" />
+        ///     .
+        /// </summary>
+        private ImportCollector(ILogger logger, CompositionContainer container)
+        {
+            _logger = logger;
+            Container = container;
             SearchByAssembly = true;
             SearchByDirectory = true;
             AssembliesToSearch = new List<string> {Assembly.GetEntryAssembly().Location};
@@ -48,6 +71,14 @@ namespace Cush.Composition
         /// </summary>
         public List<string> AssembliesToSearch { get; set; }
 
+        /// <summary>
+        ///     Gets the part definitions that are contained in the catalog.
+        /// </summary>
+        public IQueryable<ComposablePartDefinition> Parts
+        {
+            get { return Container.Catalog.Parts; }
+        }
+
         public void Dispose()
         {
             Dispose(true);
@@ -66,14 +97,15 @@ namespace Cush.Composition
         /// <returns><see langword="true" /> if successful, otherwise <see langword="false" />.</returns>
         public bool ImportParts()
         {
-            Trace.WriteLine("Starting composition.");
+            _logger.Trace(Strings.logDivider);
+            _logger.Trace(Strings.StartingImport);
             var catalog = new AggregateCatalog();
 
             if (SearchByDirectory)
             {
                 foreach (var item in DirectoriesToSearch)
                 {
-                    Trace.WriteLine("  Adding directory {" + item + "}...");
+                    _logger.Trace(Strings.AddingDirectories, item);
                     catalog.Catalogs.Add(new DirectoryCatalog(item));
                 }
             }
@@ -83,14 +115,12 @@ namespace Cush.Composition
                 foreach (var item in AssembliesToSearch)
                 {
                     var assy = Assembly.LoadFile(item);
-                    Trace.WriteLine("  Adding assembly {" + item + "}...");
+                    _logger.Trace(Strings.AddingAssembly, item);
                     catalog.Catalogs.Add(new AssemblyCatalog(assy));
                 }
             }
-
-            Trace.WriteLine("  Creating Container...");
             Container = new CompositionContainer(catalog);
-
+            _logger.Trace(Strings.logDivider);
             return true;
         }
 

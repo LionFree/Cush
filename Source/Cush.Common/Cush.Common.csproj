@@ -12,9 +12,7 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-
   <Import Project="$(SolutionDir)Build.props" Condition="Exists('$(SolutionDir)Build.props')" />
-
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -27,10 +25,11 @@
   <ItemGroup>
     <Compile Include="Annotations\Annotations.cs" />
     <Compile Include="Annotations\JetBrains.Annotations.cs" />
-    <Compile Include="Attributes\DynamicallyInvokable.cs" />
     <Compile Include="BaseClasses\BoundedList.cs" />
     <Compile Include="BaseClasses\CollectionDebugView.cs" />
     <Compile Include="BaseClasses\ExceptionHandler.cs" />
+    <Compile Include="BaseClasses\KeyedItem.cs" />
+    <Compile Include="BaseClasses\ThreadSafeObservableCollection.cs" />
     <Compile Include="Exceptions\BindingErrorListener.cs" />
     <Compile Include="Exceptions\ExceptionHandler.cs" />
     <Compile Include="Exceptions\Strings.Designer.cs">
@@ -45,9 +44,26 @@
     <Compile Include="Interaction\IDialogs.cs" />
     <Compile Include="Interfaces\IBuildInfo.cs" />
     <Compile Include="Interfaces\IKeyedItem.cs" />
+    <Compile Include="Logging\Internal\EventLogProxy.cs" />
+    <Compile Include="Logging\Internal\ExceptionWriter.cs" />
+    <Compile Include="Logging\Logger_Implementations\ConsoleLogImplementation.cs" />
+    <Compile Include="Logging\Logger_Implementations\TraceLogImplementation.cs" />
+    <Compile Include="Logging\Logger_Implementations\NullLogImplementation.cs" />
+    <Compile Include="Logging\Logger_Implementations\FileLogImplementation.cs" />
+    <Compile Include="Logging\Internal\FileNameFormatter.cs" />
+    <Compile Include="Logging\Internal\FileNameFormattingOptions.cs" />
+    <Compile Include="Logging\Logger_Implementations\BaseLogger.cs" />
+    <Compile Include="Logging\Loggers.cs" />
+    <Compile Include="Logging\Logger_Implementations\ConsoleLogger.cs" />
+    <Compile Include="Logging\Internal\EnabledLevels.cs" />
+    <Compile Include="Logging\Internal\Log.cs" />
+    <Compile Include="Logging\Internal\LogConfiguration.cs" />
+    <Compile Include="Logging\Internal\LogEntry.cs" />
+    <Compile Include="Logging\Internal\LogLevel.cs" />
+    <Compile Include="Logging\Logger_Implementations\TraceLogger.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="BaseClasses\IComposable`1.cs" />
-    <Compile Include="Logging\NullLogger.cs" />
+    <Compile Include="Logging\Logger_Implementations\NullLogger.cs" />
     <Compile Include="BaseClasses\DisposableBase.cs" />
     <Compile Include="BaseClasses\DisposableEquatableBase.cs" />
     <Compile Include="BaseClasses\EquatableBase.cs" />

@@ -11,7 +11,7 @@ namespace Cush.Common.Tests.Logging
         [SetUp]
         public void SetUp()
         {
-            _sut = NullLogger.Default;
+            _sut = new NullLogger();
         }
 
         private ILogger _sut;
@@ -22,8 +22,9 @@ namespace Cush.Common.Tests.Logging
             Assert.DoesNotThrow(() => action(message));
         }
 
-        private void TestFormattedException(Action<Exception, string, object[]> action)
+        private void TestFormattedException(Action<bool, Exception, string, object[]> action)
         {
+            var logEvent = GetRandom.Bool();
             var exception = GetRandom.Exception();
             var messageFormat = "Stupid Exception: {0}";
             var args = new[]
@@ -33,7 +34,7 @@ namespace Cush.Common.Tests.Logging
                 GetRandom.String(2, 5)
             };
 
-            Assert.DoesNotThrow(() => action(exception, messageFormat, args));
+            Assert.DoesNotThrow(() => action(logEvent, exception, messageFormat, args));
         }
 
         private void TestException(Action<Exception, string> action)
@@ -61,7 +62,7 @@ namespace Cush.Common.Tests.Logging
         public void Constructor()
         {
             object temp = null;
-            Assert.DoesNotThrow(() => { temp = NullLogger.Default; });
+            Assert.DoesNotThrow(() => { temp = new NullLogger(); });
             var actual = temp as NullLogger;
             Assert.IsNotNull(actual);
         }

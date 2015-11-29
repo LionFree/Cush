@@ -1,105 +1,66 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
+using Cush.Common.Logging.Internal;
 
 namespace Cush.Common.Logging
 {
     /// <summary>
     ///     Provides logging interface and utility functions for Cush libraries.
     /// </summary>
-    public interface ILogger
+    public abstract class BaseLogger : ILogger
     {
-        /// <summary>
-        ///     Gets the name of the logger.
-        /// </summary>
-        string Name { get; }
+        private readonly EventLogProxy _eventLog;
+        private readonly string _eventSourceName;
+        private readonly Log _log;
 
-        #region Is__Enabled methods
+        protected BaseLogger(Log log, string eventSourceName, string eventLogName, EventLogProxy proxy)
+        {
+            _log = log;
+            _eventSourceName = eventSourceName;
+            _eventLog = proxy;
 
-        /// <summary>
-        ///     Gets a value indicating whether logging is enabled for the <c>TRACE</c> level.
-        /// </summary>
-        /// <returns>
-        ///     A value of <see langword="true" /> if logging is enabled for the <c>TRACE</c> level, otherwise it returns
-        ///     <see langword="false" />.
-        /// </returns>
-        bool IsTraceEnabled { get; }
+            if (string.IsNullOrEmpty(eventSourceName)) return;
+            if (!_eventLog.SourceExists(eventSourceName))
+                _eventLog.CreateEventSource(eventSourceName, eventLogName);
+        }
 
-        /// <summary>
-        ///     Gets a value indicating whether logging is enabled for the <c>DEBUG</c> level.
-        /// </summary>
-        /// <returns>
-        ///     A value of <see langword="true" /> if logging is enabled for the <c>DEBUG</c> level, otherwise it returns
-        ///     <see langword="false" />.
-        /// </returns>
-        bool IsDebugEnabled { get; }
 
-        /// <summary>
-        ///     Gets a value indicating whether logging is enabled for the <c>INFO</c> level.
-        /// </summary>
-        /// <returns>
-        ///     A value of <see langword="true" /> if logging is enabled for the <c>INFO</c> level, otherwise it returns
-        ///     <see langword="false" />.
-        /// </returns>
-        bool IsInfoEnabled { get; }
 
-        /// <summary>
-        ///     Gets a value indicating whether logging is enabled for the <c>WARN</c> level.
-        /// </summary>
-        /// <returns>
-        ///     A value of <see langword="true" /> if logging is enabled for the <c>WARN</c> level, otherwise it returns
-        ///     <see langword="false" />.
-        /// </returns>
-        bool IsWarnEnabled { get; }
-
-        /// <summary>
-        ///     Gets a value indicating whether logging is enabled for the <c>ERROR</c> level.
-        /// </summary>
-        /// <returns>
-        ///     A value of <see langword="true" /> if logging is enabled for the <c>ERROR</c> level, otherwise it returns
-        ///     <see langword="false" />.
-        /// </returns>
-        bool IsErrorEnabled { get; }
-
-        /// <summary>
-        ///     Gets a value indicating whether logging is enabled for the <c>FATAL</c> level.
-        /// </summary>
-        /// <returns>
-        ///     A value of <see langword="true" /> if logging is enabled for the <c>FATAL</c> level, otherwise it returns
-        ///     <see langword="false" />.
-        /// </returns>
-        bool IsFatalEnabled { get; }
-
-        #endregion
-
-        #region Trace() overloads
-
+        #region Passthrough Overrides
         /// <overloads>Logs a diagnostic message at the <c>TRACE</c> level.</overloads>
         /// <summary>
         ///     Writes a diagnostic message at the <c>TRACE</c> level.
         /// </summary>
         /// <param name="message">The message <see langword="string" /> to log.</param>
-        ///// <remarks>
-        /////     <para>
-        /////         This method first checks if this logger is <c>TRACE</c>
-        /////         enabled. If this logger is <c>TRACE</c> enabled, then it
-        /////         logs the message at the <c>TRACE</c> level.
-        /////     </para>
-        /////     <para>
-        /////         <b>WARNING</b> Note that passing an <see cref="Exception" />
-        /////         to this method will print the name of the <see cref="Exception" />
-        /////         but no stack trace. To print a stack trace use the
-        /////         <see cref="M:Trace(Exception, string)" /> form instead.
-        /////     </para>
-        ///// </remarks>
-        ///// <seealso cref="IsTraceEnabled" />
-        void Trace([Localizable(false)] string message);
+        /// <remarks>
+        ///     <para>
+        ///         This method first checks if this logger is <c>TRACE</c>
+        ///         enabled. If this logger is <c>TRACE</c> enabled, then it
+        ///         logs the message at the <c>TRACE</c> level.
+        ///     </para>
+        ///     <para>
+        ///         <b>WARNING</b> Note that passing an <see cref="Exception" />
+        ///         to this method will print the name of the <see cref="Exception" />
+        ///         but no stack trace. To print a stack trace use the
+        ///         <see cref="M:Trace(Exception, string)" /> form instead.
+        ///     </para>
+        /// </remarks>
+        /// <seealso cref="IsTraceEnabled" />
+        public void Trace([Localizable(false)] string message)
+        {
+            Trace(false, null, message, null);
+        }
 
         /// <overloads>Logs a diagnostic message at the <c>TRACE</c> level.</overloads>
         /// <summary>
         ///     Writes an <see cref="T:Exception" /> at the <c>TRACE</c> level.
         /// </summary>
         /// <param name="exception">An <see cref="T:Exception" /> to be logged.</param>
-        void Trace([Localizable(false)] Exception exception);
+        public void Trace(Exception exception)
+        {
+            Trace(false, exception, null, null);
+        }
 
         /// <summary>
         ///     Writes a diagnostic message and <see cref="T:Exception" /> at the <c>TRACE</c> level.
@@ -112,9 +73,12 @@ namespace Cush.Common.Logging
         ///     </para>
         /// </remarks>
         /// <seealso cref="IsTraceEnabled" />
-        void Trace(Exception exception, [Localizable(false)] string message);
+        public void Trace(Exception exception, [Localizable(false)] string message)
+        {
+            Trace(false, exception, message, null);
+        }
 
-        /// <overloads>Log a formatted diagnostic message with the <c>TRACE</c> level.</overloads>
+        /// <overloads>_log a formatted diagnostic message with the <c>TRACE</c> level.</overloads>
         /// <summary>
         ///     Writes a diagnostic message at the <c>TRACE</c> level using the specified parameters.
         /// </summary>
@@ -135,7 +99,10 @@ namespace Cush.Common.Logging
         ///     </para>
         /// </remarks>
         /// <seealso cref="IsTraceEnabled" />
-        void Trace([Localizable(false)] string message, params object[] args);
+        public void Trace([Localizable(false)] string message, params object[] args)
+        {
+            Trace(false, null, message, args);
+        }
 
         /// <summary>
         ///     Writes a diagnostic message and <see cref="T:Exception" /> at the <c>TRACE</c> level using the specified
@@ -150,27 +117,10 @@ namespace Cush.Common.Logging
         ///     </para>
         /// </remarks>
         /// <seealso cref="IsTraceEnabled" />
-        void Trace(Exception exception, [Localizable(false)] string message, params object[] args);
-
-        /// <summary>
-        ///     Writes a diagnostic message and <see cref="T:Exception" /> at the <c>TRACE</c> level using the specified
-        ///     parameters.
-        /// </summary>
-        /// <param name="message">A message <see langword="string" /> containing format items.</param>
-        /// <param name="logEvent">Determines whether or not to add an entry to the <see cref="System.Diagnostics.EventLog"/>.</param>
-        /// <param name="exception">An <see cref="T:Exception" /> to be logged.</param>
-        /// <param name="args">Arguments to format.</param>
-        /// <remarks>
-        ///     <para>
-        ///         See the <see cref="M:Trace(string)" /> form for more detailed information.
-        ///     </para>
-        /// </remarks>
-        /// <seealso cref="IsTraceEnabled" />
-        void Trace(bool logEvent, Exception exception, [Localizable(false)] string message, params object[] args);
-
-        #endregion
-
-        #region Debug() overloads
+        public void Trace(Exception exception, string message, params object[] args)
+        {
+            Trace(false, exception, message, args);
+        }
 
         /// <overloads>Logs a diagnostic message at the <c>DEBUG</c> level.</overloads>
         /// <summary>
@@ -191,15 +141,20 @@ namespace Cush.Common.Logging
         ///     </para>
         /// </remarks>
         /// <seealso cref="IsDebugEnabled" />
-        void Debug([Localizable(false)] string message);
+        public void Debug([Localizable(false)] string message)
+        {
+            Debug(false, null, message, null);
+        }
 
         /// <overloads>Logs an <see cref="T:Exception" /> at the <c>DEBUG</c> level.</overloads>
         /// <summary>
         ///     Writes an <see cref="T:Exception" /> at the <c>DEBUG</c> level.
         /// </summary>
         /// <param name="exception">An <see cref="T:Exception" /> to be logged.</param>
-        void Debug([Localizable(false)] Exception exception);
-
+        public void Debug(Exception exception)
+        {
+            Debug(false, exception, null, null);
+        }
 
         /// <summary>
         ///     Writes a diagnostic message and <see cref="T:Exception" /> at the <c>DEBUG</c> level.
@@ -213,9 +168,12 @@ namespace Cush.Common.Logging
         /// </remarks>
         /// <seealso cref="M:Debug(string)" />
         /// <seealso cref="IsDebugEnabled" />
-        void Debug(Exception exception, [Localizable(false)] string message);
+        public void Debug(Exception exception, [Localizable(false)] string message)
+        {
+            Debug(false, exception, message, null);
+        }
 
-        /// <overloads>Log a formatted diagnostic message with the <c>DEBUG</c> level.</overloads>
+        /// <overloads>_log a formatted diagnostic message with the <c>DEBUG</c> level.</overloads>
         /// <summary>
         ///     Writes a formatted diagnostic message at the <c>DEBUG</c> level using the specified
         ///     parameters.
@@ -237,7 +195,10 @@ namespace Cush.Common.Logging
         ///     </para>
         /// </remarks>
         /// <seealso cref="IsDebugEnabled" />
-        void Debug([Localizable(false)] string message, params object[] args);
+        public void Debug([Localizable(false)] string message, params object[] args)
+        {
+            Debug(false, null, message, args);
+        }
 
         /// <summary>
         ///     Writes a diagnostic message and <see cref="T:Exception" /> at the <c>DEBUG</c> level using the specified
@@ -253,28 +214,10 @@ namespace Cush.Common.Logging
         /// </remarks>
         /// <seealso cref="M:Debug(string)" />
         /// <seealso cref="IsDebugEnabled" />
-        void Debug(Exception exception, [Localizable(false)] string message, params object[] args);
-
-        /// <summary>
-        ///     Writes a diagnostic message and <see cref="T:Exception" /> at the <c>DEBUG</c> level using the specified
-        ///     parameters.
-        /// </summary>
-        /// <param name="message">A <see langword="string" /> containing format items.</param>
-        /// <param name="logEvent">Determines whether or not to add an entry to the <see cref="System.Diagnostics.EventLog"/>.</param>
-        /// <param name="exception">An exception to be logged.</param>
-        /// <param name="args">Arguments to format.</param>
-        /// <remarks>
-        ///     <para>
-        ///         See the <see cref="M:Debug(string)" /> form for more detailed information.
-        ///     </para>
-        /// </remarks>
-        /// <seealso cref="M:Debug(string)" />
-        /// <seealso cref="IsDebugEnabled" />
-        void Debug(bool logEvent, Exception exception, [Localizable(false)] string message, params object[] args);
-
-        #endregion
-
-        #region Info() overloads
+        public void Debug(Exception exception, string message, params object[] args)
+        {
+            Debug(false, exception, message, args);
+        }
 
         /// <overloads>Logs a diagnostic message at the <c>INFO</c> level.</overloads>
         /// <summary>
@@ -295,16 +238,20 @@ namespace Cush.Common.Logging
         ///     </para>
         /// </remarks>
         /// <seealso cref="IsInfoEnabled" />
-        void Info([Localizable(false)] string message);
-
+        public void Info([Localizable(false)] string message)
+        {
+            Info(false, null, message, null);
+        }
 
         /// <overloads>Logs an <see cref="T:Exception" /> at the <c>INFO</c> level.</overloads>
         /// <summary>
         ///     Writes an <see cref="T:Exception" /> at the <c>INFO</c> level.
         /// </summary>
         /// <param name="exception">An <see cref="T:Exception" /> to be logged.</param>
-        void Info([Localizable(false)] Exception exception);
-
+        public void Info(Exception exception)
+        {
+            Info(false, exception, null, null);
+        }
 
         /// <summary>
         ///     Writes a diagnostic message and <see cref="T:Exception" /> at the <c>INFO</c> level.
@@ -318,9 +265,12 @@ namespace Cush.Common.Logging
         /// </remarks>
         /// <seealso cref="M:Info(string)" />
         /// <seealso cref="IsInfoEnabled" />
-        void Info(Exception exception, [Localizable(false)] string message);
+        public void Info(Exception exception, [Localizable(false)] string message)
+        {
+            Info(false, exception, message, null);
+        }
 
-        /// <overloads>Log a formatted diagnostic message with the <c>INFO</c> level.</overloads>
+        /// <overloads>_log a formatted diagnostic message with the <c>INFO</c> level.</overloads>
         /// <summary>
         ///     Writes a diagnostic message at the <c>INFO</c> level using the specified parameters.
         /// </summary>
@@ -342,7 +292,10 @@ namespace Cush.Common.Logging
         /// </remarks>
         /// <seealso cref="M:Info(string)" />
         /// <seealso cref="IsInfoEnabled" />
-        void Info([Localizable(false)] string message, params object[] args);
+        public void Info([Localizable(false)] string message, params object[] args)
+        {
+            Info(false, null, message, args);
+        }
 
         /// <summary>
         ///     Writes a diagnostic message and <see cref="T:Exception" /> at the <c>INFO</c> level.
@@ -357,33 +310,16 @@ namespace Cush.Common.Logging
         /// </remarks>
         /// <seealso cref="M:Info(string)" />
         /// <seealso cref="IsInfoEnabled" />
-        void Info(Exception exception, [Localizable(false)] string message, params object[] args);
-
-        /// <summary>
-        ///     Writes a diagnostic message and <see cref="T:Exception" /> at the <c>INFO</c> level.
-        /// </summary>
-        /// <param name="message">A message <see langword="string" /> containing format items.</param>
-        /// <param name="logEvent">Determines whether or not to add an entry to the <see cref="System.Diagnostics.EventLog"/>.</param>
-        /// <param name="exception">An <see cref="T:Exception" /> to be logged.</param>
-        /// <param name="args">Arguments to format.</param>
-        /// <remarks>
-        ///     <para>
-        ///         See the <see cref="M:Info(string)" /> form for more detailed information.
-        ///     </para>
-        /// </remarks>
-        /// <seealso cref="M:Info(string)" />
-        /// <seealso cref="IsInfoEnabled" />
-        void Info(bool logEvent, Exception exception, [Localizable(false)] string message, params object[] args);
-
-        #endregion
-
-        #region Warn() overloads
+        public void Info(Exception exception, string message, params object[] args)
+        {
+            Info(false, exception, message, args);
+        }
 
         /// <overloads>Logs a diagnostic message at the <c>WARN</c> level.</overloads>
         /// <summary>
         ///     Writes the diagnostic message at the <c>WARN</c> level.
         /// </summary>
-        /// <param name="message">Log message.</param>
+        /// <param name="message">_log message.</param>
         /// <remarks>
         ///     <para>
         ///         This method first checks if this logger is <c>WARN</c>
@@ -398,15 +334,18 @@ namespace Cush.Common.Logging
         ///     </para>
         /// </remarks>
         /// <seealso cref="IsWarnEnabled" />
-        void Warn([Localizable(false)] string message);
+        public void Warn([Localizable(false)] string message)
+        {
+            Warn(false, null, message, null);
+        }
 
         /// <overloads>Logs an <see cref="T:Exception" /> at the <c>WARN</c> level.</overloads>
         /// <summary>
         ///     Writes an <see cref="T:Exception" /> at the <c>WARN</c> level.
         /// </summary>
         /// <param name="exception">An <see cref="T:Exception" /> to be logged.</param>
-        void Warn([Localizable(false)] Exception exception);
-        
+        public void Warn(Exception exception) { Warn(false, exception, null, null); }
+
         /// <summary>
         ///     Writes a diagnostic message and <see cref="T:Exception" /> at the <c>WARN</c> level.
         /// </summary>
@@ -419,9 +358,9 @@ namespace Cush.Common.Logging
         /// </remarks>
         /// <seealso cref="M:Warn(string)" />
         /// <seealso cref="IsWarnEnabled" />
-        void Warn(Exception exception, [Localizable(false)] string message);
+        public void Warn(Exception exception, [Localizable(false)] string message) { Warn(false, exception, message, null); }
 
-        /// <overloads>Log a formatted diagnostic message with the <c>ERROR</c> level.</overloads>
+        /// <overloads>_log a formatted diagnostic message with the <c>ERROR</c> level.</overloads>
         /// <summary>
         ///     Writes a diagnostic message at the <c>WARN</c> level using the specified parameters.
         /// </summary>
@@ -443,7 +382,7 @@ namespace Cush.Common.Logging
         /// </remarks>
         /// <seealso cref="M:Warn(string)" />
         /// <seealso cref="IsWarnEnabled" />
-        void Warn([Localizable(false)] string message, params object[] args);
+        public void Warn([Localizable(false)] string message, params object[] args) { Warn(false, null, message, args); }
 
         /// <summary>
         ///     Writes a diagnostic message and <see cref="T:Exception" /> at the <c>WARN</c> level.
@@ -458,33 +397,16 @@ namespace Cush.Common.Logging
         /// </remarks>
         /// <seealso cref="M:Warn(string)" />
         /// <seealso cref="IsWarnEnabled" />
-        void Warn(Exception exception, [Localizable(false)] string message, params object[] args);
-
-        /// <summary>
-        ///     Writes a diagnostic message and <see cref="T:Exception" /> at the <c>WARN</c> level.
-        /// </summary>
-        /// <param name="message">A <see langword="string" /> containing format items.</param>
-        /// <param name="logEvent">Determines whether or not to add an entry to the <see cref="System.Diagnostics.EventLog"/>.</param>
-        /// <param name="exception">An <see cref="T:Exception" /> to be logged.</param>
-        /// <param name="args">Arguments to format.</param>
-        /// <remarks>
-        ///     <para>
-        ///         See the <see cref="M:Warn(string)" /> form for more detailed information.
-        ///     </para>
-        /// </remarks>
-        /// <seealso cref="M:Warn(string)" />
-        /// <seealso cref="IsWarnEnabled" />
-        void Warn(bool logEvent, Exception exception, [Localizable(false)] string message, params object[] args);
-
-        #endregion
-
-        #region Error() overloads
+        public void Warn(Exception exception, string message, params object[] args)
+        {
+            Warn(false, exception, message, args);
+        }
 
         /// <overloads>Logs a diagnostic message at the <c>ERROR</c> level.</overloads>
         /// <summary>
         ///     Writes a diagnostic message at the <c>ERROR</c> level.
         /// </summary>
-        /// <param name="message">Log message.</param>
+        /// <param name="message">_log message.</param>
         /// <remarks>
         ///     <para>
         ///         This method first checks if this logger is <c>ERROR</c>
@@ -499,15 +421,14 @@ namespace Cush.Common.Logging
         ///     </para>
         /// </remarks>
         /// <seealso cref="IsErrorEnabled" />
-        void Error([Localizable(false)] string message);
+        public void Error([Localizable(false)] string message) { Error(false, null, message,null);}
 
         /// <overloads>Logs an <see cref="T:Exception" /> at the <c>ERROR</c> level.</overloads>
         /// <summary>
         ///     Writes an <see cref="T:Exception" /> at the <c>ERROR</c> level.
         /// </summary>
         /// <param name="exception">An <see cref="T:Exception" /> to be logged.</param>
-        void Error([Localizable(false)] Exception exception);
-
+        public void Error(Exception exception) { Error(false, exception, null, null); }
 
         /// <summary>
         ///     Writes a diagnostic message and <see cref="T:Exception" /> at the <c>ERROR</c> level.
@@ -521,9 +442,9 @@ namespace Cush.Common.Logging
         /// </remarks>
         /// <seealso cref="M:Error(string)" />
         /// <seealso cref="IsErrorEnabled" />
-        void Error(Exception exception, [Localizable(false)] string message);
+        public void Error(Exception exception, [Localizable(false)] string message) { Error(false, exception, message, null); }
 
-        /// <overloads>Log a formatted diagnostic message with the <c>ERROR</c> level.</overloads>
+        /// <overloads>_log a formatted diagnostic message with the <c>ERROR</c> level.</overloads>
         /// <summary>
         ///     Writes a diagnostic message at the <c>ERROR</c> level using the specified parameters.
         /// </summary>
@@ -544,7 +465,7 @@ namespace Cush.Common.Logging
         /// </remarks>
         /// <seealso cref="M:Error(string)" />
         /// <seealso cref="IsErrorEnabled" />
-        void Error([Localizable(false)] string message, params object[] args);
+        public void Error([Localizable(false)] string message, params object[] args) { Error(false, null, message, args); }
 
         /// <summary>
         ///     Writes a diagnostic message and <see cref="T:Exception" /> at the <c>ERROR</c> level.
@@ -559,33 +480,16 @@ namespace Cush.Common.Logging
         /// </remarks>
         /// <seealso cref="M:Error(string)" />
         /// <seealso cref="IsErrorEnabled" />
-        void Error(Exception exception, [Localizable(false)] string message, params object[] args);
-
-        /// <summary>
-        ///     Writes a diagnostic message and <see cref="T:Exception" /> at the <c>ERROR</c> level.
-        /// </summary>
-        /// <param name="message">A <see langword="string" /> containing format items.</param>
-        /// <param name="logEvent">Determines whether or not to add an entry to the <see cref="System.Diagnostics.EventLog"/>.</param>
-        /// <param name="exception">An <see cref="T:Exception" /> to be logged.</param>
-        /// <param name="args">Arguments to format.</param>
-        /// <remarks>
-        ///     <para>
-        ///         See the <see cref="M:Error(string)" /> form for more detailed information.
-        ///     </para>
-        /// </remarks>
-        /// <seealso cref="M:Error(string)" />
-        /// <seealso cref="IsErrorEnabled" />
-        void Error(bool logEvent, Exception exception, [Localizable(false)] string message, params object[] args);
-
-        #endregion
-
-        #region Fatal() overloads
+        public void Error(Exception exception, string message, params object[] args)
+        {
+            Error(false, exception, message, args);
+        }
 
         /// <overloads>Logs a diagnostic message at the <c>FATAL</c> level.</overloads>
         /// <summary>
         ///     Writes a diagnostic message at the <c>FATAL</c> level.
         /// </summary>
-        /// <param name="message">Log message.</param>
+        /// <param name="message">_log message.</param>
         /// <remarks>
         ///     <para>
         ///         This method first checks if this logger is <c>FATAL</c>
@@ -600,14 +504,14 @@ namespace Cush.Common.Logging
         ///     </para>
         /// </remarks>
         /// <seealso cref="IsFatalEnabled" />
-        void Fatal([Localizable(false)] string message);
+        public void Fatal([Localizable(false)] string message) { Fatal(false, null, message, null); }
 
         /// <overloads>Logs an <see cref="T:Exception" /> at the <c>FATAL</c> level.</overloads>
         /// <summary>
         ///     Writes an <see cref="T:Exception" /> at the <c>FATAL</c> level.
         /// </summary>
         /// <param name="exception">An <see cref="T:Exception" /> to be logged.</param>
-        void Fatal([Localizable(false)] Exception exception);
+        public void Fatal(Exception exception) { Fatal(false, exception, null, null); }
 
         /// <summary>
         ///     Writes a diagnostic message and <see cref="T:Exception" /> at the <c>FATAL</c> level.
@@ -621,9 +525,9 @@ namespace Cush.Common.Logging
         /// </remarks>
         /// <seealso cref="M:Fatal(string)" />
         /// <seealso cref="IsFatalEnabled" />
-        void Fatal(Exception exception, [Localizable(false)] string message);
+        public void Fatal(Exception exception, [Localizable(false)] string message) { Fatal(false, exception, message, null); }
 
-        /// <overloads>Log a formatted diagnostic message with the <c>FATAL</c> level.</overloads>
+        /// <overloads>_log a formatted diagnostic message with the <c>FATAL</c> level.</overloads>
         /// <summary>
         ///     Writes a diagnostic message at the <c>FATAL</c> level using the specified parameters.
         /// </summary>
@@ -645,7 +549,7 @@ namespace Cush.Common.Logging
         /// </remarks>
         /// <seealso cref="M:Fatal(string)" />
         /// <seealso cref="IsFatalEnabled" />
-        void Fatal([Localizable(false)] string message, params object[] args);
+        public void Fatal([Localizable(false)] string message, params object[] args) { Fatal(false, null, message, args); }
 
         /// <summary>
         ///     Writes a diagnostic message and <see cref="T:Exception" /> at the <c>FATAL</c> level using the specified
@@ -661,7 +565,107 @@ namespace Cush.Common.Logging
         /// </remarks>
         /// <seealso cref="M:Fatal(string)" />
         /// <seealso cref="IsFatalEnabled" />
-        void Fatal(Exception exception, [Localizable(false)] string message, params object[] args);
+        public void Fatal(Exception exception, string message, params object[] args)
+        {
+            Fatal(false, exception, message, args);
+        }
+
+        /// <summary>
+        ///     Writes a diagnostic message and <see cref="T:Exception" /> at the <c>TRACE</c> level using the specified
+        ///     parameters.
+        /// </summary>
+        /// <param name="message">A message <see langword="string" /> containing format items.</param>
+        /// <param name="logEvent">Determines whether or not to add an entry to the <see cref="System.Diagnostics.EventLog"/>.</param>
+        /// <param name="exception">An <see cref="T:Exception" /> to be logged.</param>
+        /// <param name="args">Arguments to format.</param>
+        /// <remarks>
+        ///     <para>
+        ///         See the <see cref="M:Trace(string)" /> form for more detailed information.
+        ///     </para>
+        /// </remarks>
+        /// <seealso cref="IsTraceEnabled" />
+        public void Trace(bool logEvent, Exception exception, string message, params object[] args)
+        {
+            WriteEntry(logEvent, LogLevel.Trace, EventLogEntryType.Information, exception, message, args);
+        }
+
+        /// <summary>
+        ///     Writes a diagnostic message and <see cref="T:Exception" /> at the <c>DEBUG</c> level using the specified
+        ///     parameters.
+        /// </summary>
+        /// <param name="message">A <see langword="string" /> containing format items.</param>
+        /// <param name="logEvent">Determines whether or not to add an entry to the <see cref="System.Diagnostics.EventLog"/>.</param>
+        /// <param name="exception">An exception to be logged.</param>
+        /// <param name="args">Arguments to format.</param>
+        /// <remarks>
+        ///     <para>
+        ///         See the <see cref="M:Debug(string)" /> form for more detailed information.
+        ///     </para>
+        /// </remarks>
+        /// <seealso cref="M:Debug(string)" />
+        /// <seealso cref="IsDebugEnabled" />
+        public void Debug(bool logEvent, Exception exception, string message, params object[] args)
+        {
+            WriteEntry(logEvent, LogLevel.Debug, EventLogEntryType.Information, exception, message, args);
+        }
+
+        /// <summary>
+        ///     Writes a diagnostic message and <see cref="T:Exception" /> at the <c>INFO</c> level.
+        /// </summary>
+        /// <param name="message">A message <see langword="string" /> containing format items.</param>
+        /// <param name="logEvent">Determines whether or not to add an entry to the <see cref="System.Diagnostics.EventLog"/>.</param>
+        /// <param name="exception">An <see cref="T:Exception" /> to be logged.</param>
+        /// <param name="args">Arguments to format.</param>
+        /// <remarks>
+        ///     <para>
+        ///         See the <see cref="M:Info(string)" /> form for more detailed information.
+        ///     </para>
+        /// </remarks>
+        /// <seealso cref="M:Info(string)" />
+        /// <seealso cref="IsInfoEnabled" />
+        public void Info(bool logEvent, Exception exception, string message, params object[] args)
+        {
+            WriteEntry(logEvent, LogLevel.Info, EventLogEntryType.Information, exception, message, args);
+        }
+
+        /// <summary>
+        ///     Writes a diagnostic message and <see cref="T:Exception" /> at the <c>WARN</c> level.
+        /// </summary>
+        /// <param name="message">A <see langword="string" /> containing format items.</param>
+        /// <param name="logEvent">Determines whether or not to add an entry to the <see cref="System.Diagnostics.EventLog"/>.</param>
+        /// <param name="exception">An <see cref="T:Exception" /> to be logged.</param>
+        /// <param name="args">Arguments to format.</param>
+        /// <remarks>
+        ///     <para>
+        ///         See the <see cref="M:Warn(string)" /> form for more detailed information.
+        ///     </para>
+        /// </remarks>
+        /// <seealso cref="M:Warn(string)" />
+        /// <seealso cref="IsWarnEnabled" />
+        public void Warn(bool logEvent, Exception exception, string message, params object[] args)
+        {
+            WriteEntry(logEvent, LogLevel.Warn,
+                exception == null ? EventLogEntryType.Warning : EventLogEntryType.Error, exception, message, args);
+        }
+
+        /// <summary>
+        ///     Writes a diagnostic message and <see cref="T:Exception" /> at the <c>ERROR</c> level.
+        /// </summary>
+        /// <param name="message">A <see langword="string" /> containing format items.</param>
+        /// <param name="logEvent">Determines whether or not to add an entry to the <see cref="System.Diagnostics.EventLog"/>.</param>
+        /// <param name="exception">An <see cref="T:Exception" /> to be logged.</param>
+        /// <param name="args">Arguments to format.</param>
+        /// <remarks>
+        ///     <para>
+        ///         See the <see cref="M:Error(string)" /> form for more detailed information.
+        ///     </para>
+        /// </remarks>
+        /// <seealso cref="M:Error(string)" />
+        /// <seealso cref="IsErrorEnabled" />
+        public void Error(bool logEvent, Exception exception, string message, params object[] args)
+        {
+            WriteEntry(logEvent, LogLevel.Error, EventLogEntryType.Error, exception, message, args);
+        }
 
         /// <summary>
         ///     Writes a diagnostic message and <see cref="T:Exception" /> at the <c>FATAL</c> level using the specified
@@ -678,8 +682,85 @@ namespace Cush.Common.Logging
         /// </remarks>
         /// <seealso cref="M:Fatal(string)" />
         /// <seealso cref="IsFatalEnabled" />
-        void Fatal(bool logEvent, Exception exception, [Localizable(false)] string message, params object[] args);
+        public void Fatal(bool logEvent, Exception exception, string message, params object[] args)
+        {
+            WriteEntry(logEvent, LogLevel.Fatal, EventLogEntryType.Error, exception, message, args);
+        }
+
 
         #endregion
+
+        #region Abstract Methods
+
+        /// <summary>
+        ///     Gets the name of the logger.
+        /// </summary>
+        public abstract string Name { get; }
+
+        /// <summary>
+        ///     Gets a value indicating whether logging is enabled for the <c>TRACE</c> level.
+        /// </summary>
+        /// <returns>
+        ///     A value of <see langword="true" /> if logging is enabled for the <c>TRACE</c> level, otherwise it returns
+        ///     <see langword="false" />.
+        /// </returns>
+        public abstract bool IsTraceEnabled { get; }
+
+        /// <summary>
+        ///     Gets a value indicating whether logging is enabled for the <c>DEBUG</c> level.
+        /// </summary>
+        /// <returns>
+        ///     A value of <see langword="true" /> if logging is enabled for the <c>DEBUG</c> level, otherwise it returns
+        ///     <see langword="false" />.
+        /// </returns>
+        public abstract bool IsDebugEnabled { get; }
+
+        /// <summary>
+        ///     Gets a value indicating whether logging is enabled for the <c>INFO</c> level.
+        /// </summary>
+        /// <returns>
+        ///     A value of <see langword="true" /> if logging is enabled for the <c>INFO</c> level, otherwise it returns
+        ///     <see langword="false" />.
+        /// </returns>
+        public abstract bool IsInfoEnabled { get; }
+
+        /// <summary>
+        ///     Gets a value indicating whether logging is enabled for the <c>WARN</c> level.
+        /// </summary>
+        /// <returns>
+        ///     A value of <see langword="true" /> if logging is enabled for the <c>WARN</c> level, otherwise it returns
+        ///     <see langword="false" />.
+        /// </returns>
+        public abstract bool IsWarnEnabled { get; }
+
+        /// <summary>
+        ///     Gets a value indicating whether logging is enabled for the <c>ERROR</c> level.
+        /// </summary>
+        /// <returns>
+        ///     A value of <see langword="true" /> if logging is enabled for the <c>ERROR</c> level, otherwise it returns
+        ///     <see langword="false" />.
+        /// </returns>
+        public abstract bool IsErrorEnabled { get; }
+
+        /// <summary>
+        ///     Gets a value indicating whether logging is enabled for the <c>FATAL</c> level.
+        /// </summary>
+        /// <returns>
+        ///     A value of <see langword="true" /> if logging is enabled for the <c>FATAL</c> level, otherwise it returns
+        ///     <see langword="false" />.
+        /// </returns>
+        public abstract bool IsFatalEnabled { get; }
+        
+        private void WriteEntry(bool logEvent, LogLevel level, EventLogEntryType entryType, Exception exception, string message,
+           params object[] args)
+        {
+            _log.AddEntry(level, exception, message, args);
+
+            if (logEvent)
+                _eventLog.WriteEntry(_eventSourceName, string.Format(message, args), entryType);
+        }
+        #endregion
+
+
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Runtime.InteropServices;
-using Cush.Common.Attributes;
 
 namespace Cush.Common
 {
@@ -9,7 +8,6 @@ namespace Cush.Common
     /// </summary>
     /// <filterpriority>1</filterpriority>
     [ComVisible(true)]
-    [__DynamicallyInvokable]
     public interface IBoundedList : IList, ICollection, IEnumerable
     {
         /// <summary>
@@ -18,8 +16,7 @@ namespace Cush.Common
         /// <returns>
         ///     The number of elements actually contained in the <see cref="T:BoundedList" />.
         /// </returns>
-        [__DynamicallyInvokable]
-        new int Count { [__DynamicallyInvokable] get; }
+        new int Count {  get; }
 
         /// <summary>
         ///     Gets or sets the total number of elements the internal data structure can hold before resizing.
@@ -31,8 +28,7 @@ namespace Cush.Common
         ///     <see cref="P:BoundedList.Capacity" /> is set to a value that is less than <see cref="P:BoundedList.Count" />.
         /// </exception>
         /// <exception cref="T:System.OutOfMemoryException">There is not enough memory available on the system.</exception>
-        [__DynamicallyInvokable]
-        int Capacity { [__DynamicallyInvokable] get; [__DynamicallyInvokable] set; }
+        int Capacity {  get;  set; }
         
         /// <summary>
         ///     Copies the entire <see cref="T:BoundedList" /> to a compatible one-dimensional array, starting at the specified
@@ -50,7 +46,6 @@ namespace Cush.Common
         ///     greater than the available space from <paramref name="arrayIndex" /> to the end of the destination
         ///     <paramref name="array" />.
         /// </exception>
-        [__DynamicallyInvokable]
         void CopyTo(object[] array, int arrayIndex);
     }
 }
