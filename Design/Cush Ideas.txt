@@ -32,7 +32,9 @@ Cush.Common
 		A generic factory class
 		GetInstance<IFactoryCreateable>(params object[] args);  SLOW???  
 		(see http://geekswithblogs.net/mrsteve/archive/2012/02/19/a-fast-c-sharp-extension-method-using-expression-trees-create-instance-from-type-again.aspx)
-
+	Logging
+		Wrappers for NLog, Log4Net
+		
 Cush.ResourceSystem - Wrapped Resource- or File-System
 	Add ILogger to constructors
 	IO (serialization)
