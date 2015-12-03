@@ -3,6 +3,15 @@ CUSH IDEAS - Implement Top Items First
 (?? consider)
 ==========================================================================================
 
+Note: xxxWeasel is an example of a BAD class name.  
+	Try NOT use Weasel words like "Handler" or "Manager".  Be specific about what it does.
+	Pay attention to the Single Responsibility Principle:
+		If you're not creative enough to come up with a better description of what your class does than "manage" or "handle" or "help", then maybe your class has too many responsibilities.
+	
+
+==========================================================================================
+Scope
+==========================================================================================
 Cush.Testing
 	(done) Get a random value of any numeric type T
 	(done) Method timing code.
@@ -10,8 +19,8 @@ Cush.Testing
 		** Get Framework Version (Only really helps if compiled on the latest version of the Framework)
 		** Get Messagebox Content
 		** Provide strongly typed access to a compile-time string representing the name of a variable, field, property, method, event, enum value, or type. 
-		** Collection equality assertions : Assert.AreEqual(ExpectedCollection, ActualCollection)
-		Assert.AreEqual(ExpectedCollection, ActualCollection)
+		** Collection equality assertions : 
+			- Assert.AreEqual(expectedCollection, actualCollection)
 
 Cush.Common
 	Base Classes
@@ -20,44 +29,64 @@ Cush.Common
 		(done) PropertyChangedBase, 
 		(done) BoundedList<T>,
 	Common Interfaces
-		(done) ILogger (to pass around to ResourceSystem)
+		(done) ILogger (to pass around to the Resource System, Console Proxy, Exception handlers, etc.)
 	Exceptions
-		Exception Handler
-		Exception Thrower
-	Exceptions (Exception handler)  
-	** Async (AsyncWorker)
-	** Bootstrapping (CompositionRoot) 
-		- OR - use this as a pattern, make the static GetInstance class the Composition Root
+		- HighLevelExceptionHandler 
+			- catches [and logs] uncaught exceptions
+		ThrowHelper 
+			- a set of methods throwing exceptions based on evaluated conditions,
+					e.g., IfNullThenThrow(()=>parameter)
+	Architecture
+		- Bootstrapping:  ICompositionRoot, includes
+			- a method for composing the object graph, and
+			- a method for starting the application (with CommandLine args)
+				
 	?? DependencyInjection
-		A generic factory class
-		GetInstance<IFactoryCreateable>(params object[] args);  SLOW???  
-		(see http://geekswithblogs.net/mrsteve/archive/2012/02/19/a-fast-c-sharp-extension-method-using-expression-trees-create-instance-from-type-again.aspx)
-	Logging
-		Wrappers for NLog, Log4Net
+		?? A generic factory class
+		?? CreateInstanceFromType<IFactoryCreateable>(params object[] args);  SLOW???  
+			(see http://geekswithblogs.net/mrsteve/archive/2012/02/19/a-fast-c-sharp-extension-method-using-expression-trees-create-instance-from-type-again.aspx)
 		
+	Logging
+		- SEE NOTES BELOW: create adapters/extensions for log4net or nlog - do NOT recreate the wheel
+		- Add ILogger overrides:
+				Cush.Logging.log4net.Logger
+				Cush.Logging.nLog.Logger	
+
+	** Async (AsyncWorker)
+
+				
 Cush.ResourceSystem - Wrapped Resource- or File-System
-	Add ILogger to constructors
-	IO (serialization)
+	- Add ILogger to constructors
+	- IO (serialization)
 	
 Cush.CommandLine
-	Parser
-	ConsoleProxy
+	- Add ILogger to constructors	
+	- Command Line Parser 
+	- ConsoleProxy / Command Line Harness (mockable command line interface)
+		This is a dependency of Windows.Services - Implement together
 	
 Cush.Windows
-	Single Instance
+	- Single Instance
+		For WPF, WinForms, Console, and Service
 
 Cush.Windows.Services
-	Cush.Services (Windows Service Framework, GenericHost)
-	
-Cush.Composition (MEF)
-	Resources
+	- (done) Windows Service Framework 
+	- Add ILogger to constructors
+	- Command Line Harness (mockable command line interface)
+	?? GenericHost (A generic RESTful endpoint)
+		
+Cush.Composition 
+	(Uses Microsoft's MEF)
+	- Composable Extension Interfaces
+	- abstract Composition Container
+	- Resources	
 	?? AutoConfig?
 
 Cush.WPF (WPF specific)
-	In-app Logging dialog
-	Exception dialog
-	Controls
-	?? MVVM (WPF-specific)
+	- In-app Logging dialog
+	- Exception dialog
+	- Controls
+	- ?? MVVM (WPF-specific)
 
 Cush.Windows.Forms
 	
@@ -65,6 +94,15 @@ Cush.Communication
 	Cush.REST
 	Cush.Email
 
+Cush.Examples
+	Interface Implementation Examples
+		Disposable, 
+		EquatableDisposable, 
+
+Cush.MVVM	
+	?? AVOID using WPF-specific methods here, so that WinForms folks can use it too
+		RelayCommand - Careful not to use WPF-specific assemblies
+		EventToCommand behavior - Careful not to use WPF-specific assemblies
 
 	
 MVVM Ideas
@@ -94,18 +132,69 @@ Cush.MVVM	(MVVM - AVOID using WPF-specific methods here, so that WinForms folks 
 NOTES
 ==========================================================================================
 
-	Library classes should be defined with Constructor Injection throughout.
-		Simple DI Facade
-		Property Injection vs Constructor Injection
+	Logging:
+		If I want to support other loggers, then instead of making a logging facade, make an adapter for that logger.  
+			That is, make a Log4Net appender that also does the nifty gui stuff.
+		If I'm gonna roll my own, start with NLog, and add features from other loggers
 
-	Use abstract factory when 
-	DI Friendly Library: 	http://blog.ploeh.dk/2014/05/19/di-friendly-library/
-	DI Friendly Framework:	http://blog.ploeh.dk/2014/05/19/di-friendly-framework/
+		http://stackoverflow.com/questions/710863/log4net-vs-nlog
+			I was recently tasked to "prototype up some loggin'" for an upcoming project. I didn't have any logging framework experience. I researched, ran through tutorials, made toy apps, etc. on Log4Net, NLog, and Enterprise Library for a few days. Came back 3-4 weeks later and put them together into a cohesive demo. Hopefully some of this is useful to you.
+
+			My recommendation for our project is this:
+
+			Use a logging facade (e.g. Common.Logging, SimpleLoggingFacade) to avoid direct dependencies.
+			If we end up using Enterprise Library for other facilities, then use it for Logging, too.
+			If we end up using something with a dependency on Log4Net, use Log4Net.
+			If none of the above, use NLog. Which I'd prefer.
+
+
+	Temp objects:
+		"Running PerfMonitor on my computer reports that 43% of the total run time is spent in GC. 
+		If you rewrite your code to use fewer temporary objects, you should see the desired 4x speedup."
+
+	Dependency Injection:
+		Only applications should have Composition Roots. Libraries and frameworks shouldn't.
+		Library classes should be defined with Constructor Injection throughout.
+			Simple DI Facade
+			Property Injection vs Constructor Injection
+
+		Use abstract factory when 
+			DI Friendly Library: 	http://blog.ploeh.dk/2014/05/19/di-friendly-library/
+			DI Friendly Framework:	http://blog.ploeh.dk/2014/05/19/di-friendly-framework/
+
+  	Assembly Boundaries:
+		an assembly is by definition the smallest independently versionable unit of self-describing shippable functionality in .NET. 
+		Are there parts of your software that you intend to ship or version independently of each other? Then they should be in different assemblies.
+
+		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
+			- Tells NGen that it is OK to inline the method it's applied to even in a different
+			  assembly.
+		 	- NGen will inline the String.Equals call, replacing the method call instruction 
+		 	  with the actual code in the method. Method calls are (slightly) expensive, so this is a performance boost for frequently-called methods.
+		 	- However, if Microsoft finds a security hole in String.Equals, they cannot just 
+		 	  update mscorlib .dll, because that won't affect the assembly that you just NGen'd. (Since it has raw machine code without referencing String.Equals).
 
 	Domain model 
 		Contains objects that the business expects,  i.e., shopping cart, NOT Giraffe
 		The "Service Layer" part of the model can be called "Business Logic Layer" (Service is a weasel word.)
 
+	MVVM
+		View only knows about the shape of the ViewModel; binds to properties on VM
+		ViewModel only knows about the shape of the Model; binds to properties on Model
+		Model just holds and manipulates its own data
+
+		Must support View-First and ViewModel-First
+
+		ViewModel (the ViewModel should ideally be kept ignorant of the view)
+			?? ViewModel.RequestDialog<TDialog>(params object[] args)
+			?? 	Extension for requesting a view on the fly (i.e., show this dialog, please)
+			?? 	This should really be done on the view, responding to some bound property
+
+		View
+			?? TViewModel ViewModel {get{return (TViewModel)DataContext;}} where TViewModel:ViewModel
+
+
+	
 
 MAYBE
 ==========================================================================================
@@ -113,9 +202,15 @@ MAYBE
 	Cush.AutoConfig ??
 	Generic Rest Mediator??  Can this happen? Easily? Worth it?
 
-"Running PerfMonitor on my computer reports that 43% of the total run time is spent in GC. 
-If you rewrite your code to use fewer temporary objects, you should see the desired 4x speedup."
 	
+
+	Look @ PeanutButter
+		https://github.com/fluffynuts/PeanutButter
+			Randoms
+			DecimalDecorator
+			XElementExtensions
+			ServiceShell
+
 	Look @ plugins for Fody
 		Fody.AsyncErrorHandler (Integrates error handling into async and TPL code.)
 		AutoDependencyProperty (Generates WPF DependencyProperty boilerplate from automatic C# properties.)
@@ -137,3 +232,7 @@ If you rewrite your code to use fewer temporary objects, you should see the desi
 				 		uint y = unchecked((uint) x);
 				 	OR make the method internal
 
+
+
+[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]  
+		WILL NOT WORK outside of MS assemblies...?

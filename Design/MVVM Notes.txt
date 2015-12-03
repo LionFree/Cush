@@ -1,0 +1,77 @@
+MVVM Notes.txt
+
+	View only knows about the shape of the ViewModel; binds to properties on ViewModel
+	ViewModel only knows about the shape of the Model; binds to properties on Model
+		Most of the work is done in the ViewModel
+	Model just holds and manipulates its own data
+
+
+	View-first:
+		View first simply means the view is what drives the creation or discovery of the view model. In view first scenarios, the view typically binds to the view model as a resource, uses a locator pattern, or has the view model injected via MEF, Unity, or some other means. This is a very common method for managing views and view models. For example:
+
+			private void Application_Startup(object sender, StartupEventArgs e)
+			{
+			    var shell = new MainPage();
+			    shell.LayoutRoot.DataContext = new ContactViewModel();
+			    RootVisual = shell;
+			}
+
+	ViewModel-first (MVP):
+		ViewModel first is another method to wire the framework together. In this scenario, the viewmodel is responsible for creating the view and binding itself to the view. You can see an example of this in Rob Eisenberg’s convention-based framework he discussed at MIX: Build your own MVVM Framework.
+
+		ViewModel creates new views in response to changes in properties, usually with ItemsControls/DataTemplates
+
+
+
+	?? Must support View-First and ViewModel-First instantiation ??
+
+		ViewModel (the ViewModel should ideally be kept ignorant of the view)
+			?? ViewModel.RequestDialog<TViewModel>(params object[] args)
+			?? ViewModel.RequestDialog(IDialog dialog, params object[] args)
+			?? 	Extension for requesting a view on the fly (i.e., show the corresponding dialog, please)
+			?? 	How do I do this from the view, responding to some bound property?
+
+		View
+			public interface IView<TViewModel>
+			{
+				TViewModel ViewModel { get; }
+			}
+
+			public class ExampleView : IView<ExampleViewModel>
+			{
+				Public ExampleView(ExampleViewModel viewModel)
+				{
+					_viewModel
+				}
+
+				ExampleViewModel ViewModel { get { return (ExampleViewModel)DataContext; }} 
+			}
+
+
+
+
+
+* View First - Pros
+	Easy to track which ViewModel is used by a View
+
+* View First - Cons
+	Doesn't allow a single View to be easily used with multiple ViewModels
+	Requires extra events to handle communication between Views and ViewModels
+
+* ViewModel First - Pros
+	Allows more complete testing of logic to open new Views and ViewModels
+	Tends to be DRYer as applications get larger
+	View and ViewModel are more independent and can be worked on separately more easily
+
+* ViewModel First - Cons
+	More difficult to set up in Silverlight without DataTemplateSelector and typed DataTemplates.
+
+
+
+Dialogs in VM
+	// Abstracting out the WPF code
+	//dialogService.Register<SearchScreenViewModel>(SearchScreenViewDialog);	// View type, Viewmodel Type
+	
+	dialogService.ShowDialog<SearchScreenViewModel>();  						// default view model
+	dialogService.ShowDialog<SearchScreenViewModel>(existingViewModel);  		// existing view model
+
