@@ -1,0 +1,101 @@
+CUSH SCOPE - Implement Top Items First
+(** implement when needed / problem domain is better understood)
+(?? consider)
+==========================================================================================
+Cush.Testing
+	(done) Get a random value of any numeric type T
+	(done) Method timing code.
+	** Verify a data object doesn't throw an exception when being hammered by multiple threads
+		** Get Framework Version (Only really helps if compiled on the latest version of the Framework)
+		** Get Messagebox Content
+		** Provide strongly typed access to a compile-time string representing the name of a variable, field, property, method, event, enum value, or type. 
+		** Collection equality assertions : 
+			- Assert.AreEqual(expectedCollection, actualCollection)
+
+Cush.Common
+	Base Classes
+		(done) Disposable, 
+		(done) EquatableDisposable, 
+		(done) PropertyChangedBase, 
+		(done) BoundedList<T>,
+	Common Interfaces
+		(done) ILogger (to pass around to the Resource System, Console Proxy, Exception handlers, etc.)
+	Exceptions
+		- HighLevelExceptionHandler 
+			- catches [and logs] uncaught exceptions
+		ThrowHelper 
+			- a set of methods throwing exceptions based on evaluated conditions,
+					e.g., IfNullThenThrow(()=>parameter)
+	Architecture
+		- Bootstrapping:  ICompositionRoot, includes
+			- a method for composing the object graph, and
+			- a method for starting the application (with CommandLine args)
+				
+	?? DependencyInjection
+		?? A generic factory class
+		?? CreateInstanceFromType<IFactoryCreateable>(params object[] args);  SLOW???  
+			(see http://geekswithblogs.net/mrsteve/archive/2012/02/19/a-fast-c-sharp-extension-method-using-expression-trees-create-instance-from-type-again.aspx)
+		
+	Logging
+		- SEE NOTES BELOW: create adapters/extensions for log4net or nlog - do NOT recreate the wheel
+		- Add ILogger overrides:
+				Cush.Logging.log4net.Logger
+				Cush.Logging.nLog.Logger	
+
+	** Async (AsyncWorker)
+
+	
+Cush.CommandLine
+	- Add ILogger to constructors	
+	- Command Line Parser 
+	- ConsoleProxy / Command Line Harness (mockable command line interface)
+		This is a dependency of Windows.Services - Implement together
+	
+Cush.Windows
+	- Single Instance Application
+		For WPF, WinForms, Console, and Service
+
+Cush.Windows.Services
+	- (done) Windows Service Framework 
+	- Add ILogger to constructors
+	- Command Line Harness (mockable command line interface)
+	?? GenericHost (A generic RESTful endpoint)
+		
+Cush.Composition 
+	(Uses Microsoft's MEF)
+	- Composable Extension Interfaces
+	- abstract Composition Container
+	- Resources	
+	?? AutoConfig?
+
+Cush.WPF (WPF specific)
+	- In-app Logging dialog
+	- Exception dialog
+	- Controls
+	- ?? MVVM (WPF-specific)
+
+Cush.Windows.Forms
+
+Cush.MVVM	
+	- RelayCommand - Include both WPF- and WinForms-specific options
+	- EventToCommand behavior - Include both WPF- and WinForms-specific options
+
+Cush.TestHarnesses
+	Interface Implementation Examples
+		Disposable, 
+		EquatableDisposable, 
+
+?? Cush.ResourceSystem - Wrapped Resource- or File-System
+	- Add ILogger to constructors
+	- IO (serialization)
+		
+?? Cush.Communication
+	Cush.REST
+	Cush.Email
+		
+?? Cush.Audit
+	non-ambiguous date/time
+	audit infrastructure
+		Different Events: Create / Read / Update / Delete / <CUSTOM>
+		Different Logging Levels: Trace / Debug / Warn / Error / FATAL
+		Different Output: File / Database / EventLog / <CUSTOM>
