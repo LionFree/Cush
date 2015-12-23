@@ -6,105 +6,8 @@ CUSH IDEAS - Implement Top Items First
 Note: xxxWeasel is an example of a BAD class name.  
 	Try NOT use Weasel words like "Handler" or "Manager".  Be specific about what it does.
 	Pay attention to the Single Responsibility Principle:
-		If you're not creative enough to come up with a better description of what your class does than "manage" or "handle" or "help", then maybe your class has too many responsibilities.
-	
+		If you're not creative enough to come up with a better description of what your class does than "manage" or "handle" or "help", then maybe your class has too many responsibilities.	
 
-==========================================================================================
-Scope
-==========================================================================================
-Cush.Testing
-	(done) Get a random value of any numeric type T
-	(done) Method timing code.
-	** Verify a data object doesn't throw an exception when being hammered by multiple threads
-		** Get Framework Version (Only really helps if compiled on the latest version of the Framework)
-		** Get Messagebox Content
-		** Provide strongly typed access to a compile-time string representing the name of a variable, field, property, method, event, enum value, or type. 
-		** Collection equality assertions : 
-			- Assert.AreEqual(expectedCollection, actualCollection)
-
-Cush.Common
-	Base Classes
-		(done) Disposable, 
-		(done) EquatableDisposable, 
-		(done) PropertyChangedBase, 
-		(done) BoundedList<T>,
-	Common Interfaces
-		(done) ILogger (to pass around to the Resource System, Console Proxy, Exception handlers, etc.)
-	Exceptions
-		- HighLevelExceptionHandler 
-			- catches [and logs] uncaught exceptions
-		ThrowHelper 
-			- a set of methods throwing exceptions based on evaluated conditions,
-					e.g., IfNullThenThrow(()=>parameter)
-	Architecture
-		- Bootstrapping:  ICompositionRoot, includes
-			- a method for composing the object graph, and
-			- a method for starting the application (with CommandLine args)
-				
-	?? DependencyInjection
-		?? A generic factory class
-		?? CreateInstanceFromType<IFactoryCreateable>(params object[] args);  SLOW???  
-			(see http://geekswithblogs.net/mrsteve/archive/2012/02/19/a-fast-c-sharp-extension-method-using-expression-trees-create-instance-from-type-again.aspx)
-		
-	Logging
-		- SEE NOTES BELOW: create adapters/extensions for log4net or nlog - do NOT recreate the wheel
-		- Add ILogger overrides:
-				Cush.Logging.log4net.Logger
-				Cush.Logging.nLog.Logger	
-
-	** Async (AsyncWorker)
-
-				
-Cush.ResourceSystem - Wrapped Resource- or File-System
-	- Add ILogger to constructors
-	- IO (serialization)
-	
-Cush.CommandLine
-	- Add ILogger to constructors	
-	- Command Line Parser 
-	- ConsoleProxy / Command Line Harness (mockable command line interface)
-		This is a dependency of Windows.Services - Implement together
-	
-Cush.Windows
-	- Single Instance
-		For WPF, WinForms, Console, and Service
-
-Cush.Windows.Services
-	- (done) Windows Service Framework 
-	- Add ILogger to constructors
-	- Command Line Harness (mockable command line interface)
-	?? GenericHost (A generic RESTful endpoint)
-		
-Cush.Composition 
-	(Uses Microsoft's MEF)
-	- Composable Extension Interfaces
-	- abstract Composition Container
-	- Resources	
-	?? AutoConfig?
-
-Cush.WPF (WPF specific)
-	- In-app Logging dialog
-	- Exception dialog
-	- Controls
-	- ?? MVVM (WPF-specific)
-
-Cush.Windows.Forms
-	
-Cush.Communication
-	Cush.REST
-	Cush.Email
-
-Cush.Examples
-	Interface Implementation Examples
-		Disposable, 
-		EquatableDisposable, 
-
-Cush.MVVM	
-	?? AVOID using WPF-specific methods here, so that WinForms folks can use it too
-		RelayCommand - Careful not to use WPF-specific assemblies
-		EventToCommand behavior - Careful not to use WPF-specific assemblies
-
-	
 MVVM Ideas
 ==========================================================================================
 
@@ -126,9 +29,7 @@ Cush.MVVM	(MVVM - AVOID using WPF-specific methods here, so that WinForms folks 
 	RelayCommand - Careful not to use WPF-specific assemblies
 	EventToCommand behavior - Careful not to use WPF-specific assemblies
 
-
-
-
+	
 NOTES
 ==========================================================================================
 
@@ -201,9 +102,10 @@ MAYBE
 	Cush.Eventing ?? WeakEvents?
 	Cush.AutoConfig ??
 	Generic Rest Mediator??  Can this happen? Easily? Worth it?
-
+	?? Cush.Localization
 	
-
+Ideas:
+	
 	Look @ PeanutButter
 		https://github.com/fluffynuts/PeanutButter
 			Randoms
@@ -231,8 +133,3 @@ MAYBE
 				 		int x;
 				 		uint y = unchecked((uint) x);
 				 	OR make the method internal
-
-
-
-[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]  
-		WILL NOT WORK outside of MS assemblies...?
