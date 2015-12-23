@@ -10,7 +10,7 @@ namespace Cush.Common.Exceptions
     ///     Provides the abstract base class for the handlers who monitor
     ///     unhandled exceptions.
     /// </summary>
-    public abstract class ExceptionHandler<TUIExceptionEventArgs>
+    public abstract class ExceptionHandler<TWindow, TUIExceptionEventArgs>
     {
         /// <summary>
         ///     A listener that monitors trace and debug output.
@@ -27,7 +27,7 @@ namespace Cush.Common.Exceptions
             typeof (BadImageFormatException)
         };
 
-        protected ExceptionHandler(TraceListener listener, IDialogs dialogs, ILogger logger)
+        protected ExceptionHandler(TraceListener listener, IDialogs<TWindow> dialogs, ILogger logger)
         {
             Listener = listener;
             Dialogs = dialogs;
@@ -45,7 +45,7 @@ namespace Cush.Common.Exceptions
         /// <summary>
         ///     The dialogs to use for user interaction.
         /// </summary>
-        protected IDialogs Dialogs { get; set; }
+        protected IDialogs<TWindow> Dialogs { get; set; }
 
         /// <summary>
         ///     The logger to use when logging messages and exceptions.

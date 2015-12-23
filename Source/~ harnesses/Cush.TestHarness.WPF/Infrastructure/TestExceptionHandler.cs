@@ -12,7 +12,7 @@ namespace Cush.TestHarness.WPF.Infrastructure
 {
     internal class TestExceptionHandler : WPFExceptionHandler
     {
-        public TestExceptionHandler(IDialogs dialogs, ILogger logger)
+        public TestExceptionHandler(IDialogs<Window> dialogs, ILogger logger)
             : base(dialogs, logger)
         {
         }
@@ -20,12 +20,12 @@ namespace Cush.TestHarness.WPF.Infrastructure
         internal void AttachToApplication()
         {
             // Add the event handler for handling UI thread exceptions to the event.
-            System.Windows.Application.Current.DispatcherUnhandledException += OnMainUIThreadException;
+            Application.Current.DispatcherUnhandledException += OnMainUIThreadException;
         }
 
         internal void RecoverFromException(Exception ex)
         {
-            LogAndReportException(ex, System.Windows.Application.Current.MainWindow);
+            LogAndReportException(ex, Application.Current.MainWindow);
             SaveAppState();
         }
 
@@ -47,7 +47,8 @@ namespace Cush.TestHarness.WPF.Infrastructure
             ThrowHelper.IfNullThenThrow(() => exception);
 
             var message =
-                $"{exception.GetType()}: {exception.Message}{(null == exception.InnerException ? string.Empty : exception.InnerException.Message)}";
+                string.Format("{0}: {1}{2}", exception.GetType(), exception.Message,
+                    null == exception.InnerException ? string.Empty : exception.InnerException.Message);
 
             Logger.Error(exception, message);
         }
@@ -55,7 +56,8 @@ namespace Cush.TestHarness.WPF.Infrastructure
         internal void ReportException(Exception exception, Window window)
         {
             var formattedString =
-                $"EXCEPTION TargetSite {exception.TargetSite}: {exception.Message}{Environment.NewLine}{exception.StackTrace}";
+                string.Format("EXCEPTION TargetSite {0}: {1}{2}{3}", exception.TargetSite, exception.Message,
+                    Environment.NewLine, exception.StackTrace);
 
             Dialogs.ShowError(window, formattedString);
         }
@@ -72,7 +74,7 @@ namespace Cush.TestHarness.WPF.Infrastructure
             if (!e.IsTerminating) return;
 
             OnUnrecoverableException(exception);
-            System.Windows.Application.Current.Shutdown();
+            Application.Current.Shutdown();
         }
 
         protected override void OnUnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)

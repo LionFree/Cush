@@ -1,0 +1,15 @@
+﻿<Application x:Class="Cush.TestHarness.WPF.Infrastructure.WPFApplication"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Startup="WPFApplication_OnStartup"
+             ShutdownMode="OnLastWindowClose"
+             >
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!--<ResourceDictionary Source="pack://application:,,,/Cush.WPF;component/Themes/Generic.xaml" />-->
+                <ResourceDictionary Source="pack://application:,,,/Cush.TestHarness.WPF;component/Resources/Styles/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

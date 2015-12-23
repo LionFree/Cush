@@ -1,5 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
+
 // ReSharper disable ObjectCreationAsStatement
 
 namespace Cush.WPF.Tests

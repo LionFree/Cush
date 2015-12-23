@@ -54,8 +54,8 @@ namespace Cush.WPF
         /// <param name="resourceAddress">The URI of the ResourceDictionary.</param>
         public ResourceContainer(string name, string resourceAddress)
         {
-            if (null == resourceAddress) throw new ArgumentNullException("resourceAddress");
-            if (null == name) throw new ArgumentNullException("name");
+            if (null == resourceAddress) throw new ArgumentNullException(nameof(resourceAddress));
+            if (null == name) throw new ArgumentNullException(nameof(name));
             _displayName = name;
             
             Resources = string.IsNullOrEmpty(resourceAddress) 
@@ -75,7 +75,7 @@ namespace Cush.WPF
         public ResourceContainer(string name, IResourceContainer container)
             : this(name, container.Resources.Source.AbsoluteUri)
         {
-            if (null == container) throw new ArgumentNullException("container");
+            if (null == container) throw new ArgumentNullException(nameof(container));
         }
         
         #endregion

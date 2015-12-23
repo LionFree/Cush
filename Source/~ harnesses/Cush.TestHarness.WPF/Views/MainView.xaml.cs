@@ -1,4 +1,6 @@
-﻿using Cush.MVVM;
+﻿using System.Diagnostics;
+using System.Windows;
+using Cush.MVVM;
 using Cush.TestHarness.WPF.ViewModels;
 
 namespace Cush.TestHarness.WPF.Views
@@ -12,6 +14,11 @@ namespace Cush.TestHarness.WPF.Views
         {
             DataContext = vm;
             InitializeComponent();
+        }
+
+        private void MRUMenu_OnOpenOtherFileClicked(object sender, RoutedEventArgs e)
+        {
+            //Trace.WriteLine("MRUMenu.Files.Count: " + MRUMenu.Files.Count); 
         }
     }
 }

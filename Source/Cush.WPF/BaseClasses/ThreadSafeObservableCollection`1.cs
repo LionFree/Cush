@@ -165,6 +165,7 @@ namespace Cush.WPF
             }
         }
 
+        [DebuggerStepThrough]
         private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using Cush.Common.Exceptions;
 using Cush.Common.Helpers;
 using Cush.WPF.Interfaces;
 
@@ -11,35 +12,57 @@ namespace Cush.WPF.ColorSchemes
     [DebuggerDisplay("Theme={Theme.DisplayName}, Accent={Accent.DisplayName}")]
     public class ColorScheme : IColorScheme
     {
-        private readonly string _displayName;
-        private readonly Guid _guid;
+        private IKeyedResourceContainer _accent;
+        private IKeyedResourceContainer _theme;
 
         /// <summary>
         ///     Gets the globally-unique identifier of the <see cref="ColorScheme" />.
         /// </summary>
-        public Guid Guid
-        {
-            get { return _guid; }
-        }
+        public Guid Guid { get; }
 
         /// <summary>
         ///     Gets the value indicating the <see cref="DisplayName" /> of the <see cref="ColorScheme" />.
         /// </summary>
-        public string DisplayName
-        {
-            get { return _displayName; }
-        }
+        public string DisplayName { get; }
 
         /// <summary>
         ///     Gets or sets the value indicating the <see cref="Theme" /> of the <see cref="ColorScheme" />.
         /// </summary>
-        public IKeyedResourceContainer Theme { get; set; }
+        public IKeyedResourceContainer Theme
+        {
+            get { return _theme; }
+            set
+            {
+                if (_theme == value) return;
+                var args = new ChangedEventArgs<IKeyedResourceContainer>(_theme, value);
+                _theme = value;
+                RaiseEvent(ThemeChanged, args);
+            }
+        }
 
         /// <summary>
         ///     Gets or sets the value indicating the <see cref="Accent" /> of the <see cref="ColorScheme" />.
         /// </summary>
-        public IKeyedResourceContainer Accent { get; set; }
-        
+        public IKeyedResourceContainer Accent
+        {
+            get { return _accent; }
+            set
+            {
+                if (_accent == value) return;
+                var args = new ChangedEventArgs<IKeyedResourceContainer>(_accent, value);
+                _accent = value;
+                RaiseEvent(AccentChanged, args);
+            }
+        }
+
+        public event EventHandler<ChangedEventArgs<IKeyedResourceContainer>> ThemeChanged;
+        public event EventHandler<ChangedEventArgs<IKeyedResourceContainer>> AccentChanged;
+
+        private void RaiseEvent<T>(EventHandler<T> handler, T e)
+        {
+            handler?.Invoke(this, e);
+        }
+
         #region Constructors
 
         /// <summary>
@@ -57,7 +80,7 @@ namespace Cush.WPF.ColorSchemes
         public ColorScheme(IColorScheme colorScheme)
             : this(colorScheme.DisplayName, colorScheme.Theme, colorScheme.Accent)
         {
-            if (null == colorScheme) throw new ArgumentNullException("colorScheme");
+            ThrowHelper.IfNullThenThrow(() => colorScheme);
         }
 
         /// <summary>
@@ -66,15 +89,18 @@ namespace Cush.WPF.ColorSchemes
         /// </summary>
         public ColorScheme(string displayName, IKeyedResourceContainer theme, IKeyedResourceContainer accent)
         {
-            if (null == theme) throw new ArgumentNullException("theme");
-            if (null == accent) throw new ArgumentNullException("accent");
+            ThrowHelper.IfNullThenThrow(() => theme);
+            ThrowHelper.IfNullThenThrow(() => accent);
+            ThrowHelper.IfNullThenThrow(() => theme.Resources.Source);
+            ThrowHelper.IfNullThenThrow(() => accent.Resources.Source);
             Theme = theme;
             Accent = accent;
-            _guid = GuidHelper.Create(GuidHelper.UrlNamespace,
+
+            Guid = GuidHelper.Create(GuidHelper.UrlNamespace,
                 Theme.Resources.Source.AbsoluteUri +
                 Accent.Resources.Source.AbsoluteUri);
-                
-            _displayName = displayName;
+
+            DisplayName = displayName;
         }
 
         #endregion

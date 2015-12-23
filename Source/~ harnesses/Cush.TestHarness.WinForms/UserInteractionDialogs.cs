@@ -1,24 +1,24 @@
-﻿using System.Windows.Forms;
-using Cush.Common;
+﻿using System;
+using System.Windows.Forms;
 using Cush.Common.Interaction;
 
 namespace Cush.TestHarness.WinForms
 {
-    internal class UserInteractionDialogs : IDialogs
+    internal class UserInteractionDialogs : IDialogs<Form>
     {
         public void ShowError(string error)
         {
             MessageBox.Show(error);
         }
 
-        public void ShowError<T>(T owner, string message)
+        public void ShowError(Form owner, string message)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public void ShowMessage<T>(T owner, string title, string message, object icon)
+        public void ShowMessage(Form owner, string title, string message, object icon)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

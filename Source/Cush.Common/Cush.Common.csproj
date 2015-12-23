@@ -27,9 +27,14 @@
     <Compile Include="Annotations\JetBrains.Annotations.cs" />
     <Compile Include="BaseClasses\BoundedList.cs" />
     <Compile Include="BaseClasses\CollectionDebugView.cs" />
-    <Compile Include="BaseClasses\ExceptionHandler.cs" />
     <Compile Include="BaseClasses\KeyedItem.cs" />
     <Compile Include="BaseClasses\ThreadSafeObservableCollection.cs" />
+    <Compile Include="Debugging\Assert.cs" />
+    <Compile Include="Debugging\Verify.cs" />
+    <Compile Include="Events\FileEventArgs.cs" />
+    <Compile Include="Events\SafeRaise.cs" />
+    <Compile Include="Events\ViewClosingEventArgs.cs" />
+    <Compile Include="Events\WeakEventSource.cs" />
     <Compile Include="Exceptions\BindingErrorListener.cs" />
     <Compile Include="Exceptions\ExceptionHandler.cs" />
     <Compile Include="Exceptions\Strings.Designer.cs">
@@ -46,28 +51,28 @@
     <Compile Include="Interfaces\IKeyedItem.cs" />
     <Compile Include="Logging\Internal\EventLogProxy.cs" />
     <Compile Include="Logging\Internal\ExceptionWriter.cs" />
-    <Compile Include="Logging\Logger_Implementations\ConsoleLogImplementation.cs" />
-    <Compile Include="Logging\Logger_Implementations\TraceLogImplementation.cs" />
-    <Compile Include="Logging\Logger_Implementations\NullLogImplementation.cs" />
-    <Compile Include="Logging\Logger_Implementations\FileLogImplementation.cs" />
+    <Compile Include="Logging\Implementations\ConsoleLogImplementation.cs" />
+    <Compile Include="Logging\Implementations\TraceLogImplementation.cs" />
+    <Compile Include="Logging\Implementations\NullLogImplementation.cs" />
+    <Compile Include="Logging\Implementations\FileLogImplementation.cs" />
     <Compile Include="Logging\Internal\FileNameFormatter.cs" />
     <Compile Include="Logging\Internal\FileNameFormattingOptions.cs" />
-    <Compile Include="Logging\Logger_Implementations\BaseLogger.cs" />
+    <Compile Include="Logging\Implementations\BaseLogger.cs" />
     <Compile Include="Logging\Loggers.cs" />
-    <Compile Include="Logging\Logger_Implementations\ConsoleLogger.cs" />
+    <Compile Include="Logging\Implementations\ConsoleLogger.cs" />
     <Compile Include="Logging\Internal\EnabledLevels.cs" />
     <Compile Include="Logging\Internal\Log.cs" />
     <Compile Include="Logging\Internal\LogConfiguration.cs" />
     <Compile Include="Logging\Internal\LogEntry.cs" />
     <Compile Include="Logging\Internal\LogLevel.cs" />
-    <Compile Include="Logging\Logger_Implementations\TraceLogger.cs" />
+    <Compile Include="Logging\Implementations\TraceLogger.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="BaseClasses\IComposable`1.cs" />
-    <Compile Include="Logging\Logger_Implementations\NullLogger.cs" />
+    <Compile Include="Logging\Implementations\NullLogger.cs" />
     <Compile Include="BaseClasses\DisposableBase.cs" />
     <Compile Include="BaseClasses\DisposableEquatableBase.cs" />
     <Compile Include="BaseClasses\EquatableBase.cs" />
-    <Compile Include="BaseClasses\ExtendedPropertyChangedEventArgs.cs" />
+    <Compile Include="Events\ExtendedPropertyChangedEventArgs.cs" />
     <Compile Include="BaseClasses\KeyedList`1.cs" />
     <Compile Include="BaseClasses\IBoundedList.cs" />
     <Compile Include="BaseClasses\IBoundedList`1.cs" />
@@ -90,7 +95,5 @@
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Extensions\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

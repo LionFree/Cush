@@ -12,7 +12,7 @@ namespace Cush.TestHarness.WPF.Infrastructure
         [STAThread]
         private static void Main(string[] args)
         {
-            Application.ComposeObjectGraph().StartSingleInstance(args);
+            WPFApplication.ComposeObjectGraph().StartSingleInstance(args);
 
             try
             {

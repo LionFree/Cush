@@ -5,6 +5,7 @@ using System.Security;
 
 namespace Cush.ResourceSystem
 {
+    [CLSCompliant(true)]
     public interface IResourceSystemInfo
     {
         /// <summary>
@@ -95,13 +96,11 @@ namespace Cush.ResourceSystem
         /// <summary>
         ///     Deletes the object.
         /// </summary>
-        [SecuritySafeCritical]
         void Delete();
 
         /// <summary>
         ///     Refreshes the state of the object.
         /// </summary>
-        [SecuritySafeCritical]
         void Refresh();
     }
 }

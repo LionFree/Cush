@@ -159,7 +159,7 @@
     <comment>FileNameFormattingOption.CustomName</comment>
   </data>
   <data name="FileLogEntryFormat" xml:space="preserve">
-    <value>{0:yyyy'-'MM'-'dd HH':'mm':'ss} [{1}]\t{2}</value>
+    <value>{0:yyyy'-'MM'-'dd HH':'mm':'ss} [{1}]	{2}</value>
     <comment>Log Entry format with short time.  
 {0}=time, {1}=log level, {2}=message</comment>
   </data>
@@ -178,7 +178,7 @@
     <comment>FileNameFormattingOption.SortableDate</comment>
   </data>
   <data name="TraceLogEntryFormat" xml:space="preserve">
-    <value>{0:yyyy'-'MM'-'dd HH':'mm':'ss'.'fffffff} [{1}]\t{2}</value>
+    <value>{0:yyyy'-'MM'-'dd HH':'mm':'ss'.'fffffff} [{1}]	{2}</value>
     <comment>Log Entry format with more precise time.  
 {0}=time, {1}=log level, {2}=message</comment>
   </data>

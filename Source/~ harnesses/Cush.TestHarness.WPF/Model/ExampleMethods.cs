@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
 using System.ServiceModel.Web;
-using Cush.Common;
 using Cush.MVVM;
 using Cush.TestHarness.WPF.Model;
 using Cush.TestHarness.WPF.ViewModels;
@@ -11,6 +9,7 @@ using Cush.Testing;
 using Cush.Testing.RandomObjects;
 using Cush.Windows;
 using Cush.Windows.Services;
+using Strings = Cush.TestHarness.WPF.Resources.Strings;
 
 namespace Cush.TestHarness.WPF.Infrastructure
 {

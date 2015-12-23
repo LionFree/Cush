@@ -10,14 +10,17 @@ namespace Cush.TestHarness.WinService.Infrastructure
     {
         internal static ServiceProgram ComposeObjectGraph()
         {
-            return new ProgramImpl();
+            return new ProgramImpl(new ServiceHost(typeof (ServiceProgram), new Uri("localhost")));
         }
 
         private class ProgramImpl : ServiceProgram
         {
+            public ProgramImpl(ServiceHost host)
+            {
+                _serviceHost = host;
+            }
 
-
-            private ServiceHost _serviceHost;
+            private readonly ServiceHost _serviceHost;
 
             public override void OnStart(string[] args)
             {

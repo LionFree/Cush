@@ -81,7 +81,7 @@ namespace Cush.Common.Exceptions
             if (value != null) return;
             throw new ArgumentNullException(Expressions.GetPropertyName(propertyExpression));
         }
-
+        
         [AssertionMethod]
         public static void IfNullThenThrowArgumentException<T>(Expression<Func<T>> propertyExpression, string message)
         {

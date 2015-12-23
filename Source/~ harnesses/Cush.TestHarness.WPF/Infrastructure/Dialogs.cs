@@ -1,34 +1,32 @@
 ﻿using System.Windows;
-using Cush.Common;
 using Cush.Common.Interaction;
 
 namespace Cush.TestHarness.WPF.Infrastructure
 {
-    internal class Dialogs : IDialogs
+    internal class Dialogs : IDialogs<Window>
     {
         public void ShowError(string message)
         {
-            ShowMessage<Window>(null, "Error", message, MessageBoxImage.Error);
+            ShowMessage(null, "Error", message, MessageBoxImage.Error);
         }
 
-        public void ShowError<T>(T owner, string message)
+        public void ShowError(Window owner, string message)
         {
             ShowMessage(owner, "Error", message, MessageBoxImage.Information);
         }
 
-        public void ShowMessage<T>(T owner, string title, string message, object icon)
+        public void ShowMessage(Window owner, string title, string message, object icon)
         {
-            var window = owner as Window;
             var image = GetImageOrDefault(icon, MessageBoxImage.Information);
             
-            if (window == null)
+            if (owner == null)
             {
                 MessageBox.Show(message, title, MessageBoxButton.OK, image, MessageBoxResult.None,
                     MessageBoxOptions.ServiceNotification);
                 return;
             }
 
-            MessageBox.Show(window, message, title, MessageBoxButton.OK, image, MessageBoxResult.None);
+            MessageBox.Show(owner, message, title, MessageBoxButton.OK, image, MessageBoxResult.None);
         }
 
 

@@ -11,11 +11,14 @@
     <AssemblyName>Cush.TestHarness.WPF</AssemblyName>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
-  
+  <PropertyGroup>
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
   <Import Project="$(SolutionDir)Build.props" Condition="Exists('$(SolutionDir)Build.props')" />
-  
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Xml" />
@@ -28,7 +31,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Infrastructure\App.xaml">
+    <Page Include="Infrastructure\EntryPoint.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -37,9 +40,12 @@
     <Compile Include="Infrastructure\Endpoint\CustomAuthorizationManager.cs" />
     <Compile Include="Infrastructure\Endpoint\IPatientService.cs" />
     <Compile Include="Infrastructure\Endpoint\PatientService.cs" />
+    <Compile Include="Model\ColorSchemeContainer.cs" />
+    <Compile Include="Model\Composer.cs" />
     <Compile Include="Model\ExampleMethods.cs" />
+    <Compile Include="Model\IColorSchemeContainer.cs" />
     <Compile Include="Model\RandomMethods.cs" />
-    <Compile Include="Infrastructure\Strings.Designer.cs">
+    <Compile Include="Resources\Strings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Strings.resx</DependentUpon>
@@ -50,10 +56,14 @@
     <Compile Include="Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Infrastructure\App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
+    <Compile Include="Infrastructure\EntryPoint.xaml.cs">
+      <DependentUpon>EntryPoint.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Resources\Styles\Styles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\MainView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -73,8 +83,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Infrastructure\Strings.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+    <EmbeddedResource Include="Resources\Strings.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -87,6 +97,10 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <Page Include="Resources\Styles\Styles.Buttons.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -95,6 +109,10 @@
     <ProjectReference Include="..\..\Cush.Common\Cush.Common.csproj">
       <Project>{59bfb945-62f7-4675-a9e4-a5577efd7ec8}</Project>
       <Name>Cush.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Cush.Composition\Cush.Composition.csproj">
+      <Project>{2a49e35f-55e8-4327-9ef3-fa26049dcad4}</Project>
+      <Name>Cush.Composition</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Cush.MVVM\Cush.MVVM.csproj">
       <Project>{0bcb7b58-4ae7-40ed-aef7-75fb06bc6c95}</Project>
@@ -117,4 +135,5 @@
       <Name>Cush.Windows.Services</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
 </Project>
