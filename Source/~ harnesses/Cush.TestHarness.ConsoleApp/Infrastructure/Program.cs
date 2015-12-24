@@ -82,6 +82,12 @@ namespace Cush.TestHarness.ConsoleApp.Infrastructure
         }
 
         public abstract bool OnSecondInstanceCreated(string[] args);
+
+        public void InitializeAndRun(params string[] args)
+        {
+            throw new NotImplementedException();
+        }
+
         public abstract void Start(params string[] args);
     }
 }

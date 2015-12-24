@@ -1,0 +1,26 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <ResourceDictionary.MergedDictionaries>
+
+        <!-- Themes / Colors -->
+        <ResourceDictionary Source="/Cush.WPF;component/Themes/Colors.xaml" />
+        <ResourceDictionary Source="/Cush.WPF;component/Themes/DarkColors.xaml" />
+        <ResourceDictionary Source="/Cush.WPF;component/Themes/Fonts.xaml" />
+
+        <!-- Controls -->
+        <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls.Windows;;component/ControlTemplates/ContentDialog.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls.Windows;component/ControlTemplates/CushWindow.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls.Windows;component/ControlTemplates/Flyout.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls.Windows;component/ControlTemplates/FlyoutsControl.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls.Windows;component/ControlTemplates/Glow.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls.Windows;component/ControlTemplates/WindowCommands.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls.Windows;component/ControlTemplates/WindowStateButtons.xaml" />
+
+    </ResourceDictionary.MergedDictionaries>
+
+</ResourceDictionary>

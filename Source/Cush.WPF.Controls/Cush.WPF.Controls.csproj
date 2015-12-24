@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D63906C8-96C8-4C36-9028-CEB281965A4B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Cush.WPF.Controls</RootNamespace>
+    <AssemblyName>Cush.WPF.Controls</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <Import Project="$(SolutionDir)Build.props" Condition="Exists('$(SolutionDir)Build.props')" />
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controls\Actions\CloseTabItemAction.cs" />
+    <Compile Include="Controls\AnimatedSingleRowTabControl.cs" />
+    <Compile Include="Controls\AnimatedTabControl.cs" />
+    <Compile Include="Controls\AnimatingContentControl.cs" />
+    <Compile Include="Controls\AppBarButton.cs" />
+    <Compile Include="Controls\BaseTabControl.cs" />
+    <Compile Include="Controls\Behaviors\ReloadBehavior.cs" />
+    <Compile Include="Controls\ContentControlEx.cs" />
+    <Compile Include="Controls\Converters\OffOnConverter.cs" />
+    <Compile Include="Controls\CushProgressBar.cs" />
+    <Compile Include="Controls\CushTabControl.cs" />
+    <Compile Include="Controls\CushTabItem.cs" />
+    <Compile Include="Controls\Helpers\ControlsHelper.cs" />
+    <Compile Include="Controls\Helpers\MRUExtensionMethods.cs" />
+    <Compile Include="Controls\Helpers\MRUMenuHelper.cs" />
+    <Compile Include="Controls\Helpers\TextboxHelper.cs" />
+    <Compile Include="Controls\Helpers\VisualStates.cs" />
+    <Compile Include="Controls\IndeterminateProgressBar.xaml.cs">
+      <DependentUpon>IndeterminateProgressBar.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ItemSize.cs" />
+    <Compile Include="Controls\MRUEntry.cs" />
+    <Compile Include="Controls\MRUFileMenu.cs" />
+    <Compile Include="Controls\MultiFrameImage.cs" />
+    <Compile Include="Controls\NavBar.cs" />
+    <Compile Include="Controls\PasswordValidator.cs" />
+    <Compile Include="Controls\ProgressRing.cs" />
+    <Compile Include="Controls\RangeSelectionChangedEventArgs.cs" />
+    <Compile Include="Controls\RangeSlider.cs" />
+    <Compile Include="Controls\ResizingPage.cs" />
+    <Compile Include="Controls\Tile.cs" />
+    <Compile Include="Controls\ToggleSwitch.cs" />
+    <Compile Include="Controls\ToggleSwitchButton.cs" />
+    <Compile Include="Controls\TransitioningContentControl.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Strings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Strings.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Controls\IndeterminateProgressBar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ControlTemplates\AnimatedSingleRowTabControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ControlTemplates\AnimatingContentControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ControlTemplates\AppBarButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ControlTemplates\ContentControlEx.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ControlTemplates\CushProgressBar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ControlTemplates\CushTabControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ControlTemplates\CushTabItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ControlTemplates\MRUFileMenu.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ControlTemplates\NavBar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ControlTemplates\ProgressRing.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ControlTemplates\ResizingPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ControlTemplates\Tile.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ControlTemplates\ToggleSwitch.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ControlTemplates\TransitioningContentControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Strings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Cush.Common\Cush.Common.csproj">
+      <Project>{59bfb945-62f7-4675-a9e4-a5577efd7ec8}</Project>
+      <Name>Cush.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cush.WPF\Cush.WPF.csproj">
+      <Project>{9cfa0f6d-0d08-4be7-9c37-ca4b7696c6b1}</Project>
+      <Name>Cush.WPF</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

@@ -88,15 +88,6 @@ namespace Cush.Composition {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ======================================================================.
-        /// </summary>
-        internal static string logDivider {
-            get {
-                return ResourceManager.GetString("logDivider", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Starting import..
         /// </summary>
         internal static string StartingImport {

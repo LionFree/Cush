@@ -1,0 +1,98 @@
+﻿<!-- Read the license the link below:
+http://creativecommons.org/licenses/by/3.0/ **
+
+Basicaly, use it anyway you want but include this
+license file in the source if your project is open
+source. Nothing is needed in the front facing project.
+Commercial use is not only allowed but encouraged.
+This pack was made to promote consistency in
+applications.
+
+
+Authors*
+- Oren Nachman
+  - appbar.chevron.down
+  - appbar.chevron.up
+  - appbar.chevron.left
+  - appbar.chevron.right
+
+Special Thanks
+- Massimo Savazzi (@msavazzi) - Excel sheet with all missing exports
+
+
+* Developers and designers that emailed Templarian
+  source .design icons to be added into the package.
+  http://templarian.com/ admin@templarian.com
+
+** Does not apply to copyrighted logos
+- Skype
+- Facebook
+- Twitter
+- Etc...
+    -->
+<ResourceDictionary xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+
+    <!-- ReSharper disable InconsistentNaming -->
+
+
+    <Canvas Width="48" Height="48" Clip="F1 M 0,0L 48,0L 48,48L 0,48L 0,0" UseLayoutRounding="False" x:Key="appbar_settings">
+        <Ellipse Width="4" Height="4" Canvas.Left="22" Canvas.Top="22" Stretch="Fill" Fill="{DynamicResource BlackBrush}" />
+        <Path Width="19.6504" Height="19.6504" Canvas.Left="14.1748" Canvas.Top="14.1748" Stretch="Fill" Fill="{DynamicResource BlackBrush}" Data="F1 M 24.69,17.5542L 27.9094,14.793C 28.5138,15.05 29.0876,15.3647 29.6241,15.7302L 29.0458,19.93L 33.2747,20.2541C 33.5166,20.8524 33.7023,21.4794 33.8252,22.1286L 30.4458,24.69L 33.207,27.9094C 32.95,28.5137 32.6353,29.0876 32.2698,29.6241L 28.07,29.0458L 27.7459,33.2747C 27.1476,33.5166 26.5206,33.7023 25.8714,33.8252L 23.3099,30.4458L 20.0906,33.207C 19.4862,32.95 18.9124,32.6353 18.3759,32.2698L 18.9542,28.0699L 14.7253,27.7459C 14.4834,27.1476 14.2977,26.5206 14.1748,25.8713L 17.5542,23.3099L 14.793,20.0906C 15.05,19.4862 15.3647,18.9124 15.7302,18.3759L 19.93,18.9542L 20.2541,14.7252C 20.8524,14.4834 21.4794,14.2977 22.1286,14.1748L 24.69,17.5542 Z M 24,20C 21.7909,20 20,21.7909 20,24C 20,26.2091 21.7909,28 24,28C 26.2091,28 28,26.2091 28,24C 28,21.7909 26.2091,20 24,20 Z " />
+    </Canvas>
+
+    <Canvas Width="48" Height="48" Clip="F1 M 0,0L 48,0L 48,48L 0,48L 0,0" UseLayoutRounding="False" x:Key="appbar_information_circle">
+        <Path Width="24" Height="24" Canvas.Left="12" Canvas.Top="12" Stretch="Fill" Fill="{DynamicResource BlackBrush}" Data="F1 M 24,12C 30.6274,12 36,17.3726 36,24C 36,30.6274 30.6274,36 24,36C 17.3726,36 12,30.6274 12,24C 12,17.3726 17.3726,12 24,12 Z M 21,21L 21,23L 23,23L 23,30L 21,30L 21,32L 28,32L 28,30L 26,30L 26,23L 26,21L 21,21 Z M 24.5,16C 23.6716,16 23,16.6716 23,17.5C 23,18.3284 23.6716,19 24.5,19C 25.3284,19 26,18.3284 26,17.5C 26,16.6716 25.3284,16 24.5,16 Z " />
+    </Canvas>
+
+
+
+    <Canvas Width="48" Height="48" Clip="F1 M 0,0L 48,0L 48,48L 0,48L 0,0" x:Key="appbar_add">
+        <Path Width="24" Height="24" Canvas.Left="12" Canvas.Top="12" Stretch="Fill" Fill="{DynamicResource BlackBrush}" 
+              Data="F1 M 22,12L 26,12L 26,22L 36,22L 36,26L 26,26L 26,36L 22,36L 22,26L 12,26L 12,22L 22,22L 22,12 Z " />
+    </Canvas>
+
+    <Canvas Width="48" Height="4" Clip="F1 M 0,12L 24,0L 24,24L 0,12L 0,0" x:Key="appbar_remove">
+        <Path Width="24" Height="4" Canvas.Left="12" Canvas.Top="12" Stretch="Fill" Fill="{DynamicResource BlackBrush}" 
+              Data="F1 M 12,12L 36,12L 36,22L 12,22 Z "
+              />
+    </Canvas>
+
+
+
+    <Canvas Width="48" Height="48" Clip="F1 M 0,0L 48,0L 48,48L 0,48L 0,0" UseLayoutRounding="False" x:Key="appbar_folder_open">
+        <Path Width="26.5833" Height="19" Canvas.Left="13" Canvas.Top="13" Stretch="Fill" Fill="Black" Data="F1 M 16.6668,20L 13,28.5336L 13,16L 23,16L 23,15C 23,13.8954 23.8954,13 25,13L 32,13C 33.1046,13 35,14.8954 35,16L 35,20L 16.6668,20 Z M 35,32L 28,32L 13,32L 17.5833,21L 39.5833,21L 35,32 Z " />
+    </Canvas>
+
+    <Canvas Width="48" Height="48" Clip="F1 M 0,0L 48,0L 48,48L 0,48L 0,0" UseLayoutRounding="False" x:Key="appbar_arrow_up_down">
+        <Path Width="14" Height="25" Canvas.Left="11" Canvas.Top="9.00001" Stretch="Fill" Fill="{DynamicResource BlackBrush}" Data="F1 M 16,34L 20,34L 20,17.25L 25,23L 25,16.5L 18,9.00001L 11,16.5L 11,23L 16,17.25L 16,34 Z " />
+        <Path Width="14" Height="25" Canvas.Left="23" Canvas.Top="14" Stretch="Fill" Fill="{DynamicResource BlackBrush}" Data="F1 M 28,14L 32,14L 32,30.75L 37,25L 37,31.5L 30,39L 23,31.5L 23,25L 28,30.75L 28,14 Z " />
+    </Canvas>
+
+    <Canvas Width="48" Height="48" Clip="F1 M 0,0L 48,0L 48,48L 0,48L 0,0" UseLayoutRounding="False" x:Key="appbar_filter">
+        <Path Width="24" Height="26" Canvas.Left="12" Canvas.Top="13" Stretch="Fill" Fill="{DynamicResource BlackBrush}" Data="F1 M 22,39L 22,27L 12,13L 36,13L 26,27L 26,37L 22,39 Z " />
+    </Canvas>
+
+    <Canvas Width="48" Height="48" Clip="F1 M 0,0L 48,0L 48,48L 0,48L 0,0" UseLayoutRounding="False" x:Key="appbar_arrow_left">
+        <Path Width="25" Height="18" Canvas.Left="11" Canvas.Top="15" Stretch="Fill" Fill="{DynamicResource BlackBrush}" Data="F1 M 36,22L 36,26L 19.75,26L 27,33L 20.5,33L 11,24L 20.5,15L 27,15L 19.75,22L 36,22 Z " />
+    </Canvas>
+
+    <Canvas Width="48.0067" Height="48.0067" Clip="F1 M 0,0L 48.0067,0L 48.0067,48.0067L 0,48.0067L 0,0" UseLayoutRounding="False" x:Key="appbar_pin">
+        <Path Width="20.0028" Height="27.2535" Canvas.Left="14.002" Canvas.Top="12.0017" Stretch="Fill" Fill="{DynamicResource BlackBrush}" Data="F1 M 22.7532,33.0046L 22.7532,29.004L 14.002,29.004C 14.3353,27.6705 14.6687,26.337 15.5022,25.6703C 16.2407,25.0794 17.3719,25.0121 18.5479,25.0045L 19.7528,17.0024C 18.7526,17.0024 18.0025,17.0024 17.3358,16.1689C 16.669,15.3355 16.3356,13.6686 16.0022,12.0017L 32.0045,12.0017C 31.6711,13.6686 31.3377,15.3355 30.6709,16.1689C 30.0042,17.0024 29.254,17.0024 28.2539,17.0024L 29.4588,25.0045C 30.6348,25.0121 31.766,25.0794 32.5045,25.6703C 33.338,26.337 33.6714,27.6705 34.0047,29.004L 25.2536,29.004L 25.2536,33.0046L 24.0033,39.2552L 22.7532,33.0046 Z " />
+    </Canvas>
+
+    <Canvas Width="48" Height="48" Clip="F1 M 0,0L 48,0L 48,48L 0,48L 0,0" UseLayoutRounding="False" x:Key="appbar_pin_rotated_270">
+        <Path Width="27.2535" Height="20.0028" Canvas.Left="9.74651" Canvas.Top="14" Stretch="Fill" Fill="{DynamicResource BlackBrush}" Data="F1 M 15.9971,22.7513L 19.9976,22.7512L 19.9976,14C 21.3311,14.3334 22.6647,14.6668 23.3314,15.5002C 23.9223,16.2388 23.9895,17.37 23.9972,18.5459L 31.9993,19.7508C 31.9993,18.7507 31.9993,18.0006 32.8327,17.3338C 33.6662,16.667 35.3331,16.3337 37,16.0003L 37,32.0025C 35.3331,31.6691 33.6662,31.3357 32.8327,30.669C 31.9993,30.0022 31.9993,29.2521 31.9993,28.2519L 23.9972,29.4569C 23.9895,30.6328 23.9223,31.764 23.3314,32.5026C 22.6647,33.336 21.3311,33.6694 19.9976,34.0028L 19.9976,25.2517L 15.9971,25.2517L 9.74651,24.0014L 15.9971,22.7513 Z " />
+    </Canvas>
+
+    <Canvas Width="48" Height="48" Clip="F1 M 0,0L 48,0L 48,48L 0,48L 0,0" UseLayoutRounding="False" x:Key="appbar_sort_alphabetical_ascending">
+        <Path Width="9.87" Height="10.7" Canvas.Left="11.595" Canvas.Top="11.29" Stretch="Fill" Fill="{DynamicResource BlackBrush}" Data="F1 M 17.9828,19.11L 18.8174,21.99L 21.465,21.99L 18.0952,11.29L 14.8852,11.29L 11.595,21.99L 14.1148,21.99L 14.8852,19.11L 17.9828,19.11 Z M 15.2383,17.37L 15.8803,15.1234C 15.9682,14.7929 16.0532,14.4426 16.1351,14.0725C 16.217,13.7024 16.2979,13.3549 16.3778,13.03L 16.4099,13.03C 16.4909,13.3545 16.5778,13.6988 16.6707,14.0632C 16.7637,14.4275 16.8587,14.7719 16.9556,15.0965L 17.6297,17.37L 15.2383,17.37 Z " />
+        <Path Width="8.3" Height="10.67" Canvas.Left="12.49" Canvas.Top="25.305" Stretch="Fill" Fill="{DynamicResource BlackBrush}" Data="F1 M 12.49,35.975L 20.79,35.975L 20.79,33.945L 15.7273,33.945L 15.7273,33.8823L 20.7102,26.7228L 20.7102,25.305L 12.9502,25.305L 12.9502,27.335L 17.584,27.335L 17.584,27.3974L 12.49,34.6539L 12.49,35.975 Z " />
+        <Path Width="12" Height="25" Canvas.Left="23" Canvas.Top="11" Stretch="Fill" Fill="{DynamicResource BlackBrush}" Data="F1 M 27,11L 31,11L 31,28L 35,23L 35,29L 29,36L 23,29L 23,23L 27,28L 27,11 Z " />
+    </Canvas>
+
+
+
+
+
+</ResourceDictionary>

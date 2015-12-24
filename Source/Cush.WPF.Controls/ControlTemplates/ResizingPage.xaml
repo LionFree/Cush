@@ -1,0 +1,33 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:Cush.WPF.Controls">
+
+    <ControlTemplate x:Key="PageTemplateKey" TargetType="{x:Type controls:ResizingPage}">
+        <Grid Background="{TemplateBinding Background}">
+            <AdornerDecorator>
+                <controls:AnimatingContentControl IsTabStop="False" FocusVisualStyle="{x:Null}">
+                    <Grid>
+                        <ContentPresenter Content="{TemplateBinding Content}"/>
+                    </Grid>
+                </controls:AnimatingContentControl>
+            </AdornerDecorator>
+            <Border x:Name="PART_Border" BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+        </Grid>
+    </ControlTemplate>
+
+    <Style TargetType="{x:Type controls:ResizingPage}">
+        <Setter Property="Foreground">
+            <Setter.Value>
+                <SolidColorBrush Color="{DynamicResource BlackBrush}"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Background">
+            <Setter.Value>
+                <SolidColorBrush Color="{DynamicResource WhiteBrush}"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template" Value="{StaticResource PageTemplateKey}" />
+    </Style>
+</ResourceDictionary>

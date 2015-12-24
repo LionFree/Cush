@@ -11,8 +11,8 @@ namespace Cush.TestHarness.WinForms
     internal abstract class Program : ISingleInstanceApplication
     {
         public abstract bool OnSecondInstanceCreated(string[] args);
-        public abstract void Start(params string[] args);
-
+        public abstract void InitializeAndRun(params string[] args);
+        
         internal static Program ComposeObjectGraph()
         {
             return new ProgramImpl();
@@ -45,7 +45,7 @@ namespace Cush.TestHarness.WinForms
             /// <summary>
             ///     The main entry point for the application.
             /// </summary>
-            public override void Start(params string[] args)
+            public override void InitializeAndRun(params string[] args)
             {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);

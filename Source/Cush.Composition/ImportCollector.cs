@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Primitives;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Cush.Common.Logging;
@@ -97,7 +98,7 @@ namespace Cush.Composition
         /// <returns><see langword="true" /> if successful, otherwise <see langword="false" />.</returns>
         public bool ImportParts()
         {
-            _logger.Trace(Strings.logDivider);
+            Trace.WriteLine(Common.Strings.logDivider);
             _logger.Trace(Strings.StartingImport);
             var catalog = new AggregateCatalog();
 
@@ -120,7 +121,7 @@ namespace Cush.Composition
                 }
             }
             Container = new CompositionContainer(catalog);
-            _logger.Trace(Strings.logDivider);
+            Trace.WriteLine(Common.Strings.logDivider);
             return true;
         }
 

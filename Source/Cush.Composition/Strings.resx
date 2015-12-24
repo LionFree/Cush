@@ -126,9 +126,6 @@
   <data name="ComposingTypes" xml:space="preserve">
     <value>Composing the following types:</value>
   </data>
-  <data name="logDivider" xml:space="preserve">
-    <value>======================================================================</value>
-  </data>
   <data name="StartingImport" xml:space="preserve">
     <value>Starting import.</value>
   </data>

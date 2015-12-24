@@ -164,7 +164,7 @@
 {0}=time, {1}=log level, {2}=message</comment>
   </data>
   <data name="logDivider" xml:space="preserve">
-    <value>======================================================================</value>
+    <value>=============================================================================================================</value>
   </data>
   <data name="LogEntryToString" xml:space="preserve">
     <value>Log Event: Level={0} Message='{1}' SequenceId={2}</value>

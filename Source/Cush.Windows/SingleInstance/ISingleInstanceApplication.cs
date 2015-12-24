@@ -26,6 +26,6 @@
         ///     The wrapped application's entry point.
         ///     Initializes the application and calls the <see cref="M:Run()" /> method.
         /// </summary>
-        void Start(params string[] args);
+        void InitializeAndRun(params string[] args);
     }
 }

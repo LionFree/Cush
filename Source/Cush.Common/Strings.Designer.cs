@@ -178,7 +178,7 @@ namespace Cush.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ======================================================================.
+        ///   Looks up a localized string similar to =============================================================================================================.
         /// </summary>
         public static string logDivider {
             get {

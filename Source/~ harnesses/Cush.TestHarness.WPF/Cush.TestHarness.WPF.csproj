@@ -12,15 +12,13 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>
-    </StartupObject>
+    <StartupObject>Cush.TestHarness.WPF.Infrastructure.EntryPoint</StartupObject>
   </PropertyGroup>
   <Import Project="$(SolutionDir)Build.props" Condition="Exists('$(SolutionDir)Build.props')" />
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xaml">
@@ -31,42 +29,58 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Infrastructure\EntryPoint.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Infrastructure\TestExceptionHandler.cs" />
-    <Compile Include="Infrastructure\SingleInstanceEntryPoint.cs" />
-    <Compile Include="Infrastructure\Endpoint\CustomAuthorizationManager.cs" />
-    <Compile Include="Infrastructure\Endpoint\IPatientService.cs" />
-    <Compile Include="Infrastructure\Endpoint\PatientService.cs" />
-    <Compile Include="Model\ColorSchemeContainer.cs" />
-    <Compile Include="Model\Composer.cs" />
-    <Compile Include="Model\ExampleMethods.cs" />
-    <Compile Include="Model\IColorSchemeContainer.cs" />
-    <Compile Include="Model\RandomMethods.cs" />
-    <Compile Include="Resources\Strings.Designer.cs">
+    <Compile Include="Infrastructure\Composer.cs" />
+    <Compile Include="ViewModels\AboutViewModel.cs" />
+    <Compile Include="ViewModels\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\StartPageEventArgs.cs" />
+    <Compile Include="Views\Dialogs\AboutDialog.xaml.cs">
+      <DependentUpon>AboutDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\DialogPack.cs" />
+    <Compile Include="Views\Dialogs\SettingsDialog.xaml.cs">
+      <DependentUpon>SettingsDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Resources\Strings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
-    <Compile Include="Infrastructure\Dialogs.cs" />
-    <Compile Include="Model\Patient.cs" />
-    <Compile Include="ViewModels\MainViewModel.cs" />
-    <Compile Include="Views\MainView.xaml.cs">
-      <DependentUpon>MainView.xaml</DependentUpon>
+    <Compile Include="ViewModels\ShellViewModel.cs" />
+    <Compile Include="ViewModels\StartPageViewModel.cs" />
+    <Compile Include="Views\Pages\StartPage.xaml.cs">
+      <DependentUpon>StartPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ShellView.xaml.cs">
+      <DependentUpon>ShellView.xaml</DependentUpon>
+    </Compile>
+    <ApplicationDefinition Include="Infrastructure\EntryPoint.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Infrastructure\Engine.cs" />
     <Compile Include="Infrastructure\EntryPoint.xaml.cs">
       <DependentUpon>EntryPoint.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Resources\Styles\Styles.xaml">
-      <Generator>MSBuild:Compile</Generator>
+    <Page Include="Views\Dialogs\AboutDialog.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\MainView.xaml">
-      <Generator>MSBuild:Compile</Generator>
+    <Page Include="Views\Dialogs\SettingsDialog.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Resources\Icons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\StartPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ShellView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -83,24 +97,19 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Resources\Strings.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="packages.config" />
+    <EmbeddedResource Include="Views\Resources\Strings.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <Page Include="Resources\Styles\Styles.Buttons.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -114,26 +123,28 @@
       <Project>{2a49e35f-55e8-4327-9ef3-fa26049dcad4}</Project>
       <Name>Cush.Composition</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Cush.MVVM\Cush.MVVM.csproj">
-      <Project>{0bcb7b58-4ae7-40ed-aef7-75fb06bc6c95}</Project>
-      <Name>Cush.MVVM</Name>
+    <ProjectReference Include="..\..\Cush.WPF.ColorSchemes\Cush.WPF.ColorSchemes.csproj">
+      <Project>{6cc06b8e-7431-4b76-be2a-065837065d96}</Project>
+      <Name>Cush.WPF.ColorSchemes</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Cush.Testing\Cush.Testing.csproj">
-      <Project>{02f5f73a-82f2-4930-bdd0-2007c1a0dcbd}</Project>
-      <Name>Cush.Testing</Name>
+    <ProjectReference Include="..\..\Cush.WPF.Controls.Windows\Cush.WPF.Controls.Windows.csproj">
+      <Project>{edfa4bf7-49d9-4fc1-bcc5-3ba9ace5b10c}</Project>
+      <Name>Cush.WPF.Controls.Windows</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Cush.Windows\Cush.Windows.csproj">
-      <Project>{085fd5e5-18be-407f-a625-6280155b1481}</Project>
-      <Name>Cush.Windows</Name>
+    <ProjectReference Include="..\..\Cush.WPF.Controls\Cush.WPF.Controls.csproj">
+      <Project>{d63906c8-96c8-4c36-9028-ceb281965a4b}</Project>
+      <Name>Cush.WPF.Controls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Cush.WPF.Styles\Cush.WPF.Styles.csproj">
+      <Project>{80c74490-3cf6-4379-9492-87be4e200c3e}</Project>
+      <Name>Cush.WPF.Styles</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Cush.WPF\Cush.WPF.csproj">
       <Project>{9cfa0f6d-0d08-4be7-9c37-ca4b7696c6b1}</Project>
       <Name>Cush.WPF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Cush.Windows.Services\Cush.Windows.Services.csproj">
-      <Project>{a2bfe50d-7c6d-4d64-8e9d-5f0490020748}</Project>
-      <Name>Cush.Windows.Services</Name>
-    </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Model\" />
+  </ItemGroup>
 </Project>

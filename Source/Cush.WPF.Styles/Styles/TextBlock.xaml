@@ -1,0 +1,23 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- note: default style for textblock is now in CushWindow !!! -->
+    <!-- never ever make a default style for TextBlock in App.xaml !!!  -->
+    <Style TargetType="{x:Type TextBlock}" x:Key="CushTextBlock">
+        <!-- doesn't need this anymore... -->
+        <!--<Setter Property="Foreground"
+                Value="{DynamicResource LabelTextBrush}" />-->
+    </Style>
+
+    <Style TargetType="{x:Type TextBlock}"
+           x:Key="CushAutoCollapsingTextBlock" BasedOn="{StaticResource CushTextBlock}">
+        <Style.Triggers>
+            <Trigger Property="Text"
+                     Value="">
+                <Setter Property="Visibility"
+                        Value="Collapsed" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+</ResourceDictionary>

@@ -28,21 +28,10 @@
   <ItemGroup>
     <Compile Include="BaseClasses\BindableBase.cs" />
     <Compile Include="BaseClasses\CollectionDebugView`1.cs" />
+    <Compile Include="BaseClasses\CommandCanExecuteParameter.cs" />
     <Compile Include="BaseClasses\RelayCommand.cs" />
     <Compile Include="BaseClasses\ResourceContainer.cs" />
     <Compile Include="BaseClasses\ResourceExtension.cs" />
-    <Compile Include="ColorSchemes\ColorScheme.cs" />
-    <Compile Include="ColorSchemes\ColorSchemeExtension.cs" />
-    <Compile Include="ColorSchemes\ColorSchemeExtensionContainer.cs" />
-    <Compile Include="ColorSchemes\ColorSchemeManager.cs" />
-    <Compile Include="ColorSchemes\Defaults\AccentBlue.xaml.cs">
-      <DependentUpon>AccentBlue.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ColorSchemes\Defaults\BaseLight.xaml.cs">
-      <DependentUpon>BaseLight.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ColorSchemes\Defaults\DefaultColorScheme.cs" />
-    <Compile Include="ColorSchemes\ChangedEventArgs.cs" />
     <Compile Include="Controls\Converters\BackgroundToForegroundConverter.cs" />
     <Compile Include="Controls\Converters\ColorToSolidColorBrushValueConverter.cs" />
     <Compile Include="Controls\Converters\HexToColorConverter.cs" />
@@ -60,6 +49,8 @@
     <Compile Include="Debugging\ObservableTraceListener.cs" />
     <Compile Include="Exceptions\WPFExceptionHandler.cs" />
     <Compile Include="Extensions\WPFExtensions.cs" />
+    <Compile Include="Helpers\ColorHelper.cs" />
+    <Compile Include="Helpers\CommandHelper.cs" />
     <Compile Include="Helpers\TreeHelper.cs" />
     <Compile Include="Strings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -69,15 +60,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseClasses\ThreadSafeObservableCollection`1.cs" />
-    <Compile Include="ColorSchemes\Helpers\ResourceHelper.cs" />
-    <Compile Include="Interfaces\IColorScheme.cs" />
-    <Compile Include="Interfaces\IColorSchemeExtension.cs" />
-    <Compile Include="Interfaces\IColorSchemeExtensionContainer.cs" />
     <Compile Include="Interfaces\IKeyedResourceContainer.cs" />
     <Compile Include="Interfaces\IMRUEntry.cs" />
     <Compile Include="Interfaces\IResourceContainer.cs" />
     <Compile Include="Interfaces\IResourceExtension.cs" />
-    <Compile Include="Interfaces\ISchemedElement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -94,14 +80,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="ColorSchemes\Defaults\AccentBlue.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="ColorSchemes\Defaults\BaseLight.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Themes\Colors.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -29,6 +29,9 @@
     <Compile Include="BaseClasses\CollectionDebugView.cs" />
     <Compile Include="BaseClasses\KeyedItem.cs" />
     <Compile Include="BaseClasses\ThreadSafeObservableCollection.cs" />
+    <Compile Include="Crypto\CryptoAlgorithm.cs" />
+    <Compile Include="Crypto\CryptoHasher.cs" />
+    <Compile Include="Crypto\SecureStringHelper.cs" />
     <Compile Include="Debugging\Assert.cs" />
     <Compile Include="Debugging\Verify.cs" />
     <Compile Include="Events\FileEventArgs.cs" />
