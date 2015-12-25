@@ -16,7 +16,7 @@
     <controls:CushWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Styles;component/Styles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/Styles.xaml" />
                 <ResourceDictionary
                     Source="pack://application:,,,/Cush.TestHarness.WPF;component/Views/Resources/Icons.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -34,7 +34,7 @@
                             <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_settings}" />
                         </Rectangle.Fill>
                     </Rectangle>
-                    <TextBlock Text="{x:Static resources:Strings.TEXT_Settings}" />
+                    <TextBlock Text="{x:Static resources:Strings.TEXT_Settings}" Foreground="White" />
                 </StackPanel>
             </Button>
 

@@ -23,10 +23,14 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\IsNullConverter.cs" />
     <Compile Include="Converters\MarkupConverter.cs" />
     <Compile Include="Converters\ThicknessToDoubleConverter.cs" />
     <Compile Include="Converters\ToLowerConverter.cs" />
     <Compile Include="Converters\ToUpperConverter.cs" />
+    <Compile Include="Helpers\ComboBoxHelper.cs" />
+    <Compile Include="Helpers\ControlsHelper.cs" />
+    <Compile Include="Helpers\ScrollBarHelper.cs" />
     <Compile Include="Helpers\TextboxHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -124,6 +128,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Styles\ScrollViewer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\Shared.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

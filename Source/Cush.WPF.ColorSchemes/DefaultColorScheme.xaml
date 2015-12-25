@@ -1,7 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <ResourceDictionary.MergedDictionaries>
-        <!--<ResourceDictionary Source="pack://application:,,,/Cush.WPF.Styles;component/Themes/Colors.xaml" />-->
-        <ResourceDictionary Source="Scrollbars.CushScrollbar.xaml" />
+        <ResourceDictionary Source="Themes/Neutral.xaml" />
+        <ResourceDictionary Source="Themes/BaseLight.xaml" />
+        <ResourceDictionary Source="Accents/AccentBlue.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

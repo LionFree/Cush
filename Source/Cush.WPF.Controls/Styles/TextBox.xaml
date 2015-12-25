@@ -4,6 +4,10 @@
                     xmlns:helpers="clr-namespace:Cush.WPF.Styles.Helpers"
                     xmlns:converters="clr-namespace:Cush.WPF.Styles.Converters">
 
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Shared.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+    
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     <converters:ThicknessToDoubleConverter x:Key="ThicknessToDoubleConverter"/>
 

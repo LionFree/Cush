@@ -29,6 +29,7 @@
   </ItemGroup>
   <!--References-->
   <ItemGroup>
+    <Compile Include="Converters\IsNullConverter.cs" />
     <Compile Include="Converters\MarkupConverter.cs" />
     <Compile Include="Converters\ThicknessToDoubleConverter.cs" />
     <Compile Include="Converters\ToLowerConverter.cs" />
@@ -122,6 +123,8 @@
     <Compile Include="ColorSchemes\Themes\Neutral.xaml.cs">
       <DependentUpon>Neutral.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\ComboBoxHelper.cs" />
+    <Compile Include="Helpers\ScrollBarHelper.cs" />
     <Compile Include="Helpers\TextboxHelper.cs" />
     <Compile Include="Native\Constants.cs" />
     <Compile Include="Native\Helpers\Assert.cs" />
@@ -522,6 +525,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Styles\ScrollViewer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\Shared.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

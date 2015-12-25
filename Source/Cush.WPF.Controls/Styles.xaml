@@ -3,7 +3,7 @@
     
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Styles/ListView.xaml" />
-        <ResourceDictionary Source="Styles/Scrollbars.SmoothScrollbar.xaml" />
+        <ResourceDictionary Source="Styles/Scrollbars.CushScrollbar.xaml" />
         <ResourceDictionary Source="Styles/Buttons.xaml" />
         <ResourceDictionary Source="Styles/CheckBox.xaml" />
         <ResourceDictionary Source="Styles/ComboBox.xaml" />
@@ -30,7 +30,7 @@
     <Style TargetType="Label" BasedOn="{StaticResource CushLabelStyle}" />
     <Style TargetType="TabItem" BasedOn="{StaticResource CushTabItemStyle}"  />
     <Style TargetType="TabControl" BasedOn="{StaticResource CushTabControlStyle}" />
-    <Style TargetType="ScrollBar" BasedOn="{StaticResource CushSmoothScrollBarStyle}" />
+    <Style TargetType="ScrollBar" BasedOn="{StaticResource CushScrollBarStyle}" />
     <Style TargetType="RadioButton" BasedOn="{StaticResource CushRadioButtonStyle}" />
     <Style TargetType="ProgressBar" BasedOn="{StaticResource CushProgressBarStyle}" />
     <Style TargetType="PasswordBox" BasedOn="{StaticResource CushPasswordBoxStyle}" />

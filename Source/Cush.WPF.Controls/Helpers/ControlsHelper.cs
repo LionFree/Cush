@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace Cush.WPF.Controls.Helpers
+namespace Cush.WPF.Styles.Helpers
 {
     /// <summary>
     /// A helper class that provides various controls.
@@ -116,7 +116,7 @@ namespace Cush.WPF.Controls.Helpers
         public static readonly DependencyProperty HeaderFontStretchProperty =
             DependencyProperty.RegisterAttached("HeaderFontStretch", typeof(FontStretch), typeof(ControlsHelper), new UIPropertyMetadata(FontStretches.Normal));
 
-        [AttachedPropertyBrowsableForType(typeof(CushTabItem))]
+        //[AttachedPropertyBrowsableForType(typeof(CushTabItem))]
         [AttachedPropertyBrowsableForType(typeof(TabItem))]
         [AttachedPropertyBrowsableForType(typeof(GroupBox))]
         public static FontStretch GetHeaderFontStretch(UIElement element)
@@ -132,7 +132,7 @@ namespace Cush.WPF.Controls.Helpers
         public static readonly DependencyProperty HeaderFontWeightProperty =
             DependencyProperty.RegisterAttached("HeaderFontWeight", typeof(FontWeight), typeof(ControlsHelper), new UIPropertyMetadata(FontWeights.Normal));
 
-        [AttachedPropertyBrowsableForType(typeof(CushTabItem))]
+        //[AttachedPropertyBrowsableForType(typeof(CushTabItem))]
         [AttachedPropertyBrowsableForType(typeof(TabItem))]
         [AttachedPropertyBrowsableForType(typeof(GroupBox))]
         public static FontWeight GetHeaderFontWeight(UIElement element)
@@ -204,7 +204,7 @@ namespace Cush.WPF.Controls.Helpers
         [AttachedPropertyBrowsableForType(typeof(RadioButton))]
         [AttachedPropertyBrowsableForType(typeof(DatePicker))]
         [AttachedPropertyBrowsableForType(typeof(ComboBox))]
-        [AttachedPropertyBrowsableForType(typeof(Tile))]
+        //[AttachedPropertyBrowsableForType(typeof(Tile))]
         public static Brush GetMouseOverBorderBrush(DependencyObject obj)
         {
             return (Brush)obj.GetValue(MouseOverBorderBrushProperty);

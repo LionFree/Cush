@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace Cush.WPF.Styles.Helpers
@@ -10,6 +11,34 @@ namespace Cush.WPF.Styles.Helpers
     /// </summary>
     public class TextboxHelper : DependencyObject
     {
+        /// <summary>
+        ///     The clear text button behavior property. It sets a click event to the button if the value is true.
+        /// </summary>
+        public static readonly DependencyProperty IsClearTextButtonBehaviorEnabledProperty =
+            DependencyProperty.RegisterAttached("IsClearTextButtonBehaviorEnabled", typeof (bool),
+                typeof (TextboxHelper), new FrameworkPropertyMetadata(false, IsClearTextButtonBehaviorEnabledChanged));
+
+        public static readonly DependencyProperty ButtonContentProperty =
+            DependencyProperty.RegisterAttached("ButtonContent", typeof (object), typeof (TextboxHelper),
+                new FrameworkPropertyMetadata("r"));
+
+        public static readonly DependencyProperty ButtonFontFamilyProperty =
+            DependencyProperty.RegisterAttached("ButtonFontFamily", typeof (FontFamily), typeof (TextboxHelper),
+                new FrameworkPropertyMetadata((new FontFamilyConverter()).ConvertFromString("Marlett")));
+
+        public static readonly DependencyProperty UseFloatingWatermarkProperty =
+            DependencyProperty.RegisterAttached("UseFloatingWatermark", typeof (bool), typeof (TextboxHelper),
+                new FrameworkPropertyMetadata(false, ButtonCommandOrClearTextChanged));
+
+        public static readonly DependencyProperty ButtonCommandParameterProperty =
+            DependencyProperty.RegisterAttached("ButtonCommandParameter", typeof (object), typeof (TextboxHelper),
+                new FrameworkPropertyMetadata(null));
+
+        public static readonly DependencyProperty ButtonCommandProperty =
+            DependencyProperty.RegisterAttached("ButtonCommand", typeof (ICommand), typeof (TextboxHelper),
+                new FrameworkPropertyMetadata(null, ButtonCommandOrClearTextChanged));
+
+
         public static readonly DependencyProperty IsMonitoringProperty =
             DependencyProperty.RegisterAttached("IsMonitoring", typeof (bool), typeof (TextboxHelper),
                 new UIPropertyMetadata(false, OnIsMonitoringChanged));
@@ -28,12 +57,186 @@ namespace Cush.WPF.Styles.Helpers
             DependencyProperty.RegisterAttached("SelectAllOnFocus", typeof (bool), typeof (TextboxHelper),
                 new FrameworkPropertyMetadata(false));
 
-        private static readonly DependencyProperty HasTextProperty = DependencyProperty.RegisterAttached("HasText",
-            typeof (bool), typeof (TextboxHelper), new FrameworkPropertyMetadata(false));
+        public static readonly DependencyProperty HasTextProperty = DependencyProperty.RegisterAttached("HasText", typeof(bool), typeof(TextboxHelper), new FrameworkPropertyMetadata(false));
 
-        public bool HasText
+        /// <summary>
+        /// Gets if the attached TextBox has text.
+        /// </summary>
+        public static bool GetHasText(DependencyObject obj)
         {
-            get { return (bool) GetValue(HasTextProperty); }
+            return (bool)obj.GetValue(HasTextProperty);
+        }
+
+        public static void SetHasText(DependencyObject obj, bool value)
+        {
+            obj.SetValue(HasTextProperty, value);
+        }
+
+        private static void IsClearTextButtonBehaviorEnabledChanged(DependencyObject d,
+            DependencyPropertyChangedEventArgs e)
+        {
+            var button = d as Button;
+            if (e.OldValue != e.NewValue && button != null)
+            {
+                button.Click -= ButtonClicked;
+                if ((bool) e.NewValue)
+                {
+                    button.Click += ButtonClicked;
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Gets the clear text button behavior.
+        /// </summary>
+        [AttachedPropertyBrowsableForType(typeof (Button))]
+        public static bool GetIsClearTextButtonBehaviorEnabled(Button d)
+        {
+            return (bool) d.GetValue(IsClearTextButtonBehaviorEnabledProperty);
+        }
+
+        /// <summary>
+        ///     Sets the clear text button behavior.
+        /// </summary>
+        [AttachedPropertyBrowsableForType(typeof (Button))]
+        public static void SetIsClearTextButtonBehaviorEnabled(Button obj, bool value)
+        {
+            obj.SetValue(IsClearTextButtonBehaviorEnabledProperty, value);
+        }
+
+        public static void ButtonClicked(object sender, RoutedEventArgs e)
+        {
+            var button = ((Button) sender);
+            var parent = VisualTreeHelper.GetParent(button);
+            while (!(parent is TextBox || parent is PasswordBox || parent is ComboBox))
+            {
+                parent = VisualTreeHelper.GetParent(parent);
+            }
+
+            var command = GetButtonCommand(parent);
+            if (command != null && command.CanExecute(parent))
+            {
+                var commandParameter = GetButtonCommandParameter(parent);
+
+                command.Execute(commandParameter ?? parent);
+            }
+
+            if (GetClearTextButton(parent))
+            {
+                if (parent is TextBox)
+                {
+                    ((TextBox) parent).Clear();
+                }
+                else if (parent is PasswordBox)
+                {
+                    ((PasswordBox) parent).Clear();
+                }
+                else if (parent is ComboBox)
+                {
+                    if (((ComboBox) parent).IsEditable)
+                    {
+                        ((ComboBox) parent).Text = string.Empty;
+                    }
+                    ((ComboBox) parent).SelectedItem = null;
+                }
+            }
+        }
+
+        public static object GetButtonContent(DependencyObject d)
+        {
+            return d.GetValue(ButtonContentProperty);
+        }
+
+        public static void SetButtonContent(DependencyObject obj, object value)
+        {
+            obj.SetValue(ButtonContentProperty, value);
+        }
+
+        public static FontFamily GetButtonFontFamily(DependencyObject d)
+        {
+            return (FontFamily) d.GetValue(ButtonFontFamilyProperty);
+        }
+
+        public static void SetButtonFontFamily(DependencyObject obj, FontFamily value)
+        {
+            obj.SetValue(ButtonFontFamilyProperty, value);
+        }
+
+        public static bool GetUseFloatingWatermark(DependencyObject obj)
+        {
+            return (bool) obj.GetValue(UseFloatingWatermarkProperty);
+        }
+
+        public static void SetUseFloatingWatermark(DependencyObject obj, bool value)
+        {
+            obj.SetValue(UseFloatingWatermarkProperty, value);
+        }
+
+        public static object GetButtonCommandParameter(DependencyObject d)
+        {
+            return d.GetValue(ButtonCommandParameterProperty);
+        }
+
+        public static void SetButtonCommandParameter(DependencyObject obj, object value)
+        {
+            obj.SetValue(ButtonCommandParameterProperty, value);
+        }
+
+        public static ICommand GetButtonCommand(DependencyObject d)
+        {
+            return (ICommand) d.GetValue(ButtonCommandProperty);
+        }
+
+        public static void SetButtonCommand(DependencyObject obj, ICommand value)
+        {
+            obj.SetValue(ButtonCommandProperty, value);
+        }
+
+        private static void ButtonCommandOrClearTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var textbox = d as TextBox;
+            if (textbox != null)
+            {
+                // only one loaded event
+                textbox.Loaded -= TextBoxLoaded;
+                textbox.Loaded += TextBoxLoaded;
+                if (textbox.IsLoaded)
+                {
+                    TextBoxLoaded(textbox, new RoutedEventArgs());
+                }
+            }
+            var passbox = d as PasswordBox;
+            if (passbox != null)
+            {
+                // only one loaded event
+                passbox.Loaded -= PassBoxLoaded;
+                passbox.Loaded += PassBoxLoaded;
+                if (passbox.IsLoaded)
+                {
+                    PassBoxLoaded(passbox, new RoutedEventArgs());
+                }
+            }
+            var combobox = d as ComboBox;
+            if (combobox != null)
+            {
+                // only one loaded event
+                combobox.Loaded -= ComboBoxLoaded;
+                combobox.Loaded += ComboBoxLoaded;
+                if (combobox.IsLoaded)
+                {
+                    ComboBoxLoaded(combobox, new RoutedEventArgs());
+                }
+            }
+        }
+
+        static void ComboBoxLoaded(object sender, RoutedEventArgs e)
+        {
+            var comboBox = sender as ComboBox;
+            if (comboBox != null)
+            {
+                comboBox.SetValue(HasTextProperty,
+                    !string.IsNullOrWhiteSpace(comboBox.Text) || comboBox.SelectedItem != null);
+            }
         }
 
         public static void SetSelectAllOnFocus(DependencyObject obj, bool value)
