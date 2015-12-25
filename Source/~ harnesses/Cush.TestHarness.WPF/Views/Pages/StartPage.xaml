@@ -13,7 +13,7 @@
     <ContentControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Styles;component/Styles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/Styles.xaml" />
                 <ResourceDictionary Source="../Resources/Icons.xaml" />
             </ResourceDictionary.MergedDictionaries>
 

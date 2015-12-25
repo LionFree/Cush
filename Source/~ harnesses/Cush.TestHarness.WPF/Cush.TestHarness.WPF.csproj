@@ -119,25 +119,9 @@
       <Project>{59bfb945-62f7-4675-a9e4-a5577efd7ec8}</Project>
       <Name>Cush.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Cush.Composition\Cush.Composition.csproj">
-      <Project>{2a49e35f-55e8-4327-9ef3-fa26049dcad4}</Project>
-      <Name>Cush.Composition</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Cush.WPF.ColorSchemes\Cush.WPF.ColorSchemes.csproj">
-      <Project>{6cc06b8e-7431-4b76-be2a-065837065d96}</Project>
-      <Name>Cush.WPF.ColorSchemes</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Cush.WPF.Controls.Windows\Cush.WPF.Controls.Windows.csproj">
-      <Project>{edfa4bf7-49d9-4fc1-bcc5-3ba9ace5b10c}</Project>
-      <Name>Cush.WPF.Controls.Windows</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Cush.WPF.Controls\Cush.WPF.Controls.csproj">
-      <Project>{d63906c8-96c8-4c36-9028-ceb281965a4b}</Project>
+      <Project>{3fc56ed5-6f99-4d77-9aeb-217ed2eaeccb}</Project>
       <Name>Cush.WPF.Controls</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Cush.WPF.Styles\Cush.WPF.Styles.csproj">
-      <Project>{80c74490-3cf6-4379-9492-87be4e200c3e}</Project>
-      <Name>Cush.WPF.Styles</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Cush.WPF\Cush.WPF.csproj">
       <Project>{9cfa0f6d-0d08-4be7-9c37-ca4b7696c6b1}</Project>

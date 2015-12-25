@@ -8,24 +8,39 @@
 
     <ResourceDictionary.MergedDictionaries>
 
-        <ResourceDictionary Source="/Cush.WPF;component/Themes/Fonts.xaml" />
+        <!-- Themes / Colors -->
+        
+        <!--<ResourceDictionary Source="/Cush.WPF;component/Themes/Colors.xaml" />
+        <ResourceDictionary Source="/Cush.WPF;component/Themes/DarkColors.xaml" />-->
+        <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/ColorSchemes/Themes/Neutral.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/ColorSchemes/Themes/BaseDark.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/Themes/Fonts.xaml" />
 
         <!-- Controls -->
-        <ResourceDictionary Source="/Cush.WPF.Controls;component/ControlTemplates/AnimatingContentControl.xaml" />
-        <ResourceDictionary Source="/Cush.WPF.Controls;component/ControlTemplates/AnimatedSingleRowTabControl.xaml" />
-        <ResourceDictionary Source="/Cush.WPF.Controls;component/ControlTemplates/AppBarButton.xaml" />
-        <ResourceDictionary Source="/Cush.WPF.Controls;component/ControlTemplates/ContentControlEx.xaml" />
-        <ResourceDictionary Source="/Cush.WPF.Controls;component/ControlTemplates/CushProgressBar.xaml" />
-        <ResourceDictionary Source="/Cush.WPF.Controls;component/ControlTemplates/CushTabControl.xaml" />
-        <ResourceDictionary Source="/Cush.WPF.Controls;component/ControlTemplates/CushTabItem.xaml" />
-        <ResourceDictionary Source="/Cush.WPF.Controls;component/ControlTemplates/ProgressRing.xaml" />
-        <ResourceDictionary Source="/Cush.WPF.Controls;component/ControlTemplates/Tile.xaml" />
-        <ResourceDictionary Source="/Cush.WPF.Controls;component/ControlTemplates/ToggleSwitch.xaml" />
-        <ResourceDictionary Source="/Cush.WPF.Controls;component/ControlTemplates/TransitioningContentControl.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/ControlTemplates/AnimatingContentControl.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/ControlTemplates/AnimatedSingleRowTabControl.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/ControlTemplates/AppBarButton.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/ControlTemplates/ContentControlEx.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/ControlTemplates/CushProgressBar.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/ControlTemplates/CushTabControl.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/ControlTemplates/CushTabItem.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/ControlTemplates/ProgressRing.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/ControlTemplates/Tile.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/ControlTemplates/ToggleSwitch.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/ControlTemplates/TransitioningContentControl.xaml" />
 
-        <ResourceDictionary Source="/Cush.WPF.Controls;component/ControlTemplates/MRUFileMenu.xaml" />
-        <ResourceDictionary Source="/Cush.WPF.Controls;component/ControlTemplates/NavBar.xaml" />
-        <ResourceDictionary Source="/Cush.WPF.Controls;component/ControlTemplates/ResizingPage.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/ControlTemplates/MRUFileMenu.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/ControlTemplates/NavBar.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/ControlTemplates/ResizingPage.xaml" />
+
+        <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/ControlTemplates/ContentDialog.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/ControlTemplates/CushWindow.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/ControlTemplates/Flyout.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/ControlTemplates/FlyoutsControl.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/ControlTemplates/Glow.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/ControlTemplates/WindowCommands.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/ControlTemplates/WindowStateButtons.xaml" />
+
 
     </ResourceDictionary.MergedDictionaries>
 

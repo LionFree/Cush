@@ -85,7 +85,7 @@
 
 
     <!-- UNIVERSAL CONTROL BRUSHES -->
-    <SolidColorBrush x:Key="ButtonTextBrush" Color="{DynamicResource BaseColor3}" />
+    <SolidColorBrush x:Key="ButtonTextBrush" Color="Black" />
 
     <SolidColorBrush x:Key="ControlBackgroundBrush" Color="{DynamicResource WhiteColor}"/>
     <SolidColorBrush x:Key="WhiteBrush" Color="{DynamicResource WhiteColor}" />

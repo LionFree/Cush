@@ -152,11 +152,11 @@ namespace Cush.WPF.Controls
             {
                 var originalError = new ValidationError(new ExceptionValidationRule(), originalBoxBindingExpression)
                 {
-                    ErrorContent = Strings.ERROR_PasswordsDoNotMatch
+                    ErrorContent = Cush.WPF.Controls.Strings.ERROR_PasswordsDoNotMatch
                 };
                 var confirmError = new ValidationError(new ExceptionValidationRule(), confirmBoxBindingExpression)
                 {
-                    ErrorContent = Strings.ERROR_PasswordsDoNotMatch
+                    ErrorContent = Controls.Strings.ERROR_PasswordsDoNotMatch
                 };
 
                 Validation.MarkInvalid(originalBoxBindingExpression, originalError);

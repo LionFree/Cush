@@ -108,7 +108,7 @@ namespace Cush.WPF.Controls
             "OpenOtherText",
             typeof (string),
             typeof (MRUFileMenu),
-            new UIPropertyMetadata(Strings.TEXT_OpenOtherFiles));
+            new UIPropertyMetadata(Controls.Strings.TEXT_OpenOtherFiles));
 
         public static DependencyProperty VerticalScrollBarVisibilityProperty = DependencyProperty.Register(
             "VerticalScrollBarVisibility",

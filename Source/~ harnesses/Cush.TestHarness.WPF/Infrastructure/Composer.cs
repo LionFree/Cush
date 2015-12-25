@@ -40,7 +40,7 @@ namespace Cush.TestHarness.WPF.Infrastructure
         {
             _logger.Trace("Composing imported parts.");
             _colorSchemes.ComposeImports(collector);
-            Trace.WriteLine(Strings.logDivider);
+            Trace.WriteLine(Common.Strings.logDivider);
         }
     }
 }

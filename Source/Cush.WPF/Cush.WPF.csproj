@@ -20,7 +20,6 @@
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.XML" />
-    <Reference Include="System.Xml.Serialization" />
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -73,10 +72,6 @@
     <ProjectReference Include="..\Cush.Common\Cush.Common.csproj">
       <Project>{59bfb945-62f7-4675-a9e4-a5577efd7ec8}</Project>
       <Name>Cush.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cush.Composition\Cush.Composition.csproj">
-      <Project>{2a49e35f-55e8-4327-9ef3-fa26049dcad4}</Project>
-      <Name>Cush.Composition</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D63906C8-96C8-4C36-9028-CEB281965A4B}</ProjectGuid>
+    <ProjectGuid>{3FC56ED5-6F99-4D77-9AEB-217ED2EAECCB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Cush.WPF.Controls</RootNamespace>
@@ -14,10 +14,12 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <Import Project="$(SolutionDir)Build.props" Condition="Exists('$(SolutionDir)Build.props')" />
+  <!--AssemblyInfo-->
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -25,24 +27,147 @@
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
+  <!--References-->
   <ItemGroup>
-    <Compile Include="Controls\Actions\CloseTabItemAction.cs" />
+    <Compile Include="Converters\MarkupConverter.cs" />
+    <Compile Include="Converters\ThicknessToDoubleConverter.cs" />
+    <Compile Include="Converters\ToLowerConverter.cs" />
+    <Compile Include="Converters\ToUpperConverter.cs" />
+    <Compile Include="ColorSchemes\Accents\AccentAmber.xaml.cs">
+      <DependentUpon>AccentAmber.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ColorSchemes\Accents\AccentBlue.xaml.cs">
+      <DependentUpon>AccentBlue.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ColorSchemes\Accents\AccentBrown.xaml.cs">
+      <DependentUpon>AccentBrown.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ColorSchemes\Accents\AccentCobalt.xaml.cs">
+      <DependentUpon>AccentCobalt.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ColorSchemes\Accents\AccentCrimson.xaml.cs">
+      <DependentUpon>AccentCrimson.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ColorSchemes\Accents\AccentCyan.xaml.cs">
+      <DependentUpon>AccentCyan.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ColorSchemes\Accents\AccentEmerald.xaml.cs">
+      <DependentUpon>AccentEmerald.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ColorSchemes\Accents\AccentGreen.xaml.cs">
+      <DependentUpon>AccentGreen.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ColorSchemes\Accents\AccentIndigo.xaml.cs">
+      <DependentUpon>AccentIndigo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ColorSchemes\Accents\AccentLime.xaml.cs">
+      <DependentUpon>AccentLime.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ColorSchemes\Accents\AccentMagenta.xaml.cs">
+      <DependentUpon>AccentMagenta.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ColorSchemes\Accents\AccentMauve.xaml.cs">
+      <DependentUpon>AccentMauve.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ColorSchemes\Accents\AccentOlive.xaml.cs">
+      <DependentUpon>AccentOlive.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ColorSchemes\Accents\AccentOrange.xaml.cs">
+      <DependentUpon>AccentOrange.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ColorSchemes\Accents\AccentPink.xaml.cs">
+      <DependentUpon>AccentPink.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ColorSchemes\Accents\AccentPurple.xaml.cs">
+      <DependentUpon>AccentPurple.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ColorSchemes\Accents\AccentRed.xaml.cs">
+      <DependentUpon>AccentRed.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ColorSchemes\Accents\AccentSienna.xaml.cs">
+      <DependentUpon>AccentSienna.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ColorSchemes\Accents\AccentSteel.xaml.cs">
+      <DependentUpon>AccentSteel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ColorSchemes\Accents\AccentTaupe.xaml.cs">
+      <DependentUpon>AccentTaupe.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ColorSchemes\Accents\AccentTeal.xaml.cs">
+      <DependentUpon>AccentTeal.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ColorSchemes\Accents\AccentViolet.xaml.cs">
+      <DependentUpon>AccentViolet.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ColorSchemes\Accents\AccentYellow.xaml.cs">
+      <DependentUpon>AccentYellow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ColorSchemes\ChangedEventArgs.cs" />
+    <Compile Include="ColorSchemes\ColorScheme.cs" />
+    <Compile Include="ColorSchemes\ColorSchemeExtension.cs" />
+    <Compile Include="ColorSchemes\ColorSchemeExtensionContainer.cs" />
+    <Compile Include="ColorSchemes\ColorSchemeManager.cs" />
+    <Compile Include="ColorSchemes\DefaultColorScheme.cs" />
+    <Compile Include="ColorSchemes\Interfaces\IColorScheme.cs" />
+    <Compile Include="ColorSchemes\Interfaces\IColorSchemeExtension.cs" />
+    <Compile Include="ColorSchemes\Interfaces\IColorSchemeExtensionContainer.cs" />
+    <Compile Include="ColorSchemes\Interfaces\ISchemedElement.cs" />
+    <Compile Include="ColorSchemes\ThemeMenuData.cs" />
+    <Compile Include="ColorSchemes\Themes\BaseDark.xaml.cs">
+      <DependentUpon>BaseDark.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ColorSchemes\Themes\BaseLight.xaml.cs">
+      <DependentUpon>BaseLight.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ColorSchemes\Themes\Neutral.xaml.cs">
+      <DependentUpon>Neutral.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\TextboxHelper.cs" />
+    <Compile Include="Native\Constants.cs" />
+    <Compile Include="Native\Helpers\Assert.cs" />
+    <Compile Include="Native\Helpers\DoubleUtilities.cs" />
+    <Compile Include="Native\Helpers\DpiHelper.cs" />
+    <Compile Include="Native\Helpers\StreamHelper.cs" />
+    <Compile Include="Native\Helpers\Verify.cs" />
+    <Compile Include="Native\Enums.cs" />
+    <Compile Include="Native\Shell\Enums.cs" />
+    <Compile Include="Native\Shell\ErrorCodes.cs" />
+    <Compile Include="Native\Shell\IID.cs" />
+    <Compile Include="Native\Shell\MessageWindow.cs" />
+    <Compile Include="Native\Shell\NativeMethods.cs" />
+    <Compile Include="Native\Shell\SafeDC.cs" />
+    <Compile Include="Native\Shell\ShellProvider.cs" />
+    <Compile Include="Native\Shell\Structs.cs" />
+    <Compile Include="Native\Shell\SystemCommands.cs" />
+    <Compile Include="Native\Shell\SystemParameters.cs" />
+    <Compile Include="Native\Shell\Utility.cs" />
+    <Compile Include="Native\Shell\WindowChrome.cs" />
+    <Compile Include="Native\Shell\WindowChromeWorker.cs" />
+    <Compile Include="Native\Structs.cs" />
+    <Compile Include="Native\Win32\Enums.cs" />
+    <Compile Include="Native\Win32\NativeMethods.cs" />
+    <Compile Include="Native\Win32\SafeLibraryHandle.cs" />
+    <Compile Include="Native\Win32\UnsafeNativeMethods.cs" />
+  </ItemGroup>
+  <!-- Native -->
+  <ItemGroup>
+    <Compile Include="Actions\CloseTabItemAction.cs" />
     <Compile Include="Controls\AnimatedSingleRowTabControl.cs" />
     <Compile Include="Controls\AnimatedTabControl.cs" />
     <Compile Include="Controls\AnimatingContentControl.cs" />
     <Compile Include="Controls\AppBarButton.cs" />
     <Compile Include="Controls\BaseTabControl.cs" />
-    <Compile Include="Controls\Behaviors\ReloadBehavior.cs" />
+    <Compile Include="Behaviors\ReloadBehavior.cs" />
     <Compile Include="Controls\ContentControlEx.cs" />
-    <Compile Include="Controls\Converters\OffOnConverter.cs" />
+    <Compile Include="Converters\OffOnConverter.cs" />
     <Compile Include="Controls\CushProgressBar.cs" />
     <Compile Include="Controls\CushTabControl.cs" />
     <Compile Include="Controls\CushTabItem.cs" />
-    <Compile Include="Controls\Helpers\ControlsHelper.cs" />
-    <Compile Include="Controls\Helpers\MRUExtensionMethods.cs" />
-    <Compile Include="Controls\Helpers\MRUMenuHelper.cs" />
-    <Compile Include="Controls\Helpers\TextboxHelper.cs" />
-    <Compile Include="Controls\Helpers\VisualStates.cs" />
+    <Compile Include="Helpers\ControlsHelper.cs" />
+    <Compile Include="Helpers\MRUExtensionMethods.cs" />
+    <Compile Include="Helpers\MRUMenuHelper.cs" />
+    <!--<Compile Include="Helpers\TextboxHelper.cs" />-->
+    <Compile Include="Helpers\VisualStates.cs" />
     <Compile Include="Controls\IndeterminateProgressBar.xaml.cs">
       <DependentUpon>IndeterminateProgressBar.xaml</DependentUpon>
     </Compile>
@@ -66,8 +191,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Page Include="Controls\IndeterminateProgressBar.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -128,17 +251,350 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <!--<Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>-->
+  </ItemGroup>
+  <!--Controls-->
+  <ItemGroup>
+    <Compile Include="Actions\SetFlyoutOpenAction.cs" />
+    <Compile Include="Behaviors\BorderlessWindowBehavior.cs" />
+    <Compile Include="Behaviors\GlowWindowBehavior.cs" />
+    <Compile Include="Behaviors\StylizedBehaviorCollection.cs" />
+    <Compile Include="Behaviors\StylizedBehaviors.cs" />
+    <Compile Include="Behaviors\WindowsSettingBehavior.cs" />
+    <Compile Include="Controls\Windows\ClosingWindowEventHandlerArgs.cs" />
+    <Compile Include="Converters\ResizeModeMinMaxButtonVisibilityConverter.cs" />
+    <Compile Include="Controls\Windows\CushWindow.cs" />
+    <Compile Include="Controls\Dialogs\ContentDialog.cs" />
+    <Compile Include="Controls\Dialogs\DialogBase.cs" />
+    <Compile Include="Controls\Dialogs\DialogManager.cs" />
+    <Compile Include="Controls\Dialogs\DialogMessageResult.cs" />
+    <Compile Include="Controls\Dialogs\DialogSettings.cs" />
+    <Compile Include="Controls\Dialogs\DialogStateChangedEventArgs.cs" />
+    <Compile Include="Controls\Windows\Flyout.cs" />
+    <Compile Include="Controls\Windows\FlyoutsControl.cs" />
+    <Compile Include="Controls\Windows\FlyoutStatusChangedRoutedEventArgs.cs" />
+    <Compile Include="Controls\Windows\FlyoutTheme.cs" />
+    <Compile Include="Controls\Windows\Glow.cs" />
+    <Compile Include="Controls\Windows\GlowDirection.cs" />
+    <Compile Include="Controls\Windows\GlowWindow.xaml.cs">
+      <DependentUpon>GlowWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\ChromeButtonHelper.cs" />
+    <Compile Include="Helpers\CushWindowHelper.cs" />
+    <Compile Include="Controls\Windows\Position.cs" />
+    <Compile Include="Controls\Windows\PropertyChangeNotifier.cs" />
+    <Compile Include="Controls\Windows\Theme.cs" />
+    <Compile Include="Controls\Windows\WindowCommands.cs" />
+    <Compile Include="Controls\Windows\WindowCommandsOverlayBehavior.cs" />
+    <Compile Include="Controls\Windows\WindowSettings.cs" />
+    <Compile Include="Controls\Windows\WindowStateButtons.cs" />
+    <Compile Include="Native\NonCLSCompliantConstants.cs" />
+    <Compile Include="Native\UnsafeNativeMethods.cs" />
+    <Page Include="Controls\Windows\GlowWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ControlTemplates\ContentDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ControlTemplates\CushWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ControlTemplates\Flyout.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ControlTemplates\FlyoutsControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ControlTemplates\Glow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ControlTemplates\WindowCommands.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ControlTemplates\WindowStateButtons.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ColorSchemes\Accents\AccentAmber.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ColorSchemes\Accents\AccentBlue.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ColorSchemes\Accents\AccentBrown.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ColorSchemes\Accents\AccentCobalt.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ColorSchemes\Accents\AccentCrimson.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ColorSchemes\Accents\AccentCyan.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ColorSchemes\Accents\AccentEmerald.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ColorSchemes\Accents\AccentGreen.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ColorSchemes\Accents\AccentIndigo.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ColorSchemes\Accents\AccentLime.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ColorSchemes\Accents\AccentMagenta.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ColorSchemes\Accents\AccentMauve.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ColorSchemes\Accents\AccentOlive.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ColorSchemes\Accents\AccentOrange.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ColorSchemes\Accents\AccentPink.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ColorSchemes\Accents\AccentPurple.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ColorSchemes\Accents\AccentRed.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ColorSchemes\Accents\AccentSienna.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ColorSchemes\Accents\AccentSteel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ColorSchemes\Accents\AccentTaupe.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ColorSchemes\Accents\AccentTeal.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ColorSchemes\Accents\AccentViolet.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ColorSchemes\Accents\AccentYellow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ColorSchemes\DefaultColorScheme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ColorSchemes\Themes\BaseDark.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ColorSchemes\Themes\BaseLight.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ColorSchemes\Themes\Neutral.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\Buttons.AccentButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\Buttons.ChromeButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\Buttons.ChromelessButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\Buttons.CircleButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\Buttons.FlatButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\Buttons.SquareButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\Buttons.ToggleButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\Buttons.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\CheckBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\ComboBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\ContextMenu.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\GroupBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\Label.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\ListBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\ListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\PasswordBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\ProgressBar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\RadioButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\Scrollbars.CushScrollbar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\Scrollbars.SmoothScrollbar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\Scrollbars.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\ScrollViewer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\Slider.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\TabControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\TextBlock.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\TextBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\Thumb.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\Toolbar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\Tooltip.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\ValidationTooltip.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\WindowStateButtonStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Fonts.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
+  <!--Windows-->
+  <ItemGroup>
+    <Compile Include="Composition\Helpers\ExceptionHelper.cs" />
+    <Compile Include="Composition\ImportCollector.cs" />
+    <Compile Include="Composition\ImportContainer.cs" />
+    <Compile Include="Composition\Interfaces\IImportCollector.cs" />
+    <Compile Include="Composition\Interfaces\IImportContainer.cs" />
+    <Compile Include="Composition\Strings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Strings.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <!--Composition-->
   <ItemGroup>
     <EmbeddedResource Include="Strings.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Composition\Strings.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <!--Resources-->
   <ItemGroup>
     <ProjectReference Include="..\Cush.Common\Cush.Common.csproj">
       <Project>{59bfb945-62f7-4675-a9e4-a5577efd7ec8}</Project>
@@ -149,4 +605,6 @@
       <Name>Cush.WPF</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
+  <!--ProjectReferences-->
 </Project>
