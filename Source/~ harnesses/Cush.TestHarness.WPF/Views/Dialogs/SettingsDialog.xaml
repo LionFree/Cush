@@ -6,7 +6,6 @@
                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                       xmlns:sys="clr-namespace:System;assembly=mscorlib"
                       xmlns:helpers="clr-namespace:Cush.WPF.Styles.Helpers;assembly=Cush.WPF.Controls"
-                      xmlns:themes="clr-namespace:Cush.WPF.ColorSchemes;assembly=Cush.WPF.Controls"
                       xmlns:controls="clr-namespace:Cush.WPF.Controls;assembly=Cush.WPF.Controls"
                       xmlns:resources="clr-namespace:Cush.TestHarness.WPF.Views.Resources"
                       xmlns:viewModels="clr-namespace:Cush.TestHarness.WPF.ViewModels"
@@ -18,7 +17,7 @@
     <controls:ContentDialog.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Styles;component/Styles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/Styles.xaml" />
                 <!--<ResourceDictionary Source="../Resources/Icons.xaml" />-->
             </ResourceDictionary.MergedDictionaries>
 

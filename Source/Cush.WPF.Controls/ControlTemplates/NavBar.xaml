@@ -21,7 +21,7 @@
         <Style.Resources>
             <ResourceDictionary>
                 <ResourceDictionary.MergedDictionaries>
-                    <ResourceDictionary Source="/Cush.WPF.Styles;component/Styles/Buttons.FlatButton.xaml" />
+                    <ResourceDictionary Source="../Styles/Buttons.FlatButton.xaml" />
                 </ResourceDictionary.MergedDictionaries>
 
                 <Style TargetType="ListBoxItem">

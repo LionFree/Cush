@@ -14,6 +14,9 @@
   <PropertyGroup>
     <StartupObject>Cush.TestHarness.WPF.Infrastructure.EntryPoint</StartupObject>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
   <Import Project="$(SolutionDir)Build.props" Condition="Exists('$(SolutionDir)Build.props')" />
   <ItemGroup>
     <Reference Include="System" />

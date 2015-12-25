@@ -258,8 +258,8 @@ namespace Cush.TestHarness.WPF.ViewModels
         private void RefreshSettings()
         {
             var selectedScheme = ColorSchemeManager.CurrentScheme;
-            _selectedTheme = Themes.FirstOrDefault(x => x.Name == selectedScheme.Theme.DisplayName);
-            _selectedAccent = Accents.FirstOrDefault(x => x.Name == selectedScheme.Accent.DisplayName);
+            SelectedTheme = Themes.FirstOrDefault(x => x.Name == selectedScheme.Theme.DisplayName);
+            SelectedAccent = Accents.FirstOrDefault(x => x.Name == selectedScheme.Accent.DisplayName);
 
             _selectedFontFamily = Settings.Default.FontFamily ?? new FontFamily("Arial");
             SelectedFontSizeInPoints = Math.Abs(Settings.Default.FontSize) < double.Epsilon
