@@ -735,7 +735,7 @@ namespace Cush.WPF.Controls
                 new PropertyMetadata(true));
 
         public static readonly DependencyProperty TitlebarHeightProperty = DependencyProperty.Register(
-            "TitlebarHeight", typeof (int), typeof (CushWindow), new PropertyMetadata(30));
+            "TitlebarHeight", typeof (int), typeof (CushWindow), new PropertyMetadata(25));
 
         public static readonly DependencyProperty TitleCapsProperty = DependencyProperty.Register("TitleCaps",
             typeof (bool), typeof (CushWindow), new PropertyMetadata(true));

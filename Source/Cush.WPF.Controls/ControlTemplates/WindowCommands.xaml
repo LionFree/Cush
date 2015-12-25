@@ -3,8 +3,7 @@
                     xmlns:helpers="clr-namespace:Cush.WPF.Controls.Helpers"
                     xmlns:controls="clr-namespace:Cush.WPF.Controls">
 
-    <ControlTemplate x:Key="WindowCommandsButtonTemplate"
-                     TargetType="{x:Type Button}">
+    <ControlTemplate x:Key="WindowCommandsButtonTemplate" TargetType="{x:Type Button}">
 
         <Grid Background="{TemplateBinding Background}">
             <controls:ContentControlEx x:Name="contentPresenter"

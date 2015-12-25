@@ -29,6 +29,7 @@
   </ItemGroup>
   <!--References-->
   <ItemGroup>
+    <Compile Include="Controls\CushThumb.cs" />
     <Compile Include="Converters\IsNullConverter.cs" />
     <Compile Include="Converters\MarkupConverter.cs" />
     <Compile Include="Converters\ThicknessToDoubleConverter.cs" />

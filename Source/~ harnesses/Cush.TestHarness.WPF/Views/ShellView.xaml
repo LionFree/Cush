@@ -9,7 +9,7 @@
                    Title="{x:Static resources:Strings.TEXT_ApplicationName}" 
                    
                    mc:Ignorable="d"
-                   d:DesignHeight="768" d:DesignWidth="768"
+                   Height="768" Width="768"
                    d:DataContext="{d:DesignInstance Type=viewModels:MockShellViewModel,
                                          IsDesignTimeCreatable=false}">
 
@@ -27,14 +27,14 @@
     <controls:CushWindow.RightWindowCommands>
         <controls:WindowCommands ShowLastSeparator="True">
             <!--Command="{x:Static local:CushShellView.CmdOptions}"-->
-            <Button ToolTip="{x:Static resources:Strings.TOOLTIP_Settings}" Click="Settings_OnClick">
+            <Button ToolTip="{x:Static resources:Strings.TOOLTIP_Settings}" Click="Settings_OnClick" Foreground="White">
                 <StackPanel Orientation="Horizontal">
                     <Rectangle Width="16" Height="16" Margin="0,0,3,0">
                         <Rectangle.Fill>
                             <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_settings}" />
                         </Rectangle.Fill>
                     </Rectangle>
-                    <TextBlock Text="{x:Static resources:Strings.TEXT_Settings}" Foreground="White" />
+                    <TextBlock Text="{x:Static resources:Strings.TEXT_Settings}" />
                 </StackPanel>
             </Button>
 
@@ -75,7 +75,7 @@
 
             <!-- Header Line -->
             <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
-                <controls:AppBarButton x:Name="BackButton"
+                <!--<controls:AppBarButton x:Name="BackButton"
                                         ImageSize="Small" Margin="10,2,2,0"
                                        Command="{Binding BackButtonCommand}">
                     <Rectangle Width="20" Height="20">
@@ -84,16 +84,16 @@
                                             Visual="{StaticResource appbar_arrow_left}" />
                         </Rectangle.Fill>
                     </Rectangle>
-                </controls:AppBarButton>
+                </controls:AppBarButton>-->
 
-                <TextBlock x:Name="HeaderAppName"
+                <!--<TextBlock x:Name="HeaderAppName"
                             Text="App Name"
-                            Margin="10,2,2,2"
+                            Margin="25,2,2,2"
                             VerticalAlignment="Center"
-                            FontSize="32"
+                            FontSize="26"
                             FontWeight="Bold"
-                            FontFamily="Segoe UI"
-                            Foreground="{DynamicResource BlackBrush}" />
+                            FontFamily="Calibri"
+                            Foreground="{DynamicResource BlackBrush}" />-->
 
 
                 <StackPanel x:Name="Breadcrumbs" Orientation="Horizontal" />

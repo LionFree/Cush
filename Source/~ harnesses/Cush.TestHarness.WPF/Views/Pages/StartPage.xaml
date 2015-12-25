@@ -39,12 +39,9 @@
 
     <Grid Background="{DynamicResource WhiteBrush}">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" MinWidth="400" />
-            <!-- Recent/Open Column -->
-            <ColumnDefinition Width="Auto" />
-            <!-- Border Column -->
-            <ColumnDefinition Width="*" />
-            <!-- Template Column -->
+            <ColumnDefinition Width="1*" MinWidth="300" MaxWidth="500"/><!-- Recent/Open Column -->
+            <ColumnDefinition Width="Auto" /><!-- Border Column -->
+            <ColumnDefinition Width="1*" MinWidth="250"/><!-- Template Column -->
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -84,9 +81,9 @@
         <!--RecentFileSelected="MRUMenu_OnRecentFileSelected"-->
 
         <!-- GridSplitter -->
-        <GridSplitter Grid.Column="0" Grid.Row="1"
+        <GridSplitter Grid.Column="1" Grid.Row="1"
                       VerticalAlignment="Stretch"
-                      HorizontalAlignment="Right" Width="Auto"
+                      HorizontalAlignment="Stretch" Width="Auto"
                       BorderBrush="{DynamicResource AccentColorBrush}"
                       BorderThickness="0">
             <GridSplitter.Template>
