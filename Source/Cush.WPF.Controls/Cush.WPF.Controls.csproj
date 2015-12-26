@@ -21,6 +21,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xaml" />
@@ -128,6 +129,9 @@
     <Compile Include="Helpers\ComboBoxHelper.cs" />
     <Compile Include="Helpers\ScrollBarHelper.cs" />
     <Compile Include="Helpers\TextboxHelper.cs" />
+    <Compile Include="Configuration\MRUEntryCollection.cs" />
+    <Compile Include="Configuration\MRUEntryElement.cs" />
+    <Compile Include="Configuration\MRUListSection.cs" />
     <Compile Include="Native\Constants.cs" />
     <Compile Include="Native\Helpers\Assert.cs" />
     <Compile Include="Native\Helpers\DoubleUtilities.cs" />

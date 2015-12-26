@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using Cush.Common;
 using Cush.TestHarness.WPF.ViewModels.Interfaces;
 using Cush.WPF;
 //using Strings = Cush.TestHarness.WPF.Views.Resources.Strings;

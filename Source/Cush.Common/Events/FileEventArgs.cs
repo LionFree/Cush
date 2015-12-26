@@ -1,19 +1,15 @@
-﻿namespace Cush.Common
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
+
+namespace Cush.Common
 {
-    public class FileEventArgs : System.EventArgs
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
+    internal class FileEventArgs : EventArgs
     {
-        public FileEventArgs(FileStatus status)
-        {
-            Status = status;
-        }
-
-        public FileStatus Status { get; private set; }
-    }
-
-    public enum FileStatus
-    {
-        Done = 0,
-        Loading = 1,
-        Saving = 2
+        public string Description { get; set; }
+        public string Filename { get; set; }
+        public string Fullpath { get; set; }
+        public bool Pinned { get; set; }
+        public string TargetCommand { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Cush.Common;
 using Cush.TestHarness.WPF.ViewModels.Interfaces;
 using Cush.TestHarness.WPF.Views.Events;
 using Cush.TestHarness.WPF.Views.Pages;

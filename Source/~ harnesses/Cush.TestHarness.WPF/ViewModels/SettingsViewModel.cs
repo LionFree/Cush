@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security;
 using System.Windows;
 using System.Windows.Media;
+using Cush.Common;
 using Cush.TestHarness.WPF.Properties;
 using Cush.TestHarness.WPF.ViewModels.Interfaces;
 using Cush.WPF;

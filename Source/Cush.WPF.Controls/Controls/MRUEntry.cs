@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
 using System.Xml.Serialization;
+using Cush.Common;
 using Cush.WPF.Controls.Helpers;
 
 namespace Cush.WPF.Controls

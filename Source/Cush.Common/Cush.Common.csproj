@@ -36,7 +36,8 @@
     <Compile Include="Crypto\SecureStringHelper.cs" />
     <Compile Include="Debugging\Assert.cs" />
     <Compile Include="Debugging\Verify.cs" />
-    <Compile Include="Events\FileEventArgs.cs" />
+    <Compile Include="Events\FileProgressEventArgs.cs" />
+    <Compile Include="Events\FileProgressStatus.cs" />
     <Compile Include="Events\SafeRaise.cs" />
     <Compile Include="Events\ViewClosingEventArgs.cs" />
     <Compile Include="Events\WeakEventSource.cs" />
@@ -48,6 +49,19 @@
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
     <Compile Include="Exceptions\ThrowHelper.cs" />
+    <Compile Include="FileHandling\Enums\FileAction.cs" />
+    <Compile Include="Events\FileEventArgs.cs" />
+    <Compile Include="FileHandling\FileHandlerT.cs" />
+    <Compile Include="FileHandling\FileReader.cs" />
+    <Compile Include="FileHandling\FileStateT.cs" />
+    <Compile Include="FileHandling\FileWriter.cs" />
+    <Compile Include="FileHandling\IFileState.cs" />
+    <Compile Include="Events\IOEventArgs.cs" />
+    <Compile Include="FileHandling\Progress\ContainerStream.cs" />
+    <Compile Include="FileHandling\Progress\WriteProgressSteram.cs" />
+    <Compile Include="Helpers\FileNameHelper.cs" />
+    <Compile Include="FileHandling\Enums\SaveType.cs" />
+    <Compile Include="FileHandling\Progress\ReadProgressStream.cs" />
     <Compile Include="Helpers\Expressions.cs" />
     <Compile Include="Helpers\GuidHelper.cs" />
     <Compile Include="Interaction\NullDialogs.cs" />
