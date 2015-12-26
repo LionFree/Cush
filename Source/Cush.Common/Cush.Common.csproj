@@ -31,7 +31,7 @@
     <Compile Include="BaseClasses\BoundedList.cs" />
     <Compile Include="BaseClasses\CollectionDebugView.cs" />
     <Compile Include="BaseClasses\KeyedItem.cs" />
-    <Compile Include="BaseClasses\ThreadSafeObservableCollection.cs" />
+    <Compile Include="BaseClasses\ThreadSafeObservableCollectionT.cs" />
     <Compile Include="Configuration\MRUEntryCollection.cs" />
     <Compile Include="Configuration\MRUEntryElement.cs" />
     <Compile Include="Configuration\MRUListSection.cs" />

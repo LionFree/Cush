@@ -8,11 +8,39 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows.Threading;
-using Cush.Common;
 
-namespace Cush.WPF
+namespace Cush.Common
 {
-    [DebuggerTypeProxy(typeof (CollectionDebugView<>))]
+    //internal class ThreadSafeObservableCollection<T> : ObservableCollection<T>
+    //{
+    //    public override event NotifyCollectionChangedEventHandler CollectionChanged;
+
+    //    protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+    //    {
+    //        var collectionChanged = CollectionChanged;
+    //        if (collectionChanged == null) return;
+
+    //        foreach (var @delegate in collectionChanged.GetInvocationList())
+    //        {
+    //            var nh = (NotifyCollectionChangedEventHandler)@delegate;
+    //            var dispObj = nh.Target as DispatcherObject;
+    //            var dispatcher = dispObj?.Dispatcher;
+    //            if (dispatcher != null && !dispatcher.CheckAccess())
+    //            {
+    //                var notificationHandler = nh;
+    //                dispatcher.BeginInvoke(
+    //                    (Action)(() => notificationHandler.Invoke(this,
+    //                        new NotifyCollectionChangedEventArgs(
+    //                            NotifyCollectionChangedAction.Reset))),
+    //                    DispatcherPriority.DataBind);
+    //                continue;
+    //            }
+    //            nh.Invoke(this, e);
+    //        }
+    //    }
+    //}
+
+    [DebuggerTypeProxy(typeof(CollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
     [Serializable]
     public sealed class ThreadSafeObservableCollection<T> : ObservableCollection<T>
@@ -20,9 +48,9 @@ namespace Cush.WPF
         private readonly object _syncLock = new object();
 
         private BoundedList<T> _modifiedItems;
- 
+
         private bool _suspendCollectionChangeNotification;
-        
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="T:ThreadSafeObservableCollection`1" /> class.
         /// </summary>
@@ -36,7 +64,7 @@ namespace Cush.WPF
         /// </summary>
         /// <param name="list">The list from which the elements are copied.</param>
         /// <exception cref="T:System.ArgumentNullException">The <paramref name="list" /> parameter cannot be null.</exception>
-        public ThreadSafeObservableCollection(List<T> list) : this((IEnumerable<T>) list)
+        public ThreadSafeObservableCollection(List<T> list) : this((IEnumerable<T>)list)
         {
         }
 
@@ -57,9 +85,9 @@ namespace Cush.WPF
 
         public BoundedList<T> ModifiedItems
         {
-            get 
+            get
             { return _modifiedItems; }
-        
+
             private set
             {
                 if (_modifiedItems == value) return;
@@ -74,7 +102,7 @@ namespace Cush.WPF
         {
             if (sender is T)
             {
-                ModifiedItems.Add((T) sender);
+                ModifiedItems.Add((T)sender);
             }
 
             OnPropertyChanged(new PropertyChangedEventArgs(e.PropertyName));
@@ -89,7 +117,7 @@ namespace Cush.WPF
                 {
                     InsertItem(Count, i);
                 }
-                NotifyChanges(); 
+                NotifyChanges();
             }
         }
 
@@ -136,7 +164,7 @@ namespace Cush.WPF
         {
             _suspendCollectionChangeNotification = true;
         }
-        
+
         private void RaiseCollectionChangedEvent(NotifyCollectionChangedEventArgs args)
         {
             if (_suspendCollectionChangeNotification) return;
@@ -146,20 +174,18 @@ namespace Cush.WPF
 
             foreach (var @delegate in eventToRaise.GetInvocationList())
             {
-                var handler = (NotifyCollectionChangedEventHandler) @delegate;
+                var handler = (NotifyCollectionChangedEventHandler)@delegate;
                 var dispObj = handler.Target as DispatcherObject;
-                if (dispObj != null)
+                var dispatcher = dispObj?.Dispatcher;
+
+                if (dispatcher != null && !dispatcher.CheckAccess())
                 {
-                    var dispatcher = dispObj.Dispatcher;
-                    if (dispatcher != null && !dispatcher.CheckAccess())
-                    {
-                        var notificationHandler = handler;
-                        dispatcher.BeginInvoke(
-                            (Action) (() => notificationHandler.Invoke(this, 
-                                new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset))),
-                            DispatcherPriority.DataBind);
-                        continue;
-                    }
+                    var notificationHandler = handler;
+                    dispatcher.BeginInvoke(
+                        (Action)(() => notificationHandler.Invoke(this,
+                            new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset))),
+                        DispatcherPriority.DataBind);
+                    continue;
                 }
                 handler.Invoke(this, args);
             }
@@ -168,12 +194,12 @@ namespace Cush.WPF
         [DebuggerStepThrough]
         private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            
-            using(BlockReentrancy())
+
+            using (BlockReentrancy())
             {
                 if (_suspendCollectionChangeNotification) return;
-                
-                if (typeof (T).GetInterfaces().Contains(typeof (INotifyPropertyChanged)))
+
+                if (typeof(T).GetInterfaces().Contains(typeof(INotifyPropertyChanged)))
                 {
                     WireUpItems(e.NewItems);
                     UnHookItems(e.OldItems);

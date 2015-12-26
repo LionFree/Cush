@@ -1,9 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
+using Cush.Common;
 using Cush.TestHarness.WPF.ViewModels.Interfaces;
-using Cush.WPF;
-using Cush.WPF.Controls;
 using MRUEntry = Cush.Common.MRUEntry;
 
 namespace Cush.TestHarness.WPF.ViewModels.DesignTime

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows;
+using Cush.Common;
 using Cush.Common.Annotations;
 using Cush.Common.Exceptions;
 using Cush.Common.Logging;

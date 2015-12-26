@@ -3,24 +3,23 @@ using System.Windows.Input;
 using Cush.Common;
 using Cush.TestHarness.WPF.ViewModels.Interfaces;
 using Cush.WPF;
-using Cush.WPF.Controls;
 
 namespace Cush.TestHarness.WPF.ViewModels
 {
     public class StartPageViewModel : BindableBase, IStartPageViewModel
     {
-        private Cush.WPF.ThreadSafeObservableCollection<MRUEntry> _files;
+        private ThreadSafeObservableCollection<MRUEntry> _files;
 
-        public StartPageViewModel() : this(new Cush.WPF.ThreadSafeObservableCollection<MRUEntry>())
+        public StartPageViewModel() : this(new ThreadSafeObservableCollection<MRUEntry>())
         {
         }
 
-        public StartPageViewModel(Cush.WPF.ThreadSafeObservableCollection<MRUEntry> files)
+        public StartPageViewModel(ThreadSafeObservableCollection<MRUEntry> files)
         {
             _files = files;
         }
 
-        public Cush.WPF.ThreadSafeObservableCollection<MRUEntry> Files
+        public ThreadSafeObservableCollection<MRUEntry> Files
         {
             get { return _files; }
             set { SetProperty(ref _files, value); }

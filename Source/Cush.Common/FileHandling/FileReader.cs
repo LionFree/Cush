@@ -12,7 +12,6 @@ namespace Cush.Common
     public abstract class FileReader
     {
         protected readonly ILogger Logger;
-
         protected FileReader(ILogger logger)
         {
             Logger = logger;

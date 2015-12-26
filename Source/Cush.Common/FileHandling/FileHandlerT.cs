@@ -40,21 +40,18 @@ namespace Cush.Common
             DependencyProperty.Register("Files", typeof (ObservableCollection<IFileState<T>>), typeof (FileHandler<T>),
                 new FrameworkPropertyMetadata(null, OnFileCollectionChanged));
 
-        public FileHandler() : this(Loggers.Trace)
+        public FileHandler(FileReader reader, FileWriter writer) : this(Loggers.Trace, reader, writer)
         {
         }
 
-        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-        public FileHandler(ILogger logger) : this(logger,
-            new XmlFileReader(logger),
-            new XmlFileWriter(logger))
+        public FileHandler(ILogger logger, FileReader reader, FileWriter writer):this(logger, reader, writer, new ObservableCollection<IFileState<T>>())
         {
         }
-        
-        internal FileHandler(ILogger logger, FileReader reader, FileWriter writer)
+
+        internal FileHandler(ILogger logger, FileReader reader, FileWriter writer, ObservableCollection<IFileState<T>> files)
         {
             _logger = logger;
-            Files = new ObservableCollection<IFileState<T>>();
+            Files = files;
             _fileReader = reader;
             _fileWriter = writer;
         }

@@ -57,7 +57,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseClasses\ThreadSafeObservableCollection`1.cs" />
     <Compile Include="Interfaces\IKeyedResourceContainer.cs" />
     <Compile Include="Interfaces\IMRUEntry.cs" />
     <Compile Include="Interfaces\IResourceContainer.cs" />
