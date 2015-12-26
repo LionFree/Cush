@@ -1,10 +1,10 @@
 ﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Xml.Serialization;
-using Cush.Common;
-using Cush.WPF.Controls.Helpers;
+using Cush.Common.Helpers;
 
-namespace Cush.WPF.Controls
+namespace Cush.Common
 {
     [XmlType("MRUList"), DebuggerStepThrough]
     public class MRUEntry : BindableBase
@@ -54,7 +54,7 @@ namespace Cush.WPF.Controls
 
         #region Properties
 
-        private string _fullPath = "";
+        private string _fullPath;
         private string[] _location = new string[0];
         private bool _pinned;
         private string _shortPath = "";
@@ -87,25 +87,22 @@ namespace Cush.WPF.Controls
         ///     The filename and extension (without the path).
         /// </summary>
         [XmlIgnore]
-        public string FullFileName
-        {
-            get { return Helper.GetFilenameWithExtension(_fullPath) ?? string.Empty; }
-        }
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        public string FullFileName => Helper.GetFilenameWithExtension(_fullPath) ?? string.Empty;
 
         /// <summary>
         ///     The path where the file exists. (without the filename)
         /// </summary>
         [XmlIgnore]
-        public string FilePath
-        {
-            get { return Helper.GetPathOnly(_fullPath) ?? string.Empty; }
-        }
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+        public string FilePath => Helper.GetPathOnly(_fullPath) ?? string.Empty;
 
         [XmlIgnore]
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public string ShortPath
         {
             get { return _shortPath; }
-            internal set
+            set
             {
                 if (_shortPath == value) return;
                 _shortPath = value;

@@ -8,7 +8,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Cush.Common;
 using Cush.Common.Exceptions;
+using Cush.Common.Helpers;
 using Cush.WPF.Controls.Helpers;
 
 namespace Cush.WPF.Controls

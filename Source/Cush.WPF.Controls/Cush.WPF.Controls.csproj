@@ -127,11 +127,9 @@
       <DependentUpon>Neutral.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helpers\ComboBoxHelper.cs" />
+    <Compile Include="Helpers\MRUTextHelper.cs" />
     <Compile Include="Helpers\ScrollBarHelper.cs" />
     <Compile Include="Helpers\TextboxHelper.cs" />
-    <Compile Include="Configuration\MRUEntryCollection.cs" />
-    <Compile Include="Configuration\MRUEntryElement.cs" />
-    <Compile Include="Configuration\MRUListSection.cs" />
     <Compile Include="Native\Constants.cs" />
     <Compile Include="Native\Helpers\Assert.cs" />
     <Compile Include="Native\Helpers\DoubleUtilities.cs" />
@@ -173,7 +171,6 @@
     <Compile Include="Controls\CushTabControl.cs" />
     <Compile Include="Controls\CushTabItem.cs" />
     <Compile Include="Helpers\ControlsHelper.cs" />
-    <Compile Include="Helpers\MRUExtensionMethods.cs" />
     <Compile Include="Helpers\MRUMenuHelper.cs" />
     <!--<Compile Include="Helpers\TextboxHelper.cs" />-->
     <Compile Include="Helpers\VisualStates.cs" />
@@ -181,7 +178,6 @@
       <DependentUpon>IndeterminateProgressBar.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\ItemSize.cs" />
-    <Compile Include="Controls\MRUEntry.cs" />
     <Compile Include="Controls\MRUFileMenu.cs" />
     <Compile Include="Controls\MultiFrameImage.cs" />
     <Compile Include="Controls\NavBar.cs" />

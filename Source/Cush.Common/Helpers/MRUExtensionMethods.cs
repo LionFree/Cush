@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
 
-namespace Cush.WPF.Controls.Helpers
+namespace Cush.Common.Helpers
 {
     public static class MRUExtensionMethods
     {

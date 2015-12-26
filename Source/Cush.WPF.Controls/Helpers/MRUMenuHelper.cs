@@ -9,6 +9,9 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Cush.Common;
+using Cush.Common.Exceptions;
+using Cush.Common.Helpers;
 using Path = System.IO.Path;
 
 namespace Cush.WPF.Controls.Helpers
@@ -47,7 +50,6 @@ namespace Cush.WPF.Controls.Helpers
 
         private sealed class MRUHelperImplementation : MRUMenuHelper
         {
-            private readonly MRUEntryHelper _entryHelper;
             private readonly MRUVisualHelper _mruVisualHelper;
             private readonly MRUTextHelper _textHelper;
 
@@ -56,7 +58,6 @@ namespace Cush.WPF.Controls.Helpers
             {
                 _textHelper = textHelper;
                 _mruVisualHelper = mruVisualHelper;
-                _entryHelper = entryHelper;
             }
 
             internal override void UpdateSeparators(MRUFileMenu control)
@@ -86,10 +87,19 @@ namespace Cush.WPF.Controls.Helpers
             internal override void UpdateFileLists(ICollection<MRUEntry> files, IEnumerable<MRUEntry> pinnedList,
                                                    IEnumerable<MRUEntry> unpinnedList)
             {
-                _entryHelper.AddFromList(files, pinnedList);
-                _entryHelper.AddFromList(files, unpinnedList);
+                AddFromList(files, pinnedList);
+                AddFromList(files, unpinnedList);
             }
 
+            private void AddFromList(ICollection<MRUEntry> files, IEnumerable<MRUEntry> list)
+            {
+                ThrowHelper.IfNullThenThrow(() => list);
+                
+                foreach (var file in list.Where(file => !files.Contains(file)))
+                {
+                    files.Add(file);
+                }
+            }
 
             internal override MRUEntry GetItemFromSelectionEvent(SelectionChangedEventArgs e)
             {
@@ -209,9 +219,9 @@ namespace Cush.WPF.Controls.Helpers
 
             internal override SolidColorBrush AlterBrush(Brush brush, float modifier)
             {
-                if (brush == null) throw new ArgumentNullException("brush");
+                if (brush == null) throw new ArgumentNullException(nameof(brush));
                 var newBrush = brush as SolidColorBrush;
-                if (newBrush == null) throw new ArgumentException("brush");
+                if (newBrush == null) throw new ArgumentException(nameof(brush));
 
                 var color = newBrush.Color;
 
@@ -236,75 +246,6 @@ namespace Cush.WPF.Controls.Helpers
                 var alteredColor = Color.FromArgb(color.A, (byte)red, (byte)green, (byte)blue);
 
                 return new SolidColorBrush(alteredColor);
-            }
-        }
-    }
-
-    [DebuggerStepThrough]
-    internal abstract class MRUTextHelper
-    {
-        internal static MRUTextHelper GetInstance()
-        {
-            return GetInstance(MRUHelperPrivates.GetInstance());
-        }
-
-        internal static MRUTextHelper GetInstance(MRUHelperPrivates helper)
-        {
-            return new MRUTextHelperImplementation(helper);
-        }
-
-        internal abstract string ShortenPath(string location, FontFamily fontFamily, FontStyle fontStyle,
-                                             FontWeight fontWeight, FontStretch fontStretch, double fontSize,
-                                             double boxWidth);
-
-        #region Methods
-
-        /// <summary>
-        ///     Takes a string and returns the location of the last slash in the string.
-        /// </summary>
-        /// <param name="file">The string to strip.</param>
-        /// <returns>The integer location of the last slash in the string.</returns>
-        internal abstract int GetLastSlash(string file);
-
-        #endregion
-
-        private sealed class MRUTextHelperImplementation : MRUTextHelper
-        {
-            private readonly MRUHelperPrivates _helper;
-
-            internal MRUTextHelperImplementation(MRUHelperPrivates helper)
-            {
-                _helper = helper;
-            }
-
-            internal override int GetLastSlash(string file)
-            {
-                var lastSlash = 0;
-
-                for (int i = 1; i <= file.Length; i++)
-                {
-                    if (file.Substring(i - 1, 1) == "\\")
-                    {
-                        lastSlash = i;
-                    }
-                }
-                return lastSlash;
-            }
-
-            internal override string ShortenPath(string location, FontFamily fontFamily, FontStyle fontStyle,
-                                                 FontWeight fontWeight,
-                                                 FontStretch fontStretch, double fontSize, double boxWidth)
-            {
-                string tempString = location;
-                Size tempSize = _helper.MeasureText(tempString, fontFamily, fontStyle, fontWeight, fontStretch, fontSize);
-
-                if (tempSize.Width > boxWidth)
-                {
-                    // Shorten the string until it's short enough
-                    tempString = _helper.GetSubstringForWidth(tempString, boxWidth, fontFamily, fontStyle, fontWeight,
-                                                              fontStretch, fontSize);
-                }
-                return tempString;
             }
         }
     }
@@ -659,116 +600,6 @@ namespace Cush.WPF.Controls.Helpers
 
                 canvas.Children.Add(path);
                 return new VisualBrush { Stretch = Stretch.Fill, Visual = canvas };
-            }
-        }
-    }
-
-    internal abstract class MRUEntryHelper
-    {
-        internal static MRUEntryHelper GetInstance()
-        {
-            return GetInstance(MRUTextHelper.GetInstance());
-        }
-
-        internal static MRUEntryHelper GetInstance(MRUTextHelper textHelper)
-        {
-            return new MRUEntryHelperImplementation(textHelper);
-        }
-
-        /// <summary>
-        ///     Takes a full path and returns just the path (without the filename or extension).
-        /// </summary>
-        /// <param name="file">The path to strip.</param>
-        /// <returns>The string path.</returns>
-        internal abstract string GetPathOnly(string file);
-
-        /// <summary>
-        ///     Takes a path or filename and removes the file extension.
-        /// </summary>
-        /// <param name="file">The path or filename to strip.</param>
-        /// <returns>The string filename.</returns>
-        internal abstract string RemoveFileExtension(string file);
-
-        /// <summary>
-        ///     Takes a full path and returns just the filename (with extension).
-        /// </summary>
-        /// <param name="file">The path to strip.</param>
-        /// <returns>The string filename.</returns>
-        internal abstract string GetFilenameWithExtension(string file);
-
-        internal abstract string[] ParseLocation(string path);
-        internal abstract void AddFromList(ICollection<MRUEntry> files, IEnumerable<MRUEntry> list);
-
-        private sealed class MRUEntryHelperImplementation : MRUEntryHelper
-        {
-            private readonly MRUTextHelper _textHelper;
-
-            internal MRUEntryHelperImplementation(MRUTextHelper textHelper)
-            {
-                _textHelper = textHelper;
-            }
-
-            internal override void AddFromList(ICollection<MRUEntry> files, IEnumerable<MRUEntry> list)
-            {
-                if (list == null) throw new ArgumentNullException("list");
-
-                foreach (var file in list.Where(file => !files.Contains(file)))
-                {
-                    files.Add(file);
-                }
-            }
-
-            internal override string GetPathOnly(string file)
-            {
-                var lastSlash = _textHelper.GetLastSlash(file);
-                var lenFilename = file.Length - lastSlash;
-                return file.Substring(0, file.Length - lenFilename);
-            }
-
-            internal override string GetFilenameWithExtension(string file)
-            {
-                var lastSlash = _textHelper.GetLastSlash(file);
-                var lenFilename = file.Length - lastSlash;
-                return file.Substring(file.Length - lenFilename);
-            }
-
-            internal override string RemoveFileExtension(string file)
-            {
-                var lastDot = 0;
-
-                for (int i = 1; i <= file.Length; i++)
-                {
-                    if (file.Substring(i - 1, 1) == ".")
-                    {
-                        lastDot = i;
-                    }
-                }
-
-                var output = file;
-                if (lastDot != 0)
-                {
-                    var lenFilename = lastDot - 1;
-                    output = file.Substring(0, lenFilename);
-                }
-                return output;
-            }
-
-            internal override string[] ParseLocation(string path)
-            {
-                if (path == null)
-                {
-                    throw new ArgumentNullException("path");
-                }
-
-                // Split the path into folders and filename.
-                var temp = path.Split('\\');
-
-                // Collect the folder names.
-                var value = new string[temp.GetLength(0) - 1];
-                Array.Copy(temp, value, temp.GetLength(0) - 1);
-
-                // Return the folder names.
-                return value;
             }
         }
     }

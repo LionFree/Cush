@@ -4,8 +4,10 @@ using System.Diagnostics.CodeAnalysis;
 namespace Cush.Common
 {
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
-    internal class FileEventArgs : EventArgs
+    public class FileEventArgs : EventArgs
     {
+        public int FileCount { get; set; }
+        public int FileIndex { get; set; }
         public string Description { get; set; }
         public string Filename { get; set; }
         public string Fullpath { get; set; }
