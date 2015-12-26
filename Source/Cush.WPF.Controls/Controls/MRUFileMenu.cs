@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -22,6 +23,10 @@ namespace Cush.WPF.Controls
     // http://msdn.microsoft.com/en-us/library/ms752339.aspx
 
     [TemplatePart(Name = "Files", Type = typeof (ObservableCollection<MRUEntry>))]
+    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+    [SuppressMessage("ReSharper", "FieldCanBeMadeReadOnly.Global")]
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
+    [SuppressMessage("ReSharper", "EventNeverSubscribedTo.Global")]
     public sealed class MRUFileMenu : Control
     {
         #region Constructors
@@ -80,6 +85,7 @@ namespace Cush.WPF.Controls
             typeof (MRUFileMenu),
             new PropertyMetadata(new ObservableCollection<MRUEntry>()));
 
+
         public static DependencyProperty HotForegroundColorProperty = DependencyProperty.Register(
             "HotForegroundColor",
             typeof (SolidColorBrush),
@@ -108,7 +114,7 @@ namespace Cush.WPF.Controls
             "OpenOtherText",
             typeof (string),
             typeof (MRUFileMenu),
-            new UIPropertyMetadata(Controls.Strings.TEXT_OpenOtherFiles));
+            new UIPropertyMetadata(Strings.TEXT_OpenOtherFiles));
 
         public static DependencyProperty VerticalScrollBarVisibilityProperty = DependencyProperty.Register(
             "VerticalScrollBarVisibility",
@@ -197,9 +203,8 @@ namespace Cush.WPF.Controls
         private static void OnFilesChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
         {
             var mruFileMenu = o as MRUFileMenu;
-            if (mruFileMenu != null)
-                mruFileMenu.OnFilesChanged((ObservableCollection<MRUEntry>) e.OldValue,
-                    (ObservableCollection<MRUEntry>) e.NewValue);
+            mruFileMenu?.OnFilesChanged((ObservableCollection<MRUEntry>) e.OldValue,
+                (ObservableCollection<MRUEntry>) e.NewValue);
         }
 
         #endregion
@@ -211,15 +216,9 @@ namespace Cush.WPF.Controls
         private bool _unselecting;
         private bool _isOpenOtherCommandExecuting;
 
-        internal ObservableCollection<MRUEntry> UnpinnedFiles
-        {
-            get { return (ObservableCollection<MRUEntry>) GetValue(UnpinnedFilesProperty); }
-        }
+        internal ObservableCollection<MRUEntry> UnpinnedFiles => (ObservableCollection<MRUEntry>) GetValue(UnpinnedFilesProperty);
 
-        internal ObservableCollection<MRUEntry> PinnedFiles
-        {
-            get { return (ObservableCollection<MRUEntry>) GetValue(PinnedFilesProperty); }
-        }
+        internal ObservableCollection<MRUEntry> PinnedFiles => (ObservableCollection<MRUEntry>) GetValue(PinnedFilesProperty);
 
         private void OnOpenOtherCanExecuteChanged(object sender, EventArgs e)
         {
@@ -281,12 +280,8 @@ namespace Cush.WPF.Controls
 
         private void ExecutedContextMenuCommand(object sender, ExecutedRoutedEventArgs e)
         {
-            //Trace.WriteLine("ExecutedContextMenuCommand Start: " + DateTime.Now.Second + "." + DateTime.Now.Millisecond);
-
             var listBoxItem = e.OriginalSource as ListBoxItem;
-            if (listBoxItem == null) return;
-
-            var item = listBoxItem.Content as MRUEntry;
+            var item = listBoxItem?.Content as MRUEntry;
             if (item == null) return;
 
             var command = e.Parameter as string;
@@ -435,7 +430,7 @@ namespace Cush.WPF.Controls
         private void AddToLists(MRUEntry item)
         {
             ThrowHelper.IfNullThenThrow(() => item);
-            
+
             // The 'collection' refers to the ObservableCollection.
             // The 'list' refers to the pinned and unpinned ListBox UI elements.
 
@@ -493,8 +488,8 @@ namespace Cush.WPF.Controls
 
         private void RemoveFromLists(MRUEntry item)
         {
-            if (item == null) throw new ArgumentNullException("item");
-
+            ThrowHelper.IfNullThenThrow(()=>item);
+            
             // Check if the item is already in the collection.
             var j = Files.IndexOf(item.FullPath);
             if (j == -1) return;
@@ -564,12 +559,12 @@ namespace Cush.WPF.Controls
             }
 
             var mruEntry = Helper.GetItemFromSelectionEvent(e);
-            if (mruEntry == null) throw new ArgumentNullException("sender");
+            if (mruEntry == null) throw new ArgumentNullException(nameof(sender));
 
             // Do a hit test on the mouse relative to the pin border.
-            var pt = Mouse.GetPosition(sender as UIElement);
+            var pt = Mouse.GetPosition((UIElement) sender);
 
-            VisualTreeHelper.HitTest(sender as Visual,
+            VisualTreeHelper.HitTest((Visual) sender,
                 MyHitTestFilter,
                 x => HitTestResultBehavior.Continue,
                 new PointHitTestParameters(pt));
@@ -713,6 +708,30 @@ namespace Cush.WPF.Controls
         {
             get { return (ICommand) GetValue(OpenRecentFileCommandProperty); }
             set { SetValue(OpenRecentFileCommandProperty, value); }
+        }
+
+        public static DependencyProperty HotBackgroundColorProperty = DependencyProperty.Register(
+            "HotBackgroundColor",
+            typeof (SolidColorBrush),
+            typeof (MRUFileMenu),
+            new UIPropertyMetadata(new SolidColorBrush {Color = Colors.DarkGray}));
+
+        public static DependencyProperty ColdBackgroundColorProperty = DependencyProperty.Register(
+            "ColdBackgroundColor",
+            typeof (Brush),
+            typeof (MRUFileMenu),
+            new UIPropertyMetadata(new SolidColorBrush {Color = ColorHelper.HexToMediaColor("#D5D5D5")}));
+
+        public SolidColorBrush HotBackgroundColor
+        {
+            get { return (SolidColorBrush)GetValue(HotBackgroundColorProperty); }
+            set { SetValue(HotBackgroundColorProperty, value); }
+        }
+
+        public SolidColorBrush ColdBackgroundColor
+        {
+            get { return (SolidColorBrush) GetValue(ColdBackgroundColorProperty); }
+            set { SetValue(ColdBackgroundColorProperty, value); }
         }
 
         public SolidColorBrush HotForegroundColor

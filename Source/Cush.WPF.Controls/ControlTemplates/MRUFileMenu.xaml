@@ -80,7 +80,7 @@
                                         <Condition Property="IsMouseOver" Value="True" />
                                         <Condition Property="IsPressed" Value="False" />
                                     </MultiTrigger.Conditions>
-                                    <Setter Property="Background" Value="{DynamicResource HighlightBrush}" TargetName="PART_Border" />
+                                    <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource AncestorType=controls:MRUFileMenu}, Path=HotBackgroundColor}" TargetName="PART_Border" />
                                     <Setter Property="Fill" Value="{Binding RelativeSource={RelativeSource AncestorType=controls:MRUFileMenu}, Path=HotForegroundColor}" TargetName="PART_FolderPath"/>
                                 </MultiTrigger>
 
