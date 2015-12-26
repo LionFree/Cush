@@ -27,7 +27,7 @@ namespace Cush.TestHarness.WPF.Views.Dialogs
         {
             DataContext = vm;
             InitializeComponent();
-            _originalScheme = new ColorScheme(ColorScheme);
+            _originalScheme = new ColorScheme(this.ColorScheme);
 
             if (vm.ConfigFileHasPassword)
                 InitializePassword();
@@ -127,7 +127,7 @@ namespace Cush.TestHarness.WPF.Views.Dialogs
                 _passwordChanged = false;
             }
 
-            _originalScheme = new ColorScheme(ColorScheme);
+            _originalScheme = new ColorScheme(this.ColorScheme);
             Close();
         }
 

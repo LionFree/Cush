@@ -1,18 +1,16 @@
 ﻿<controls:CushWindow x:Class="Cush.TestHarness.WPF.Views.ShellView"
-                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                   xmlns:controls="clr-namespace:Cush.WPF.Controls;assembly=Cush.WPF.Controls"
-                   xmlns:resources="clr-namespace:Cush.TestHarness.WPF.Views.Resources"
-                   xmlns:viewModels="clr-namespace:Cush.TestHarness.WPF.ViewModels"
-                   xmlns:designTime="clr-namespace:Cush.TestHarness.WPF.ViewModels.DesignTime"
-                   Title="{x:Static resources:Strings.TEXT_ApplicationName}" 
-                   
-                   mc:Ignorable="d"
-                   Height="768" Width="768"
-                   d:DataContext="{d:DesignInstance Type=designTime:MockShellViewModel,
-                                         IsDesignTimeCreatable=false}">
+                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                     xmlns:controls="clr-namespace:Cush.WPF.Controls;assembly=Cush.WPF.Controls"
+                     xmlns:resources="clr-namespace:Cush.TestHarness.WPF.Views"
+                     xmlns:designTime="clr-namespace:Cush.TestHarness.WPF.ViewModels.DesignTime"
+                     mc:Ignorable="d"
+                     
+                     d:DataContext="{d:DesignInstance Type=designTime:MockShellViewModel, IsDesignTimeCreatable=True}" 
+                     Title="{x:Static resources:Strings.TEXT_ApplicationName}"
+                     Height="768" Width="768">
 
     <controls:CushWindow.Resources>
         <ResourceDictionary>
@@ -24,11 +22,13 @@
         </ResourceDictionary>
     </controls:CushWindow.Resources>
 
+
     <!-- The command bar (left of the window minimize/maximize/close controls) -->
     <controls:CushWindow.RightWindowCommands>
         <controls:WindowCommands ShowLastSeparator="True">
             <!--Command="{x:Static local:CushShellView.CmdOptions}"-->
-            <Button ToolTip="{x:Static resources:Strings.TOOLTIP_Settings}" Click="Settings_OnClick" Foreground="{DynamicResource IdealForegroundColorBrush}">
+            <Button ToolTip="{x:Static resources:Strings.TOOLTIP_Settings}" Click="Settings_OnClick"
+                    Foreground="{DynamicResource IdealForegroundColorBrush}">
                 <StackPanel Orientation="Horizontal">
                     <Rectangle Width="16" Height="16" Margin="0,0,3,0">
                         <Rectangle.Fill>

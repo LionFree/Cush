@@ -5,7 +5,7 @@
                         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                         xmlns:controls="clr-namespace:Cush.WPF.Controls;assembly=Cush.WPF.Controls"
                         xmlns:viewModels="clr-namespace:Cush.TestHarness.WPF.ViewModels"
-                        xmlns:resources="clr-namespace:Cush.TestHarness.WPF.Views.Resources"
+                        xmlns:resources="clr-namespace:Cush.TestHarness.WPF.Views"
 
                         PreviewMouseDown="AboutView_OnPreviewMouseDown"
 

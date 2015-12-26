@@ -8,7 +8,7 @@ namespace Cush.TestHarness.WPF.Views
     /// <summary>
     ///     Interaction logic for ShellView.xaml
     /// </summary>
-    public partial class ShellView
+    public partial class ShellView:CushWindow
     {
         private DialogPack _dialogs;
 

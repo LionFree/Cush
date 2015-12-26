@@ -7,7 +7,7 @@
                       xmlns:sys="clr-namespace:System;assembly=mscorlib"
                       xmlns:helpers="clr-namespace:Cush.WPF.Styles.Helpers;assembly=Cush.WPF.Controls"
                       xmlns:controls="clr-namespace:Cush.WPF.Controls;assembly=Cush.WPF.Controls"
-                      xmlns:resources="clr-namespace:Cush.TestHarness.WPF.Views.Resources"
+                      xmlns:resources="clr-namespace:Cush.TestHarness.WPF.Views"
                       xmlns:colorSchemes="clr-namespace:Cush.WPF.ColorSchemes;assembly=Cush.WPF.Controls"
                       xmlns:designTime="clr-namespace:Cush.TestHarness.WPF.ViewModels.DesignTime"
 

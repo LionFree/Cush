@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reflection;
 using Cush.TestHarness.WPF.ViewModels.Interfaces;
-using Cush.TestHarness.WPF.Views.Resources;
 using Cush.WPF;
 //using Strings = Cush.TestHarness.WPF.Views.Resources.Strings;
 
@@ -22,6 +21,6 @@ namespace Cush.TestHarness.WPF.ViewModels
 
         //public string Title => $"{Strings.HEADER_About}{Strings.TEXT_ApplicationName}";
 
-        public string CopyrightString => $"{Views.Resources.Strings.TEXT_ApplicationDescription}{Environment.NewLine}{Views.Resources.Strings.HEADER_CopyrightVersion}{_version.Version}{Environment.NewLine}{_copyright.Copyright}{Environment.NewLine}{Views.Resources.Strings.TEXT_AllRightsReserved}";
+        public string CopyrightString => $"{Views.Strings.TEXT_ApplicationDescription}{Environment.NewLine}{Views.Strings.HEADER_CopyrightVersion}{_version.Version}{Environment.NewLine}{_copyright.Copyright}{Environment.NewLine}{Views.Strings.TEXT_AllRightsReserved}";
     }
 }

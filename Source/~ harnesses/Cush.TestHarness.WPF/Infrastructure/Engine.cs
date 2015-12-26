@@ -24,11 +24,9 @@ namespace Cush.TestHarness.WPF.Infrastructure
         {
             var composer = ComposeExtensions(logger);
             ColorSchemeManager.PopulateSchemes(composer.Container);
-            ColorSchemeManager.SetManagedTheme("Dark");
-
+            
             var shellView = new ShellView(new ShellViewModel(new StartPage(new StartPageViewModel())));
 
-            // dialogs get the resources from ColorSchemeManager.
             var dialogs = new DialogPack(
                 new AboutDialog(new AboutViewModel(), shellView, null),
                 new SettingsDialog(new SettingsViewModel(), shellView, null)
@@ -82,7 +80,7 @@ namespace Cush.TestHarness.WPF.Infrastructure
                     Shutdown();
                 }
             }
-            
+
             internal override void Shutdown()
             {
                 Environment.Exit(0);
