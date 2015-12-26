@@ -36,9 +36,8 @@ namespace Cush.WPF.Controls
         /// <summary>
         ///     Initializes a new ContentDialog.
         /// </summary>
-        public ContentDialog() : base(null, null)
+        public ContentDialog():this(null, null)
         {
-            Initialize();
         }
 
         private void Initialize()

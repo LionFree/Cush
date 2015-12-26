@@ -20,7 +20,7 @@ namespace Cush.WPF.Controls
         /// <param name="settings"></param>
         protected DialogBase(CushWindow owningWindow, DialogSettings settings)
         {
-            DialogSettings = settings ?? owningWindow.DialogOptions;
+            DialogSettings = settings ?? owningWindow?.DialogOptions ?? new DialogSettings();
             OwningWindow = owningWindow;
             Initialize();
         }
