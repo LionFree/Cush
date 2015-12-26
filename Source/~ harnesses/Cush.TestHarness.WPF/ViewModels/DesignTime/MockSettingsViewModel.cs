@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Security;
 using System.Windows;
 using System.Windows.Media;
 using Cush.TestHarness.WPF.ViewModels.Interfaces;
@@ -12,13 +13,14 @@ namespace Cush.TestHarness.WPF.ViewModels.DesignTime
     public class MockSettingsViewModel : ISettingsViewModel
     {
         public List<ThemeMenuData> Accents { get; set; }
-        public RelayCommand ApplyCommand { get; }
+        public RelayCommand OKCommand { get; }
         public RelayCommand CancelCommand { get; }
         public RelayCommand ClearFilesCommand { get; }
         public bool ConfigFileHasPassword { get; set; }
         public bool IsBoldChecked { get; set; }
         public bool IsItalicChecked { get; set; }
         public bool IsKeepRecentFileListChecked { get; set; }
+        public bool IsPasswordLocked { get; set; }
         public ThemeMenuData SelectedAccent { get; set; }
         public FontFamily SelectedFontFamily { get; set; }
         public double SelectedFontSizeInPixels { get; }
@@ -30,5 +32,6 @@ namespace Cush.TestHarness.WPF.ViewModels.DesignTime
         public bool SimilarActivityHandling { get; set; }
         public bool SplashOk { get; set; }
         public List<ThemeMenuData> Themes { get; set; }
+        public SecureString SecurePassword { get; set; }
     }
 }

@@ -2,9 +2,6 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Cush.TestHarness.WPF.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="Theme" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Dark Theme</Value>
-    </Setting>
     <Setting Name="Accent" Type="System.String" Scope="User">
       <Value Profile="(Default)">Blue</Value>
     </Setting>
@@ -32,10 +29,13 @@
     <Setting Name="SimilarActivityHandling" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="PasswordHash" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+    <Setting Name="IsPasswordLocked" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="PasswordSalt" Type="System.String" Scope="User">
+    <Setting Name="Theme" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Dark</Value>
+    </Setting>
+    <Setting Name="Password" Type="System.Security.SecureString" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>

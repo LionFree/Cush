@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security;
 using System.Windows;
 using System.Windows.Media;
 using Cush.TestHarness.WPF.Properties;
@@ -27,31 +28,32 @@ namespace Cush.TestHarness.WPF.ViewModels
         private FontWeight _selectedFontWeight;
         private ThemeMenuData _selectedTheme;
         private bool _similarActivityHandling;
+        private SecureString _securePassword;
+        private bool _isPasswordLocked;
 
         public SettingsViewModel()
         {
-
             // Initialize the theme display
             Accents = ColorSchemeManager.Accents
-                                  .Select(
-                                      a =>
-                                      new ThemeMenuData
-                                      {
-                                          Name = a.DisplayName,
-                                          ColorBrush = a.Resources["AccentColorBrush"] as Brush
-                                      })
-                                  .ToList();
+                .Select(
+                    a =>
+                        new ThemeMenuData
+                        {
+                            Name = a.DisplayName,
+                            ColorBrush = a.Resources["AccentColorBrush"] as Brush
+                        })
+                .ToList();
 
             Themes = ColorSchemeManager.Themes
-                                 .Select(
-                                     a =>
-                                     new ThemeMenuData
-                                     {
-                                         Name = a.DisplayName,
-                                         BorderColorBrush = a.Resources["BlackColorBrush"] as Brush,
-                                         ColorBrush = a.Resources["WhiteColorBrush"] as Brush
-                                     })
-                                 .ToList();
+                .Select(
+                    a =>
+                        new ThemeMenuData
+                        {
+                            Name = a.DisplayName,
+                            BorderColorBrush = a.Resources["BlackColorBrush"] as Brush,
+                            ColorBrush = a.Resources["WhiteColorBrush"] as Brush
+                        })
+                .ToList();
 
             RefreshSettings();
         }
@@ -62,9 +64,22 @@ namespace Cush.TestHarness.WPF.ViewModels
 
         public List<ThemeMenuData> Themes { get; set; }
 
+        public SecureString SecurePassword
+        {
+            get
+            {
+                return _securePassword;
+            }
+            set
+            {
+                if (_securePassword == value) return;
+                _securePassword = value;
+            } 
+        }
+
         public List<ThemeMenuData> Accents { get; set; }
 
-        public double SelectedFontSizeInPixels => _fontSizeInPoints * (DeviceIndependentPixelsPerInch / PointsPerInch);
+        public double SelectedFontSizeInPixels => _fontSizeInPoints*(DeviceIndependentPixelsPerInch/PointsPerInch);
 
         public double SelectedFontSizeInPoints
         {
@@ -80,14 +95,14 @@ namespace Cush.TestHarness.WPF.ViewModels
             }
         }
 
-        public RelayCommand ApplyCommand
-        {
-            get { return new RelayCommand(nameof(ApplyCommand), param => Trace.WriteLine("Apply Clicked.")); }
-        }
+        public RelayCommand OKCommand => new RelayCommand(nameof(OKCommand), param => Commit());
 
         public RelayCommand ClearFilesCommand
         {
-            get { return new RelayCommand(nameof(ClearFilesCommand), param => Trace.WriteLine("Clear Files Clicked.")); }
+            get
+            {
+                return new RelayCommand(nameof(ClearFilesCommand), param => Trace.WriteLine("Clear Files Clicked."));
+            }
         }
 
         public RelayCommand CancelCommand
@@ -127,7 +142,7 @@ namespace Cush.TestHarness.WPF.ViewModels
                 OnPropertyChanged();
             }
         }
-        
+
         public bool IsBoldChecked
         {
             get { return _boldChecked; }
@@ -160,6 +175,16 @@ namespace Cush.TestHarness.WPF.ViewModels
             {
                 if (_isKeepRecentFileListChecked == value) return;
                 _isKeepRecentFileListChecked = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsPasswordLocked {
+            get { return _isPasswordLocked; }
+            set
+            {
+                if (_isPasswordLocked == value) return;
+                _isPasswordLocked = value;
                 OnPropertyChanged();
             }
         }
@@ -206,7 +231,6 @@ namespace Cush.TestHarness.WPF.ViewModels
         public bool ShowTooltips { get; set; }
 
 
-
         private static void DoClearFiles()
         {
             Trace.WriteLine("DoClearFiles");
@@ -217,10 +241,13 @@ namespace Cush.TestHarness.WPF.ViewModels
             SelectedTheme = Themes.FirstOrDefault(x => x.Name == Settings.Default.Theme);
             SelectedAccent = Accents.FirstOrDefault(x => x.Name == Settings.Default.Accent);
 
+            SecurePassword = Settings.Default.Password;
+            IsPasswordLocked = Settings.Default.IsPasswordLocked;
+
             SelectedFontFamily = Settings.Default.FontFamily ?? new FontFamily("Arial");
             SelectedFontSizeInPoints = Math.Abs(Settings.Default.FontSize) < double.Epsilon
-                                           ? 28
-                                           : Settings.Default.FontSize;
+                ? 28
+                : Settings.Default.FontSize;
             IsBoldChecked = Settings.Default.FontBold;
             IsItalicChecked = Settings.Default.FontItalic;
 
@@ -230,6 +257,12 @@ namespace Cush.TestHarness.WPF.ViewModels
 
         private void Commit()
         {
+            if (_securePassword != null)
+            {
+                Settings.Default.Password = _securePassword;
+            }
+            Settings.Default.IsPasswordLocked = IsPasswordLocked;
+
             Settings.Default.ShowTooltips = ShowTooltips;
             Settings.Default.SplashOK = SplashOk;
             Settings.Default.Theme = SelectedTheme.Name;

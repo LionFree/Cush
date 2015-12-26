@@ -32,7 +32,7 @@ namespace Cush.TestHarness.WPF.Views.Dialogs
             if (vm.ConfigFileHasPassword)
                 InitializePassword();
 
-            Apply.IsEnabled = false;
+            //Apply.IsEnabled = false;
 
             var cvs = CollectionViewSource.GetDefaultView(FontCombo.ItemsSource);
             cvs.SortDescriptions.Clear();
@@ -53,7 +53,6 @@ namespace Cush.TestHarness.WPF.Views.Dialogs
         {
             if (!IsInitialized) return;
             var samePassword = PasswordValidator.AreEqual(PasswordBox.SecurePassword, ConfirmBox.SecurePassword);
-            Apply.IsEnabled = samePassword;
         }
 
         private void PasswordChanged(object sender, RoutedEventArgs e)
@@ -61,8 +60,12 @@ namespace Cush.TestHarness.WPF.Views.Dialogs
             if (!(IsInitialized) || _ignorePasswordChanges) return;
 
             ConfirmBox.Password = string.Empty;
+            if (DataContext != null)
+            {
+                ((dynamic) DataContext).SecurePassword = ((PasswordBox) sender).SecurePassword;
+            }
+
             _passwordChanged = true;
-            Apply.IsEnabled = false;
         }
 
         private void PasswordLocked_OnClick(object sender, RoutedEventArgs e)
@@ -85,7 +88,7 @@ namespace Cush.TestHarness.WPF.Views.Dialogs
             ColorSchemeManager.SetManagedAccent(data.Name);
             _schemeChanged = true;
 
-            if (IsInitialized) Apply.IsEnabled = true;
+            //if (IsInitialized) Apply.IsEnabled = true;
         }
 
         [SecurityCritical]
@@ -101,8 +104,6 @@ namespace Cush.TestHarness.WPF.Views.Dialogs
 
             UpdateDefaultStyle();
             UpdateLayout();
-
-            if (IsInitialized) Apply.IsEnabled = true;
         }
 
 
@@ -118,7 +119,13 @@ namespace Cush.TestHarness.WPF.Views.Dialogs
         [SecurityCritical]
         private void OnOkClick(object sender, RoutedEventArgs e)
         {
-            OnApplyClick(sender, e);
+            if (_passwordChanged)
+            {
+                //_configFile.SetPassword(PasswordBox.SecurePassword, PasswordValidator.CreateNewSalt());
+                //_configFile.Save();
+                _passwordChanged = false;
+            }
+
             _originalScheme = new ColorScheme(CurrentScheme);
             Close();
         }
@@ -128,20 +135,9 @@ namespace Cush.TestHarness.WPF.Views.Dialogs
             if (_schemeChanged)
                 ColorSchemeManager.SetManagedColorScheme(_originalScheme);
 
+            ConfirmBox.Password = PasswordBox.Password;
             Settings.Default.Reload();
             Close();
-        }
-
-        private void OnApplyClick(object sender, RoutedEventArgs e)
-        {
-            if (_passwordChanged)
-            {
-                //_configFile.SetPassword(PasswordBox.SecurePassword, PasswordValidator.CreateNewSalt());
-                //_configFile.Save();
-                _passwordChanged = false;
-            }
-
-            Apply.IsEnabled = false;
         }
     }
 }

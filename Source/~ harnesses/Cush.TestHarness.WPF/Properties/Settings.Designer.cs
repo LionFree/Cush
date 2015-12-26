@@ -25,18 +25,6 @@ namespace Cush.TestHarness.WPF.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Dark Theme")]
-        public string Theme {
-            get {
-                return ((string)(this["Theme"]));
-            }
-            set {
-                this["Theme"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Blue")]
         public string Accent {
             get {
@@ -144,25 +132,36 @@ namespace Cush.TestHarness.WPF.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string PasswordHash {
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsPasswordLocked {
             get {
-                return ((string)(this["PasswordHash"]));
+                return ((bool)(this["IsPasswordLocked"]));
             }
             set {
-                this["PasswordHash"] = value;
+                this["IsPasswordLocked"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string PasswordSalt {
+        [global::System.Configuration.DefaultSettingValueAttribute("Dark")]
+        public string Theme {
             get {
-                return ((string)(this["PasswordSalt"]));
+                return ((string)(this["Theme"]));
             }
             set {
-                this["PasswordSalt"] = value;
+                this["Theme"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Security.SecureString Password {
+            get {
+                return ((global::System.Security.SecureString)(this["Password"]));
+            }
+            set {
+                this["Password"] = value;
             }
         }
     }

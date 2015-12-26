@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Security;
 using System.Windows;
 using System.Windows.Media;
 using Cush.WPF;
@@ -9,13 +10,14 @@ namespace Cush.TestHarness.WPF.ViewModels.Interfaces
     public interface ISettingsViewModel
     {
         List<ThemeMenuData> Accents { get; set; }
-        RelayCommand ApplyCommand { get; }
+        RelayCommand OKCommand { get; }
         RelayCommand CancelCommand { get; }
         RelayCommand ClearFilesCommand { get; }
         bool ConfigFileHasPassword { get; set; }
         bool IsBoldChecked { get; set; }
         bool IsItalicChecked { get; set; }
         bool IsKeepRecentFileListChecked { get; set; }
+        bool IsPasswordLocked { get; set; }
         ThemeMenuData SelectedAccent { get; set; }
         FontFamily SelectedFontFamily { get; set; }
         double SelectedFontSizeInPixels { get; }
@@ -27,5 +29,6 @@ namespace Cush.TestHarness.WPF.ViewModels.Interfaces
         bool SimilarActivityHandling { get; set; }
         bool SplashOk { get; set; }
         List<ThemeMenuData> Themes { get; set; }
+        SecureString SecurePassword { get; set; }
     }
 }
