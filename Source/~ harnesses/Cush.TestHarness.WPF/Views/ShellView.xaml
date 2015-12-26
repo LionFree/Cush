@@ -28,7 +28,7 @@
     <controls:CushWindow.RightWindowCommands>
         <controls:WindowCommands ShowLastSeparator="True">
             <!--Command="{x:Static local:CushShellView.CmdOptions}"-->
-            <Button ToolTip="{x:Static resources:Strings.TOOLTIP_Settings}" Click="Settings_OnClick" Foreground="White">
+            <Button ToolTip="{x:Static resources:Strings.TOOLTIP_Settings}" Click="Settings_OnClick" Foreground="{DynamicResource IdealForegroundColorBrush}">
                 <StackPanel Orientation="Horizontal">
                     <Rectangle Width="16" Height="16" Margin="0,0,3,0">
                         <Rectangle.Fill>

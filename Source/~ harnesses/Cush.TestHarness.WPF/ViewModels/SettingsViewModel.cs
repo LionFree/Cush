@@ -113,9 +113,7 @@ namespace Cush.TestHarness.WPF.ViewModels
             get { return _selectedFontFamily; }
             set
             {
-                if (_selectedFontFamily != null && _selectedFontFamily.Equals(value)) return;
-                _selectedFontFamily = value;
-                OnPropertyChanged();
+                SetProperty(ref _selectedFontFamily, value);
             }
         }
 
