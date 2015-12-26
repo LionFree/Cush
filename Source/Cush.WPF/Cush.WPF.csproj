@@ -25,7 +25,6 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseClasses\BindableBase.cs" />
     <Compile Include="BaseClasses\CollectionDebugView`1.cs" />
     <Compile Include="BaseClasses\CommandCanExecuteParameter.cs" />
     <Compile Include="BaseClasses\RelayCommand.cs" />

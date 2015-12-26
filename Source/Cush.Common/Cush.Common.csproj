@@ -20,11 +20,13 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xaml" />
+    <Reference Include="System.XML" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Annotations\Annotations.cs" />
     <Compile Include="Annotations\JetBrains.Annotations.cs" />
+    <Compile Include="BaseClasses\BindableBase.cs" />
     <Compile Include="BaseClasses\BoundedList.cs" />
     <Compile Include="BaseClasses\CollectionDebugView.cs" />
     <Compile Include="BaseClasses\KeyedItem.cs" />
