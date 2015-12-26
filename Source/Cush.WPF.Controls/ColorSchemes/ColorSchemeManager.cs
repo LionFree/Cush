@@ -14,7 +14,8 @@ namespace Cush.WPF.ColorSchemes
     [DebuggerDisplay("Theme={_currentScheme.Theme.DisplayName}, Accent={_currentScheme.Accent.DisplayName}")]
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-    public class ColorSchemeManager : ResourceContainer
+    [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
+    public sealed class ColorSchemeManager : ResourceContainer
     {
         public delegate void ColorSchemeChangedEventHandler(object sender, ChangedEventArgs<IColorScheme> e);
 
@@ -26,7 +27,6 @@ namespace Cush.WPF.ColorSchemes
         static ColorSchemeManager()
         {
             Elements = new ThreadSafeObservableCollection<ISchemedElement>();
-            //CurrentScheme = new ColorScheme();
         }
 
         /// <summary>
@@ -39,13 +39,13 @@ namespace Cush.WPF.ColorSchemes
         ///     The loaded accents.
         /// </summary>
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
-        public static List<IKeyedResourceContainer> Accents => _container.Accents;
+        public static IEnumerable<IKeyedResourceContainer> Accents => _container.Accents;
 
         /// <summary>
         ///     The loaded themes.
         /// </summary>
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
-        public static List<IKeyedResourceContainer> Themes => _container.Themes;
+        public static IEnumerable<IKeyedResourceContainer> Themes => _container.Themes;
 
         /// <summary>
         ///     The current color scheme, which will be pushed to all registered elements.
@@ -53,7 +53,7 @@ namespace Cush.WPF.ColorSchemes
         public static IColorScheme CurrentScheme
         {
             get { return _currentScheme; }
-            protected set
+            private set
             {
                 if (_currentScheme == value) return;
                 DisconnectEventHandlersFromCurrentScheme();
@@ -127,7 +127,7 @@ namespace Cush.WPF.ColorSchemes
         /// <param name="element">The <see cref="ISchemedElement" /> to unregister.</param>
         public static void Release(ISchemedElement element)
         {
-            if (element?.CurrentScheme == null) return;
+            if (element?.ColorScheme == null) return;
             if (!Elements.Contains(element)) return;
             //foreach (var item in Elements.Where(item => item == element))
             //{
@@ -231,7 +231,7 @@ namespace Cush.WPF.ColorSchemes
         private static void PushResourcesIntoElement(ISchemedElement element)
         {
             ThrowHelper.IfNullThenThrow(() => element);
-            if (element.CurrentScheme == _currentScheme) return;
+            if (element.ColorScheme == _currentScheme) return;
 
             ReplaceElementResourcesWithManagedScheme(element);
 
@@ -239,23 +239,23 @@ namespace Cush.WPF.ColorSchemes
             var uiElement = element as UIElement;
             uiElement?.InvalidateVisual();
 
-            element.CurrentScheme = CurrentScheme;
+            element.ColorScheme = CurrentScheme;
         }
 
         private static void ReplaceElementResourcesWithManagedScheme(ISchemedElement element)
         {
-            if (element.CurrentScheme == _currentScheme) return;
-            if (element.CurrentScheme == null)
+            if (element.ColorScheme == _currentScheme) return;
+            if (element.ColorScheme == null)
             {
                 AddManagedSchemeToElementResources(element);
             }
             else
             {
                 ReplaceResources(element.Resources, _baseTheme);
-                ReplaceResources(element.Resources, element.CurrentScheme.Accent, CurrentScheme.Accent);
-                ReplaceResources(element.Resources, element.CurrentScheme.Theme, CurrentScheme.Theme);
+                ReplaceResources(element.Resources, element.ColorScheme.Accent, CurrentScheme.Accent);
+                ReplaceResources(element.Resources, element.ColorScheme.Theme, CurrentScheme.Theme);
             }
-            element.CurrentScheme = (ColorScheme)CurrentScheme;
+            element.ColorScheme = (ColorScheme)CurrentScheme;
         }
 
         private static void AddManagedSchemeToElementResources(ISchemedElement element)

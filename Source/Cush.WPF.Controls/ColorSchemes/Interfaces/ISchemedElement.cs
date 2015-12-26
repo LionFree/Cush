@@ -8,8 +8,8 @@ namespace Cush.WPF.ColorSchemes
     public interface ISchemedElement : IResourceContainer
     {
         /// <summary>
-        ///     Gets or sets the current ColorScheme.
+        ///     Gets or sets the current <see cref="T:IColorScheme"/>.
         /// </summary>
-        IColorScheme CurrentScheme { get; set; }
+        IColorScheme ColorScheme { get; set; }
     }
 }

@@ -8,6 +8,9 @@ using Cush.WPF.ColorSchemes;
 
 namespace Cush.WPF.Controls
 {
+    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
+    [SuppressMessage("ReSharper", "VirtualMemberNeverOverriden.Global")]
     public abstract class DialogBase : ContentControl, ISchemedElement
     {
         /// <summary>
@@ -22,38 +25,42 @@ namespace Cush.WPF.Controls
             Initialize();
         }
 
-        // Prevent someone from using a parameterless constructor (must have owningWindow).
-        [SuppressMessage("ReSharper", "UnusedMember.Local")]
-        private DialogBase() { }
+        /// <summary>
+        ///     Initializes a new DialogBase with the given settings and no owning window.
+        /// </summary>
+        protected DialogBase(DialogSettings settings) : this(null, settings)
+        {
+        }
 
-        ///// <summary>
-        /////     Initializes a new DialogBase without an owning window...
-        ///// </summary>
-        //protected DialogBase()
-        //{
-        //    DialogSettings = new DialogSettings();
+        /// <summary>
+        ///     Initializes a new DialogBase with default settings and no owning window.
+        /// </summary>
+        protected DialogBase() : this(null, new DialogSettings())
+        {
+        }
 
-        //    Initialize();
-        //}
-        
         internal SizeChangedEventHandler SizeChangedHandler { get; set; }
 
         private DialogSettings DialogSettings { get; }
 
         /// <summary>
-        ///     Gets the window that owns the current Dialog.
+        ///     Gets or sets the window that owns the current Dialog.
         /// </summary>
-        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-        protected CushWindow OwningWindow { get; }
+        [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Global")]
+        protected CushWindow OwningWindow { get; set; }
 
-        
+        /// <summary>
+        ///     Gets or sets the current <see cref="T:IColorScheme"/>.
+        /// </summary>
+        public IColorScheme ColorScheme { get; set; }
+
+
         private void Initialize()
         {
             Unloaded += Dialog_Unloaded;
             ColorSchemeManager.Register(this);
         }
 
-        [SuppressMessage("ReSharper", "VirtualMemberNeverOverriden.Global")]
         public virtual void OnClose()
         {
         }
@@ -72,7 +79,7 @@ namespace Cush.WPF.Controls
         {
             return true; //allow the dialog to close.
         }
-        
+
         private void Dialog_Unloaded(object sender, RoutedEventArgs e)
         {
             //ThemeManager.IsThemeChanged -= ThemeManager_IsThemeChanged;
@@ -158,33 +165,5 @@ namespace Cush.WPF.Controls
         {
             return OnRequestClose() ? OwningWindow.HideDialogAsync(this) : Task.Factory.StartNew(() => { });
         }
-
-        #region ISchemedElement
-
-        private IColorScheme _colorScheme;
-
-        public IColorScheme CurrentScheme
-        {
-            get
-            {
-                return _colorScheme;
-            }
-            set
-            {
-                if (_colorScheme == value) return;
-                var args = new ChangedEventArgs<IColorScheme>(_colorScheme, value);
-                _colorScheme = value;
-                OnSchemeChanged(args);
-            }
-        }
-
-        public event EventHandler<ChangedEventArgs<IColorScheme>> SchemeChanged;
-
-        private void OnSchemeChanged(ChangedEventArgs<IColorScheme> args)
-        {
-            SchemeChanged?.Invoke(this, args);
-        }
-
-        #endregion
     }
 }

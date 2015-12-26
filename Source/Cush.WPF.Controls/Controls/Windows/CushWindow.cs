@@ -1143,29 +1143,9 @@ namespace Cush.WPF.Controls
 
         #endregion
 
-        #region ISchemedElement
-
-        private IColorScheme _colorScheme;
-
-        public IColorScheme CurrentScheme
-        {
-            get { return _colorScheme; }
-            set
-            {
-                if (_colorScheme == value) return;
-                var args = new ChangedEventArgs<IColorScheme>(_colorScheme, value);
-                _colorScheme = value;
-                OnSchemeChanged(args);
-            }
-        }
-
-        public event EventHandler<ChangedEventArgs<IColorScheme>> SchemeChanged;
-
-        private void OnSchemeChanged(ChangedEventArgs<IColorScheme> args)
-        {
-            SchemeChanged?.Invoke(this, args);
-        }
-
-        #endregion
+        /// <summary>
+        ///     Gets or sets the current <see cref="T:IColorScheme"/>.
+        /// </summary>
+        public IColorScheme ColorScheme { get; set; }
     }
 }

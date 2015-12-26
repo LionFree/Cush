@@ -5,6 +5,8 @@ using System.Windows;
 
 namespace Cush.WPF.Controls
 {
+    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public class ContentDialog : DialogBase
     {
         /// <summary>
@@ -34,7 +36,7 @@ namespace Cush.WPF.Controls
         /// <summary>
         ///     Initializes a new ContentDialog.
         /// </summary>
-        protected ContentDialog() : base(null, null)
+        public ContentDialog() : base(null, null)
         {
             Initialize();
         }
@@ -63,7 +65,6 @@ namespace Cush.WPF.Controls
             if (dialog != null) await dialog.Close();
         }
 
-        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public static void SetDialogResult(ContentDialog target, bool? value)
         {
             target.SetValue(DialogResultProperty, value);

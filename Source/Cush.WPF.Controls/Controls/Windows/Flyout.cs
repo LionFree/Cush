@@ -291,7 +291,7 @@ namespace Cush.WPF.Controls
             var window = ParentWindow;
             if (window != null)
             {
-                var windowScheme = window.CurrentScheme;
+                var windowScheme = window.ColorScheme;
 
                 if (windowScheme != null)
                 {
@@ -314,16 +314,16 @@ namespace Cush.WPF.Controls
             switch (Theme)
             {
                 case FlyoutTheme.Accent:
-                    CurrentScheme.Accent = windowAccent;
-                    CurrentScheme.Theme = windowTheme;
+                    ColorScheme.Accent = windowAccent;
+                    ColorScheme.Theme = windowTheme;
                     //ColorSchemeManager.UpdateColorScheme(windowAccent, windowTheme);
                     SetResourceReference(BackgroundProperty, "HighlightBrush");
                     SetResourceReference(ForegroundProperty, "IdealForegroundColorBrush");
                     break;
 
                 case FlyoutTheme.Adapt:
-                    CurrentScheme.Accent = windowAccent;
-                    CurrentScheme.Theme = windowTheme;
+                    ColorScheme.Accent = windowAccent;
+                    ColorScheme.Theme = windowTheme;
                     break;
 
                 //case FlyoutTheme.Dark:
@@ -648,32 +648,10 @@ namespace Cush.WPF.Controls
             }
         }
 
-        #region ISchemedElement
-
-        private IColorScheme _colorScheme;
-
-        public IColorScheme CurrentScheme
-        {
-            get
-            {
-                return _colorScheme;
-            }
-            set
-            {
-                if (_colorScheme == value) return;
-                var args = new ChangedEventArgs<IColorScheme>(_colorScheme, value);
-                _colorScheme = value;
-                OnSchemeChanged(args);
-            }
-        }
-
-        public event EventHandler<ChangedEventArgs<IColorScheme>> SchemeChanged;
-
-        private void OnSchemeChanged(ChangedEventArgs<IColorScheme> args)
-        {
-            SchemeChanged?.Invoke(this, args);
-        }
-
-        #endregion
+        /// <summary>
+        ///     Gets or sets the current <see cref="T:IColorScheme"/>.
+        /// </summary>
+        public IColorScheme ColorScheme { get; set; }
+        
     }
 }
