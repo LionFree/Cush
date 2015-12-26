@@ -1,5 +1,5 @@
 ﻿using System.Windows.Input;
-using Cush.TestHarness.WPF.ViewModels;
+using Cush.TestHarness.WPF.ViewModels.Interfaces;
 using Cush.WPF.Controls;
 
 namespace Cush.TestHarness.WPF.Views.Dialogs
@@ -9,7 +9,7 @@ namespace Cush.TestHarness.WPF.Views.Dialogs
     /// </summary>
     public partial class AboutDialog
     {
-        public AboutDialog(AboutViewModel vm, CushWindow owningWindow, DialogSettings settings)
+        public AboutDialog(IAboutViewModel vm, CushWindow owningWindow, DialogSettings settings)
             : base(owningWindow, settings)
         {
             DataContext = vm;

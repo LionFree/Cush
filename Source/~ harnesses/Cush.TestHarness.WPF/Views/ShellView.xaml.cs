@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using Cush.TestHarness.WPF.ViewModels;
+using Cush.TestHarness.WPF.ViewModels.Interfaces;
 using Cush.TestHarness.WPF.Views.Dialogs;
 using Cush.WPF.Controls;
 
@@ -12,7 +12,7 @@ namespace Cush.TestHarness.WPF.Views
     {
         private DialogPack _dialogs;
 
-        public ShellView(ShellViewModel vm)
+        public ShellView(IShellViewModel vm)
         {
             DataContext = vm;
             InitializeComponent();

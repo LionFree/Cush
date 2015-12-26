@@ -5,7 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using Cush.TestHarness.WPF.Properties;
-using Cush.TestHarness.WPF.ViewModels;
+using Cush.TestHarness.WPF.ViewModels.Interfaces;
 using Cush.WPF.ColorSchemes;
 using Cush.WPF.Controls;
 

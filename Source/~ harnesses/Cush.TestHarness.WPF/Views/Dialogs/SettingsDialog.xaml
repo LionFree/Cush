@@ -8,12 +8,12 @@
                       xmlns:helpers="clr-namespace:Cush.WPF.Styles.Helpers;assembly=Cush.WPF.Controls"
                       xmlns:controls="clr-namespace:Cush.WPF.Controls;assembly=Cush.WPF.Controls"
                       xmlns:resources="clr-namespace:Cush.TestHarness.WPF.Views.Resources"
-                      xmlns:viewModels="clr-namespace:Cush.TestHarness.WPF.ViewModels"
                       xmlns:colorSchemes="clr-namespace:Cush.WPF.ColorSchemes;assembly=Cush.WPF.Controls"
+                      xmlns:designTime="clr-namespace:Cush.TestHarness.WPF.ViewModels.DesignTime"
 
                       Foreground="{DynamicResource BlackBrush}"
                       Background="{DynamicResource WhiteBrush}"
-                      mc:Ignorable="d" d:DataContext="{d:DesignInstance viewModels:MockSettingsViewModel, IsDesignTimeCreatable=True}">
+                      mc:Ignorable="d" d:DataContext="{d:DesignInstance designTime:MockSettingsViewModel, IsDesignTimeCreatable=True}">
     <controls:ContentDialog.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -325,6 +325,7 @@
                 Grid.Column="1" Click="OnOkClick" IsDefault="True" />
 
         <Button Content="{x:Static resources:Strings.BUTTON_Cancel}"
+                Command="{Binding CancelCommand}"
                 Margin="3 5" Padding="10 3" Grid.Row="1"
                 Grid.Column="2" Click="OnCancelClick" IsCancel="True" />
 

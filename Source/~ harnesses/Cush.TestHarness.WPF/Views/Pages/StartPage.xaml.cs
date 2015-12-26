@@ -5,7 +5,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using Cush.TestHarness.WPF.ViewModels;
+using Cush.TestHarness.WPF.ViewModels.Interfaces;
+using Cush.TestHarness.WPF.Views.Events;
 using Cush.WPF.ColorSchemes;
 using Cush.WPF.Controls;
 
@@ -18,7 +19,7 @@ namespace Cush.TestHarness.WPF.Views.Pages
     {
         public delegate void StartViewEventHandler(object sender, FileViewEventArgs e);
 
-        public StartPage(StartPageViewModel vm)
+        public StartPage(IStartPageViewModel vm)
         {
             DataContext = vm;
             InitializeComponent();
@@ -37,8 +38,8 @@ namespace Cush.TestHarness.WPF.Views.Pages
                 {
                     if (item != null) item = VisualTreeHelper.GetParent(item);
                 }
-                var lbi = (ListBoxItem)item;
-                var rfb = (MRUEntry)lbi.Content;
+                var lbi = (ListBoxItem) item;
+                var rfb = (MRUEntry) lbi.Content;
 
                 // Toggle the pin.
                 rfb.Pinned = !rfb.Pinned;
@@ -73,7 +74,7 @@ namespace Cush.TestHarness.WPF.Views.Pages
         {
             // Get the Template filename from the button
             var b = sender as Button;
-            var filename = (string)b.Content;
+            var filename = (string) b.Content;
 
             // Create the event arguments to pass to the ShellWindow.
             var d = new FileViewEventArgs();
@@ -89,7 +90,7 @@ namespace Cush.TestHarness.WPF.Views.Pages
         {
             // Get the Template filename from the button
             var b = sender as Button;
-            var filename = (string)b.Content;
+            var filename = (string) b.Content;
 
             // Create the event arguments to pass to the ShellWindow.
             var d = new FileViewEventArgs();
@@ -115,7 +116,7 @@ namespace Cush.TestHarness.WPF.Views.Pages
             var args = e;
 
             if (args.AddedItems.Count != 0)
-                file = (MRUEntry)args.AddedItems[0];
+                file = (MRUEntry) args.AddedItems[0];
 
             if (file != null)
             {
@@ -143,7 +144,7 @@ namespace Cush.TestHarness.WPF.Views.Pages
             var args = e;
 
             if (args.AddedItems.Count != 0)
-                file = (MRUEntry)args.AddedItems[0];
+                file = (MRUEntry) args.AddedItems[0];
 
             if (file != null)
             {
@@ -171,7 +172,7 @@ namespace Cush.TestHarness.WPF.Views.Pages
             //MessageBox.Show("MainWindow: Opening other sheet!");
 
             // Raise an event to the ShellWindow to open a file and display the content page.
-            OnFileViewButtonPressed(new FileViewEventArgs { PageEvent = FileViewEvent.OpenOther });
+            OnFileViewButtonPressed(new FileViewEventArgs {PageEvent = FileViewEvent.OpenOther});
         }
     }
 }

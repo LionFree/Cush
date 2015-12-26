@@ -3,26 +3,14 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Cush.TestHarness.WPF.ViewModels.Interfaces;
+using Cush.TestHarness.WPF.Views.Events;
 using Cush.TestHarness.WPF.Views.Pages;
 using Cush.WPF;
 
 namespace Cush.TestHarness.WPF.ViewModels
 {
-    public interface IShellViewModel
-    {
-        string TestString { get; set; }
-    }
-
-    public class MockShellViewModel : ShellViewModel
-    {
-        public MockShellViewModel() : base(new StartPage(new StartPageViewModel()))
-        {
-        }
-
-
-    }
-
-    public class ShellViewModel : BindableBase
+    public class ShellViewModel : BindableBase, IShellViewModel
     {
         private readonly StartPage _fileView;
         private ICommand _backButtonCommand;
@@ -35,7 +23,7 @@ namespace Cush.TestHarness.WPF.ViewModels
             Content = _fileView;
         }
 
-        public object BackButtonCommand => _backButtonCommand ??
+        public ICommand BackButtonCommand => _backButtonCommand ??
                                            (_backButtonCommand = new RelayCommand("BackButtonCommand", OnBackButtonClick));
 
         private void OnBackButtonClick(object obj)

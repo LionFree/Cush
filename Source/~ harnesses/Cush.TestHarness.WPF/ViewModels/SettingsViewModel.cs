@@ -2,61 +2,15 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using Cush.TestHarness.WPF.Properties;
+using Cush.TestHarness.WPF.ViewModels.Interfaces;
 using Cush.WPF;
 using Cush.WPF.ColorSchemes;
 
 namespace Cush.TestHarness.WPF.ViewModels
 {
-
-    public interface ISettingsViewModel
-    {
-        List<ThemeMenuData> Accents { get; set; }
-        RelayCommand ApplyCommand { get; }
-        RelayCommand ClearFilesCommand { get; }
-        bool ConfigFileHasPassword { get; set; }
-        bool IsBoldChecked { get; set; }
-        bool IsItalicChecked { get; set; }
-        bool IsKeepRecentFileListChecked { get; set; }
-        ThemeMenuData SelectedAccent { get; set; }
-        FontFamily SelectedFontFamily { get; set; }
-        double SelectedFontSizeInPixels { get; }
-        double SelectedFontSizeInPoints { get; set; }
-        FontStyle SelectedFontStyle { get; set; }
-        FontWeight SelectedFontWeight { get; set; }
-        ThemeMenuData SelectedTheme { get; set; }
-        bool ShowTooltips { get; set; }
-        bool SimilarActivityHandling { get; set; }
-        bool SplashOk { get; set; }
-        List<ThemeMenuData> Themes { get; set; }
-    }
-
-    public sealed class MockSettingsViewModel : ISettingsViewModel
-    {
-        public List<ThemeMenuData> Accents { get; set; }
-        public RelayCommand ApplyCommand { get; }
-        public RelayCommand ClearFilesCommand { get; }
-        public bool ConfigFileHasPassword { get; set; }
-        public bool IsBoldChecked { get; set; }
-        public bool IsItalicChecked { get; set; }
-        public bool IsKeepRecentFileListChecked { get; set; }
-        public ThemeMenuData SelectedAccent { get; set; }
-        public FontFamily SelectedFontFamily { get; set; }
-        public double SelectedFontSizeInPixels { get; }
-        public double SelectedFontSizeInPoints { get; set; }
-        public FontStyle SelectedFontStyle { get; set; }
-        public FontWeight SelectedFontWeight { get; set; }
-        public ThemeMenuData SelectedTheme { get; set; }
-        public bool ShowTooltips { get; set; }
-        public bool SimilarActivityHandling { get; set; }
-        public bool SplashOk { get; set; }
-        public List<ThemeMenuData> Themes { get; set; }
-    }
-
     internal sealed class SettingsViewModel : BindableBase, ISettingsViewModel
     {
         private const double DeviceIndependentPixelsPerInch = 96.0;
@@ -128,12 +82,17 @@ namespace Cush.TestHarness.WPF.ViewModels
 
         public RelayCommand ApplyCommand
         {
-            get { return new RelayCommand("ApplyCommand", param => Trace.WriteLine("Apply Clicked.")); }
+            get { return new RelayCommand(nameof(ApplyCommand), param => Trace.WriteLine("Apply Clicked.")); }
         }
 
         public RelayCommand ClearFilesCommand
         {
-            get { return new RelayCommand("ClearFilesCommand", param => Trace.WriteLine("Clear Files Clicked.")); }
+            get { return new RelayCommand(nameof(ClearFilesCommand), param => Trace.WriteLine("Clear Files Clicked.")); }
+        }
+
+        public RelayCommand CancelCommand
+        {
+            get { return new RelayCommand(nameof(CancelCommand), param => RefreshSettings()); }
         }
 
         public FontFamily SelectedFontFamily
@@ -168,9 +127,7 @@ namespace Cush.TestHarness.WPF.ViewModels
                 OnPropertyChanged();
             }
         }
-
-
-
+        
         public bool IsBoldChecked
         {
             get { return _boldChecked; }
@@ -257,11 +214,10 @@ namespace Cush.TestHarness.WPF.ViewModels
 
         private void RefreshSettings()
         {
-            var selectedScheme = ColorSchemeManager.CurrentScheme;
-            SelectedTheme = Themes.FirstOrDefault(x => x.Name == selectedScheme.Theme.DisplayName);
-            SelectedAccent = Accents.FirstOrDefault(x => x.Name == selectedScheme.Accent.DisplayName);
+            SelectedTheme = Themes.FirstOrDefault(x => x.Name == Settings.Default.Theme);
+            SelectedAccent = Accents.FirstOrDefault(x => x.Name == Settings.Default.Accent);
 
-            _selectedFontFamily = Settings.Default.FontFamily ?? new FontFamily("Arial");
+            SelectedFontFamily = Settings.Default.FontFamily ?? new FontFamily("Arial");
             SelectedFontSizeInPoints = Math.Abs(Settings.Default.FontSize) < double.Epsilon
                                            ? 28
                                            : Settings.Default.FontSize;

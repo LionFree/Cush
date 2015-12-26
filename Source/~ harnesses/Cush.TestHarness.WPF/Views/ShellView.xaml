@@ -6,11 +6,12 @@
                    xmlns:controls="clr-namespace:Cush.WPF.Controls;assembly=Cush.WPF.Controls"
                    xmlns:resources="clr-namespace:Cush.TestHarness.WPF.Views.Resources"
                    xmlns:viewModels="clr-namespace:Cush.TestHarness.WPF.ViewModels"
+                   xmlns:designTime="clr-namespace:Cush.TestHarness.WPF.ViewModels.DesignTime"
                    Title="{x:Static resources:Strings.TEXT_ApplicationName}" 
                    
                    mc:Ignorable="d"
                    Height="768" Width="768"
-                   d:DataContext="{d:DesignInstance Type=viewModels:MockShellViewModel,
+                   d:DataContext="{d:DesignInstance Type=designTime:MockShellViewModel,
                                          IsDesignTimeCreatable=false}">
 
     <controls:CushWindow.Resources>

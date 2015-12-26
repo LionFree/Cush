@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Cush.TestHarness.WPF.ViewModels
+namespace Cush.TestHarness.WPF.Views.Events
 {
     public enum FileViewEvent
     {
