@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
 namespace Cush.WPF
@@ -6,6 +7,7 @@ namespace Cush.WPF
     /// <summary>
     ///     Implementation of <see cref="INotifyPropertyChanged" /> to simplify models.
     /// </summary>
+    [SuppressMessage("ReSharper", "ExplicitCallerInfoArgument")]
     public abstract class BindableBase : INotifyPropertyChanged
     {
         /// <summary>
@@ -29,6 +31,7 @@ namespace Cush.WPF
         ///     True if the value was changed, false if the existing value matched the
         ///     desired value.
         /// </returns>
+        [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")]
         protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {
             if (Equals(storage, value)) return false;
@@ -49,10 +52,7 @@ namespace Cush.WPF
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             var eventHandler = PropertyChanged;
-            if (eventHandler != null)
-            {
-                eventHandler(this, new PropertyChangedEventArgs(propertyName));
-            }
+            eventHandler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

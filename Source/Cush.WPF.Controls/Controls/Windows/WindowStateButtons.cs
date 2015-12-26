@@ -12,6 +12,7 @@ namespace Cush.WPF.Controls
     [TemplatePart(Name = "PART_Max", Type = typeof (Button))]
     [TemplatePart(Name = "PART_Close", Type = typeof (Button))]
     [SuppressMessage("ReSharper", "ClassWithVirtualMembersNeverInherited.Global")]
+    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     public class WindowStateButtons : ContentControl, INotifyPropertyChanged
     {
         public delegate void ClosingWindowEventHandler(object sender, ClosingWindowEventHandlerArgs args);
@@ -187,7 +188,7 @@ namespace Cush.WPF.Controls
                     return;
                 }
                 _parentWindow = value;
-                RaisePropertyChanged("ParentWindow");
+                RaisePropertyChanged(nameof(ParentWindow));
             }
         }
 
@@ -270,10 +271,7 @@ namespace Cush.WPF.Controls
         protected void OnClosingWindow(ClosingWindowEventHandlerArgs args)
         {
             var handler = ClosingWindow;
-            if (handler != null)
-            {
-                handler(this, args);
-            }
+            handler?.Invoke(this, args);
         }
 
         private void MinimizeClick(object sender, RoutedEventArgs e)
@@ -305,14 +303,13 @@ namespace Cush.WPF.Controls
                 return;
             }
 
-            if (null == ParentWindow) return;
-            ParentWindow.Close();
+            ParentWindow?.Close();
         }
 
         protected virtual void RaisePropertyChanged(string propertyName = null)
         {
             var handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
