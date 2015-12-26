@@ -27,7 +27,7 @@ namespace Cush.TestHarness.WPF.Views.Dialogs
         {
             DataContext = vm;
             InitializeComponent();
-            _originalScheme = new ColorScheme(CurrentScheme);
+            _originalScheme = new ColorScheme(ColorScheme);
 
             if (vm.ConfigFileHasPassword)
                 InitializePassword();
@@ -51,8 +51,8 @@ namespace Cush.TestHarness.WPF.Views.Dialogs
 
         private void SettingChanged(object sender, RoutedEventArgs e)
         {
-            if (!IsInitialized) return;
-            var samePassword = PasswordValidator.AreEqual(PasswordBox.SecurePassword, ConfirmBox.SecurePassword);
+            //if (!IsInitialized) return;
+            //var samePassword = PasswordValidator.AreEqual(PasswordBox.SecurePassword, ConfirmBox.SecurePassword);
         }
 
         private void PasswordChanged(object sender, RoutedEventArgs e)
@@ -78,6 +78,7 @@ namespace Cush.TestHarness.WPF.Views.Dialogs
             SettingChanged(null, null);
         }
 
+        //[SecurityCritical]
         private void AccentChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count == 0) return;
@@ -91,7 +92,7 @@ namespace Cush.TestHarness.WPF.Views.Dialogs
             //if (IsInitialized) Apply.IsEnabled = true;
         }
 
-        [SecurityCritical]
+        //[SecurityCritical]
         private void ThemeChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count == 0) return;
@@ -126,7 +127,7 @@ namespace Cush.TestHarness.WPF.Views.Dialogs
                 _passwordChanged = false;
             }
 
-            _originalScheme = new ColorScheme(CurrentScheme);
+            _originalScheme = new ColorScheme(ColorScheme);
             Close();
         }
 

@@ -117,12 +117,7 @@
                                   IsChecked="{Binding Path=ShowTooltips,Mode=TwoWay}"
                                   Click="SettingChanged"
                                   Height="Auto" Margin="3" />
-
-                        <CheckBox Content="{x:Static resources:Strings.TEXT_SimilarActivity}"
-                                  IsChecked="{Binding Path=SimilarActivityHandling, Mode=TwoWay}"
-                                  Click="SettingChanged"
-                                  Height="Auto" Margin="3" />
-
+                       
                     </StackPanel>
 
                     <CheckBox Content="{x:Static resources:Strings.TEXT_DebugMode}" Grid.Row="0" Grid.Column="1"

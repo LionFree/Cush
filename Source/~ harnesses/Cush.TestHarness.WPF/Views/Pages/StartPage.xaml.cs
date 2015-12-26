@@ -26,7 +26,7 @@ namespace Cush.TestHarness.WPF.Views.Pages
             ColorSchemeManager.Register(this);
         }
 
-        public IColorScheme CurrentScheme { get; set; }
+        public IColorScheme ColorScheme { get; set; }
 
         private void PinRecentFile(object sender, MouseButtonEventArgs e)
         {

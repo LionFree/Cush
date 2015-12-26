@@ -29,7 +29,6 @@ namespace Cush.TestHarness.WPF.ViewModels.DesignTime
         public FontWeight SelectedFontWeight { get; set; }
         public ThemeMenuData SelectedTheme { get; set; }
         public bool ShowTooltips { get; set; }
-        public bool SimilarActivityHandling { get; set; }
         public bool SplashOk { get; set; }
         public List<ThemeMenuData> Themes { get; set; }
         public SecureString SecurePassword { get; set; }

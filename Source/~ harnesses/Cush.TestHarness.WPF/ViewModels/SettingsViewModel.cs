@@ -27,7 +27,6 @@ namespace Cush.TestHarness.WPF.ViewModels
         private FontStyle _selectedFontStyle;
         private FontWeight _selectedFontWeight;
         private ThemeMenuData _selectedTheme;
-        private bool _similarActivityHandling;
         private SecureString _securePassword;
         private bool _isPasswordLocked;
 
@@ -72,8 +71,7 @@ namespace Cush.TestHarness.WPF.ViewModels
             }
             set
             {
-                if (_securePassword == value) return;
-                _securePassword = value;
+                SetProperty(ref _securePassword, value);
             } 
         }
 
@@ -126,9 +124,7 @@ namespace Cush.TestHarness.WPF.ViewModels
             get { return _selectedFontStyle; }
             set
             {
-                if (_selectedFontStyle.Equals(value)) return;
-                _selectedFontStyle = value;
-                OnPropertyChanged();
+                SetProperty(ref _selectedFontStyle, value);
             }
         }
 
@@ -137,9 +133,7 @@ namespace Cush.TestHarness.WPF.ViewModels
             get { return _selectedFontWeight; }
             set
             {
-                if (_selectedFontWeight.Equals(value)) return;
-                _selectedFontWeight = value;
-                OnPropertyChanged();
+                SetProperty(ref _selectedFontWeight, value);
             }
         }
 
@@ -148,10 +142,8 @@ namespace Cush.TestHarness.WPF.ViewModels
             get { return _boldChecked; }
             set
             {
-                if (_boldChecked == value) return;
-                _boldChecked = value;
+                SetProperty(ref _boldChecked, value);
                 SelectedFontWeight = _boldChecked ? FontWeights.Bold : FontWeights.Normal;
-                OnPropertyChanged();
             }
         }
 
@@ -160,11 +152,12 @@ namespace Cush.TestHarness.WPF.ViewModels
             get { return _italicChecked; }
             set
             {
-                if (_italicChecked == value) return;
-                _italicChecked = value;
+                SetProperty(ref _italicChecked, value);
+                //if (_italicChecked == value) return;
+                //_italicChecked = value;
 
                 SelectedFontStyle = _italicChecked ? FontStyles.Italic : FontStyles.Normal;
-                OnPropertyChanged();
+                //OnPropertyChanged();
             }
         }
 
@@ -173,9 +166,7 @@ namespace Cush.TestHarness.WPF.ViewModels
             get { return _isKeepRecentFileListChecked; }
             set
             {
-                if (_isKeepRecentFileListChecked == value) return;
-                _isKeepRecentFileListChecked = value;
-                OnPropertyChanged();
+                SetProperty(ref _isKeepRecentFileListChecked, value);
             }
         }
 
@@ -183,23 +174,10 @@ namespace Cush.TestHarness.WPF.ViewModels
             get { return _isPasswordLocked; }
             set
             {
-                if (_isPasswordLocked == value) return;
-                _isPasswordLocked = value;
-                OnPropertyChanged();
+                SetProperty(ref _isPasswordLocked, value);
             }
         }
-
-        public bool SimilarActivityHandling
-        {
-            get { return _similarActivityHandling; }
-            set
-            {
-                if (_similarActivityHandling == value) return;
-                _similarActivityHandling = value;
-                OnPropertyChanged();
-            }
-        }
-
+        
         //public ConfigFile ConfigFile
         //{
         //    get { return _configFile; }
@@ -252,7 +230,6 @@ namespace Cush.TestHarness.WPF.ViewModels
             IsItalicChecked = Settings.Default.FontItalic;
 
             IsKeepRecentFileListChecked = Settings.Default.KeepRecentFilesList;
-            SimilarActivityHandling = Settings.Default.SimilarActivityHandling;
         }
 
         private void Commit()
@@ -272,8 +249,7 @@ namespace Cush.TestHarness.WPF.ViewModels
             Settings.Default.FontBold = IsBoldChecked;
             Settings.Default.FontItalic = IsItalicChecked;
             Settings.Default.KeepRecentFilesList = IsKeepRecentFileListChecked;
-            Settings.Default.SimilarActivityHandling = SimilarActivityHandling;
-
+            
             // Save the settings
             Settings.Default.Save();
         }
