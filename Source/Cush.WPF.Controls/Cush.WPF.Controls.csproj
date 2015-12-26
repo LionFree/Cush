@@ -29,6 +29,7 @@
   </ItemGroup>
   <!--References-->
   <ItemGroup>
+    <Compile Include="ColorSchemes\ColorSchemeComposer.cs" />
     <Compile Include="Controls\CushThumb.cs" />
     <Compile Include="Converters\IsNullConverter.cs" />
     <Compile Include="Converters\MarkupConverter.cs" />

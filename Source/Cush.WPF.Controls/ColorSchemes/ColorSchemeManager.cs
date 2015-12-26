@@ -6,9 +6,13 @@ using System.Linq;
 using System.Windows;
 using Cush.Common.Annotations;
 using Cush.Common.Exceptions;
+using Cush.Common.Logging;
+using Cush.Composition;
+using Cush.WPF.Controls.ColorSchemes;
 using Cush.WPF.Interfaces;
 
 // ReSharper disable once CheckNamespace
+
 namespace Cush.WPF.ColorSchemes
 {
     [DebuggerDisplay("Theme={_currentScheme.Theme.DisplayName}, Accent={_currentScheme.Accent.DisplayName}")]
@@ -63,7 +67,31 @@ namespace Cush.WPF.ColorSchemes
                 ConnectEventHandlersToCurrentScheme();
             }
         }
-        
+
+        /// <summary>
+        ///     Loads any <see cref="ColorScheme" />s from local assemblies,
+        ///     and registers them with the <see cref="T:ColorSchemeManager" />.
+        ///     CALL THIS (OR DO IT MANUALLY) BEFORE CREATING ANY WINDOWS.
+        /// </summary>
+        /// <param name="logger">The <see cref="T:ILogger" /> to use when logging progress and error messages.</param>
+        public static void ComposeColorSchemeExtensions(ILogger logger)
+        {
+            var composer = new ColorSchemeComposer(logger);
+            try
+            {
+                using (var collector = new ImportCollector(logger))
+                {
+                    collector.ImportParts();
+                    composer.ComposeImports(collector);
+                }
+                PopulateSchemes(composer.Container);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+            }
+        }
+
         /// <summary>
         ///     Takes an <see cref="IColorSchemeExtensionContainer " /> and populates the <see cref="ColorSchemeManager" />
         ///     with the Accents, Themes, and default scheme.
@@ -106,7 +134,7 @@ namespace Cush.WPF.ColorSchemes
         }
 
         /// <summary>
-        ///     Lists the <see cref="ISchemedElement" />s that are registered in the <see cref="ColorSchemeManager"/>.
+        ///     Lists the <see cref="ISchemedElement" />s that are registered in the <see cref="ColorSchemeManager" />.
         ///     Adds a <see paramref="comment" /> before the list, if one is given.
         ///     The comment is useful for identifying the point in code where the list is generated.
         /// </summary>
@@ -135,7 +163,7 @@ namespace Cush.WPF.ColorSchemes
             //}
             Elements.Remove(element);
         }
-        
+
         // TODO: Make this an IDisposable and do dispose instead
         public static void Clear()
         {
@@ -255,7 +283,7 @@ namespace Cush.WPF.ColorSchemes
                 ReplaceResources(element.Resources, element.ColorScheme.Accent, CurrentScheme.Accent);
                 ReplaceResources(element.Resources, element.ColorScheme.Theme, CurrentScheme.Theme);
             }
-            element.ColorScheme = (ColorScheme)CurrentScheme;
+            element.ColorScheme = (ColorScheme) CurrentScheme;
         }
 
         private static void AddManagedSchemeToElementResources(ISchemedElement element)

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using Cush.Common.Logging;
-using Cush.Composition;
 using Cush.TestHarness.WPF.ViewModels;
 using Cush.TestHarness.WPF.Views;
 using Cush.TestHarness.WPF.Views.Dialogs;
@@ -22,9 +20,8 @@ namespace Cush.TestHarness.WPF.Infrastructure
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         internal static Engine ComposeObjectGraph(ILogger logger)
         {
-            var composer = ComposeExtensions(logger);
-            ColorSchemeManager.PopulateSchemes(composer.Container);
-            
+            ColorSchemeManager.ComposeColorSchemeExtensions(logger);
+
             var shellView = new ShellView(new ShellViewModel(new StartPage(new StartPageViewModel())));
 
             var dialogs = new DialogPack(
@@ -34,18 +31,7 @@ namespace Cush.TestHarness.WPF.Infrastructure
 
             shellView.AttachDialogs(dialogs);
 
-            return new Implementation(shellView, composer, logger);
-        }
-
-        private static Composer ComposeExtensions(ILogger logger)
-        {
-            var composer = new Composer(logger);
-            using (var collector = new ImportCollector(logger))
-            {
-                collector.ImportParts();
-                composer.ComposeImports(collector);
-            }
-            return composer;
+            return new Implementation(shellView, logger);
         }
 
         internal abstract void Start(params string[] args);
@@ -53,14 +39,12 @@ namespace Cush.TestHarness.WPF.Infrastructure
 
         private class Implementation : Engine
         {
-            private readonly Composer _composer;
             private readonly ILogger _logger;
             private readonly Window _view;
 
-            public Implementation(Window view, Composer composer, ILogger logger)
+            public Implementation(Window view, ILogger logger)
             {
                 _view = view;
-                _composer = composer;
                 _logger = logger;
             }
 
@@ -73,7 +57,7 @@ namespace Cush.TestHarness.WPF.Infrastructure
                 }
                 catch (Exception ex)
                 {
-                    Trace.WriteLine(ex.Message);
+                    _logger.Error(ex.Message);
                     // If it fails here, shut it down.
                     //ErrorHandler.HandleError("AppStartup", ex);
 
