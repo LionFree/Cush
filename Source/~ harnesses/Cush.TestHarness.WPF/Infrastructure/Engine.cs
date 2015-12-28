@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
+using Cush.Common.FileHandling;
 using Cush.Common.Logging;
+using Cush.TestHarness.WPF.Model;
 using Cush.TestHarness.WPF.ViewModels;
 using Cush.TestHarness.WPF.Views;
 using Cush.TestHarness.WPF.Views.Dialogs;
 using Cush.TestHarness.WPF.Views.Pages;
 using Cush.WPF.ColorSchemes;
+using Cush.WPF.Controls;
 
 namespace Cush.TestHarness.WPF.Infrastructure
 {
@@ -22,14 +25,32 @@ namespace Cush.TestHarness.WPF.Infrastructure
         {
             ColorSchemeManager.ComposeColorSchemeExtensions(logger);
 
-            var shellView = new ShellView(new ShellViewModel(new StartPage(new StartPageViewModel())));
-
-            var dialogs = new DialogPack(
-                new AboutDialog(new AboutViewModel(), shellView, null),
-                new SettingsDialog(new SettingsViewModel(), shellView, null)
+            var fileClerk = new FileClerk<DataFile>(logger,
+                new FileHandler<DataFile>(
+                    logger, new XmlFileReader(logger), new XmlFileWriter(logger))
+                {
+                    Filter = "Test Data Files (*.dat)|*.dat|All Files (*.*)|*.*",
+                    DefaultExt = "dat",
+                    DefaultFileName = string.Empty
+                }
                 );
 
-            shellView.AttachDialogs(dialogs);
+            var shellView = new ShellView(new ShellViewModel(logger, fileClerk,
+               new PagePack
+               {
+                   ActivityPage = new ActivityPage(new ActivityPageViewModel()),
+                   StartPage = new StartPage(new StartPageViewModel())
+               }
+               ));
+
+            var dialogs = new DialogPack { 
+                AboutDialog = new AboutDialog(new AboutViewModel(), shellView, null),
+                SettingsDialog=new SettingsDialog(new SettingsViewModel(), shellView, null),
+                ProgressDialog = new ProgressDialog(shellView, ProgressDialogSettings.Cancellable),
+
+                };
+
+            shellView.SetDialogs(dialogs);
 
             return new Implementation(shellView, logger);
         }

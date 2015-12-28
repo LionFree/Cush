@@ -22,6 +22,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -34,8 +35,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Infrastructure\Composer.cs" />
+    <Compile Include="Model\DataFile.cs" />
+    <Compile Include="Model\FileClerkT.cs" />
+    <Compile Include="Model\FileValidator.cs" />
+    <Compile Include="Model\Settings.cs" />
     <Compile Include="ViewModels\AboutViewModel.cs" />
+    <Compile Include="ViewModels\ActivityPageViewModel.cs" />
+    <Compile Include="ViewModels\DesignTime\MockActivityPageViewModel.cs" />
     <Compile Include="ViewModels\Interfaces\IAboutViewModel.cs" />
+    <Compile Include="ViewModels\Interfaces\IActivityPageViewModel.cs" />
     <Compile Include="ViewModels\Interfaces\ISettingsViewModel.cs" />
     <Compile Include="ViewModels\DesignTime\MockSettingsViewModel.cs" />
     <Compile Include="ViewModels\DesignTime\MockAboutViewModel.cs" />
@@ -48,10 +56,14 @@
     <Compile Include="Views\Dialogs\AboutDialog.xaml.cs">
       <DependentUpon>AboutDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Dialogs\DialogPack.cs" />
+    <Compile Include="Views\DialogPack.cs" />
     <Compile Include="Views\Dialogs\SettingsDialog.xaml.cs">
       <DependentUpon>SettingsDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Pages\ActivityPage.xaml.cs">
+      <DependentUpon>ActivityPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PagePack.cs" />
     <Compile Include="Views\Strings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -79,6 +91,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Dialogs\SettingsDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\ActivityPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -140,7 +156,5 @@
       <Name>Cush.WPF</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Model\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

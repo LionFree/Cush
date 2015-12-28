@@ -176,5 +176,24 @@ namespace Cush.TestHarness.WPF.Views.Pages
             // Raise an event to the ShellWindow to open a file and display the content page.
             OnFileViewButtonPressed(new FileViewEventArgs {PageEvent = FileViewEvent.OpenOther});
         }
+
+        internal event EventHandler<FileEventArgs> OpenRecentFile;
+        internal event EventHandler OpenOtherFile;
+
+        private void MRUFileMenu_OnOpenOtherFileClicked(object sender, RoutedEventArgs e)
+        {
+            OpenOtherFile?.Invoke(this, e);
+        }
+        
+        private void MRUFileMenu_OnRecentFileSelected(object sender, SelectionChangedEventArgs e)
+        {
+            MRUEntry file = null;
+            var args = e;
+            if (args != null && args.AddedItems.Count != 0)
+                file = (MRUEntry)args.AddedItems[0];
+
+            if (file == null) return;
+            OpenRecentFile?.Invoke(this, new FileEventArgs { Fullpath = file.FullPath });
+        }
     }
 }

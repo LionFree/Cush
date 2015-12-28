@@ -1,12 +1,16 @@
-﻿using System.Windows.Controls;
+﻿using System;
+using System.ComponentModel;
+using System.Windows.Controls;
 using System.Windows.Input;
-using Cush.TestHarness.WPF.Views.Pages;
+using Cush.Common;
 
 namespace Cush.TestHarness.WPF.ViewModels.Interfaces
 {
     public interface IShellViewModel
     {
-        ICommand BackButtonCommand { get; }
+        ICommand BackButtonClickCommand { get; }
         ContentControl Content { get; set; }
+        event EventHandler<FileProgressEventArgs> FileProgressStatusChanged;
+        event EventHandler<ProgressChangedEventArgs> FileProgressChanged;
     }
 }
