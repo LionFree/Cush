@@ -1,12 +1,16 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 
 namespace Cush.WPF.Controls
 {
-    public partial class IndeterminateProgressBar
+    [SuppressMessage("ReSharper", "RedundantExtendsListEntry")]
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
+    public partial class IndeterminateProgressBar:UserControl
     {
         public static readonly DependencyProperty ProgressColorProperty =
             DependencyProperty.RegisterAttached("ProgressColor", typeof (Brush), typeof (IndeterminateProgressBar),
@@ -21,6 +25,7 @@ namespace Cush.WPF.Controls
             dpd.AddValueChanged(this, (s, e) => ((IndeterminateProgressBar) s).StartStopAnimation());
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public Brush ProgressColor
         {
             get { return (Brush) GetValue(ProgressColorProperty); }

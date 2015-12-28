@@ -37,11 +37,6 @@
     </Compile>
     <Compile Include="Controls\Dialogs\ProgressDialogSettings.cs" />
     <Compile Include="Controls\Dialogs\ProgressDialogResult.cs" />
-    <Compile Include="Converters\IsNullConverter.cs" />
-    <Compile Include="Converters\MarkupConverter.cs" />
-    <Compile Include="Converters\ThicknessToDoubleConverter.cs" />
-    <Compile Include="Converters\ToLowerConverter.cs" />
-    <Compile Include="Converters\ToUpperConverter.cs" />
     <Compile Include="ColorSchemes\Accents\AccentAmber.xaml.cs">
       <DependentUpon>AccentAmber.xaml</DependentUpon>
     </Compile>
