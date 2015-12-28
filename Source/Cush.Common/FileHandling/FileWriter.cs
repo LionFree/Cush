@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 using Cush.Common.Exceptions;
 using Cush.Common.Logging;
 
-namespace Cush.Common
+namespace Cush.Common.FileHandling
 {
     public abstract class FileWriter
     {

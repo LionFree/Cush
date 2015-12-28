@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using Cush.Common.FileHandling;
 
 namespace Cush.Common
 {
@@ -8,6 +10,7 @@ namespace Cush.Common
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
+    [DebuggerStepThrough]
     public class IOEventArgs : EventArgs
     {
         //public delegate void IOEventHandler(object sender, IOEventArgs e);

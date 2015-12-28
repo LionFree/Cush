@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace Cush.Common
+namespace Cush.Common.FileHandling
 {
     /// <summary>
     /// Specifies whether the save is a regular Save or a Save-As.

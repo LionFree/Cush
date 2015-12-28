@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace Cush.Common
+namespace Cush.Common.FileHandling
 {
     /// <summary>
     /// Specifies the action being taken on a file.

@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
-namespace Cush.Common.Progress
+namespace Cush.Common.FileHandling.Progress
 {
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
     internal class ReadProgressStream : ContainerStream

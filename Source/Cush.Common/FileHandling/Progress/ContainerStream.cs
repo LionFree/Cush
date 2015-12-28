@@ -2,7 +2,7 @@
 using System.IO;
 using Cush.Common.Exceptions;
 
-namespace Cush.Common.Progress
+namespace Cush.Common.FileHandling.Progress
 {
     internal class ContainerStream : Stream
     {

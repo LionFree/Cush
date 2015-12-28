@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Cush.Common;
 using Cush.Common.Exceptions;
+using Cush.Common.FileHandling;
 using Cush.Common.Helpers;
 using Cush.WPF.Controls.Helpers;
 

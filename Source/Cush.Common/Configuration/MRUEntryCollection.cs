@@ -1,6 +1,6 @@
 ﻿using System.Configuration;
 
-namespace Cush.WPF.Controls
+namespace Cush.Common.Configuration
 {
     [ConfigurationCollection(typeof(MRUEntryElement),
         CollectionType = ConfigurationElementCollectionType.AddRemoveClearMap)]

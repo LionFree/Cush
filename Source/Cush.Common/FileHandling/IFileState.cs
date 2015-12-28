@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace Cush.Common
+namespace Cush.Common.FileHandling
 {
     public interface IFileState<T> :INotifyPropertyChanged where T : class
     {

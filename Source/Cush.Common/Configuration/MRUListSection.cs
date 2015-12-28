@@ -4,7 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Xml;
 
-namespace Cush.WPF.Controls
+namespace Cush.Common.Configuration
 {
     public sealed class MRUListSection : ConfigurationSection
     {

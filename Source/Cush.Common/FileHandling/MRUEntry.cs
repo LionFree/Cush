@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Xml.Serialization;
 using Cush.Common.Helpers;
 
-namespace Cush.Common
+namespace Cush.Common.FileHandling
 {
     [XmlType("MRUList"), DebuggerStepThrough]
     public class MRUEntry : BindableBase

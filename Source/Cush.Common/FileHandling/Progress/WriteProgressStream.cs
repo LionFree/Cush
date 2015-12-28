@@ -3,7 +3,7 @@ using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace Cush.Common.Progress
+namespace Cush.Common.FileHandling.Progress
 {
     [XmlSchemaProvider("MySchema")]
     public class WriteProgressStream : IXmlSerializable

@@ -14,7 +14,7 @@ using Microsoft.Win32;
 
 // ReSharper disable InconsistentNaming
 
-namespace Cush.Common
+namespace Cush.Common.FileHandling
 {
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     [SuppressMessage("ReSharper", "ClassWithVirtualMembersNeverInherited.Global")]
@@ -54,6 +54,7 @@ namespace Cush.Common
             Files = files;
             _fileReader = reader;
             _fileWriter = writer;
+            CancelFileOperations += _fileReader.CancelFileOperations;
         }
 
         public string DefaultExt
@@ -502,6 +503,13 @@ namespace Cush.Common
             return Open(fileName, fileIndex, true, callback);
         }
 
+        internal event EventHandler CancelFileOperations;
+
+        public void CancelFileOperation()
+        {
+            CancelFileOperations?.Invoke(this, new EventArgs());
+        }
+
         [SuppressMessage("ReSharper", "UnusedParameter.Local")]
         private int Open(string fileName, int fileIndex, bool userSentIndex, ProgressChangedEventHandler callback)
         {
@@ -564,6 +572,10 @@ namespace Cush.Common
                         Trace.WriteLine("DataFile is null.");
                     }
                 }
+            }
+            catch (OperationCanceledException)
+            {
+                result = false;
             }
             catch (FileNotFoundException)
             {

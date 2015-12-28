@@ -1,6 +1,6 @@
 ﻿using System.Configuration;
 
-namespace Cush.WPF.Controls
+namespace Cush.Common.Configuration
 {
     public class MRUEntryElement : ConfigurationElement
     {

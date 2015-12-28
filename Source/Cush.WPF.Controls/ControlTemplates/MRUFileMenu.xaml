@@ -2,7 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:converters="clr-namespace:Cush.WPF.Controls.Converters;assembly=Cush.WPF"
                     xmlns:controls="clr-namespace:Cush.WPF.Controls"
-                    xmlns:common="clr-namespace:Cush.Common;assembly=Cush.Common">
+                    xmlns:common="clr-namespace:Cush.Common;assembly=Cush.Common"
+                    xmlns:fileHandling="clr-namespace:Cush.Common.FileHandling;assembly=Cush.Common">
 
     <Color x:Key="SelectedBackgroundColor">#FFC5CBF9</Color>
     <Color x:Key="SelectedUnfocusedColor">#FFDDDDDD</Color>
@@ -95,7 +96,7 @@
             </Style>
 
             <!-- ItemTemplate -->
-            <DataTemplate x:Key="RecentFileTemplate" DataType="{x:Type common:MRUEntry}">
+            <DataTemplate x:Key="RecentFileTemplate" DataType="{x:Type fileHandling:MRUEntry}">
                 <DataTemplate.Resources>
 
                     <Style TargetType="DockPanel">
