@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
 using Cush.Common;
 using Cush.TestHarness.WPF.ViewModels.Interfaces;
-using MRUEntry = Cush.Common.MRUEntry;
+using MRUEntry = Cush.Common.FileHandling.MRUEntry;
 
 namespace Cush.TestHarness.WPF.ViewModels.DesignTime
 {

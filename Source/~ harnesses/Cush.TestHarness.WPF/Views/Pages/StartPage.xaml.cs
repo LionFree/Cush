@@ -6,6 +6,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using Cush.Common;
+using Cush.Common.FileHandling;
 using Cush.TestHarness.WPF.ViewModels.Interfaces;
 using Cush.TestHarness.WPF.Views.Events;
 using Cush.WPF.ColorSchemes;
