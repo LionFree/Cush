@@ -41,6 +41,7 @@
         <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/ControlTemplates/WindowCommands.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/ControlTemplates/WindowStateButtons.xaml" />
 
+        <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/ControlTemplates/DialogBase.xaml" />
 
     </ResourceDictionary.MergedDictionaries>
 

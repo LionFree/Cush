@@ -9,11 +9,7 @@ namespace Cush.WPF.Controls
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public class ContentDialog : DialogBase
     {
-        /// <summary>
-        ///     Gets/sets the dialog's Guid (it's 'handle').
-        /// </summary>
-        internal Guid Guid { get; set; }
-
+        
         public static readonly DependencyProperty DialogResultProperty = DependencyProperty.RegisterAttached(
             "DialogResult", typeof(bool?), typeof(ContentDialog), new PropertyMetadata(DialogResultChanged));
         

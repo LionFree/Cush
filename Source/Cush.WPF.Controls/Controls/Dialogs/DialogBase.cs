@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,6 +14,18 @@ namespace Cush.WPF.Controls
     [SuppressMessage("ReSharper", "VirtualMemberNeverOverriden.Global")]
     public abstract class DialogBase : ContentControl, ISchemedElement
     {
+        public static readonly DependencyProperty DialogTopProperty = DependencyProperty.Register("DialogTop",
+            typeof (object), typeof (DialogBase), new PropertyMetadata(null));
+
+        public static readonly DependencyProperty DialogBottomProperty = DependencyProperty.Register("DialogBottom",
+            typeof (object), typeof (DialogBase), new PropertyMetadata(null));
+
+        static DialogBase()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof (DialogBase),
+                new FrameworkPropertyMetadata(typeof (DialogBase)));
+        }
+
         /// <summary>
         ///     Initializes a new DialogBase.
         /// </summary>
@@ -39,9 +52,32 @@ namespace Cush.WPF.Controls
         {
         }
 
+        /// <summary>
+        ///     Gets/sets the dialog's Guid (it's 'handle').
+        /// </summary>
+        internal Guid Guid { get; set; }
+
+        /// <summary>
+        ///     Gets/sets arbitrary content on top of the dialog.
+        /// </summary>
+        public object DialogTop
+        {
+            get { return GetValue(DialogTopProperty); }
+            set { SetValue(DialogTopProperty, value); }
+        }
+
+        /// <summary>
+        ///     Gets/sets arbitrary content below the dialog.
+        /// </summary>
+        public object DialogBottom
+        {
+            get { return GetValue(DialogBottomProperty); }
+            set { SetValue(DialogBottomProperty, value); }
+        }
+
         internal SizeChangedEventHandler SizeChangedHandler { get; set; }
 
-        private DialogSettings DialogSettings { get; }
+        public DialogSettings DialogSettings { get; private set; }
 
         /// <summary>
         ///     Gets or sets the window that owns the current Dialog.
@@ -50,7 +86,7 @@ namespace Cush.WPF.Controls
         protected CushWindow OwningWindow { get; set; }
 
         /// <summary>
-        ///     Gets or sets the current <see cref="T:IColorScheme"/>.
+        ///     Gets or sets the current <see cref="T:IColorScheme" />.
         /// </summary>
         public IColorScheme ColorScheme { get; set; }
 
@@ -86,7 +122,7 @@ namespace Cush.WPF.Controls
             Unloaded -= Dialog_Unloaded;
         }
 
-        internal Task _WaitForCloseAsync()
+        public Task WaitForCloseAsync()
         {
             var tcs = new TaskCompletionSource<object>();
 
@@ -135,14 +171,16 @@ namespace Cush.WPF.Controls
         ///     Waits for the dialog to become ready for interaction.
         /// </summary>
         /// <returns>A task that represents the operation and it's status.</returns>
-        internal Task WaitForLoadAsync()
+        public Task WaitForLoadAsync()
         {
             Dispatcher.VerifyAccess();
 
             if (IsLoaded) return new Task(() => { });
 
             if (!DialogSettings.AnimateShow)
+            {
                 Opacity = 1.0; //skip the animation
+            }
 
             var tcs = new TaskCompletionSource<object>();
 
@@ -164,6 +202,19 @@ namespace Cush.WPF.Controls
         private Task RequestCloseAsync()
         {
             return OnRequestClose() ? OwningWindow.HideDialogAsync(this) : Task.Factory.StartNew(() => { });
+        }
+
+        /// <summary>
+        ///     Waits until this dialog gets unloaded.
+        /// </summary>
+        /// <returns></returns>
+        public Task WaitUntilUnloadedAsync()
+        {
+            var tcs = new TaskCompletionSource<object>();
+
+            Unloaded += (s, e) => { tcs.TrySetResult(null); };
+
+            return tcs.Task;
         }
     }
 }

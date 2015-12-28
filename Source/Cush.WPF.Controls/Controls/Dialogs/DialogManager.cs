@@ -26,14 +26,14 @@ namespace Cush.WPF.Controls
             // Otherwise, create a new one.
             return window.DialogContainer.Children.Cast<ContentDialog>()
                 .FirstOrDefault(item => item.Guid == content.Guid)
-                         ?? CreateDialog(window, content, settings);
+                   ?? CreateDialog(window, content, settings);
         }
 
         private static ContentDialog CreateDialog(CushWindow window, ContentDialog content, DialogSettings settings)
         {
             if (settings == null)
                 settings = window.DialogOptions;
-            
+
             // Pull the content out of the dialog and put it into a new dialog.  
             // (For some reason, using the dialog directly doesn't work.)
             var body = content;
@@ -44,58 +44,12 @@ namespace Cush.WPF.Controls
             {
                 Content = body,
                 Guid = content.Guid,
-                DataContext = bodyContext,
+                DataContext = bodyContext
             };
 
             return dialog;
         }
 
-        /// <summary>
-        ///     Creates a ContentDialog inside of the current window.
-        /// </summary>
-        /// <param name="window"></param>
-        /// <param name="content">The ContentDialog to display.</param>
-        /// <param name="settings">Optional settings that override the global metro dialog settings.</param>
-        /// <returns>A task promising the result of which button was pressed.</returns>
-        public static Task<MessageDialogResult> ShowDialogAsync(this CushWindow window, ContentDialog content,
-            DialogSettings settings = null)
-        {
-            ThrowHelper.IfNullThenThrow(() => content);
-
-            window.Dispatcher.VerifyAccess();
-            return HandleOverlayOnShow(settings, window).ContinueWith(z => window.Dispatcher.Invoke(() =>
-            {
-                var dialog = GetDialog(window, content, settings);
-                var sizeHandler = SetupAndOpenDialog(window, dialog);
-                dialog.SizeChangedHandler = sizeHandler;
-
-                return dialog.WaitForLoadAsync().ContinueWith(x =>
-                {
-                    window.OnDialogOpened();
-                    return dialog.WaitForButtonPressAsync().ContinueWith(y =>
-                    {
-                        //once a button as been clicked, begin removing the dialog.
-                        dialog.OnClose();
-                        window.OnDialogClosed();
-
-                        var closingTask = window.Dispatcher.Invoke(dialog._WaitForCloseAsync);
-
-                        return closingTask.ContinueWith(a => (window.Dispatcher.Invoke(() =>
-                        {
-                            window.SizeChanged -= sizeHandler;
-
-                            window.DialogContainer.Children.Remove(dialog);
-                            //remove the dialog from the container
-
-                            return HandleOverlayOnHide(settings, window);
-                            //window.overlayBox.Visibility = System.Windows.Visibility.Hidden; //deactive the overlay effect
-                        })).ContinueWith(y3 => y).Unwrap());
-                    }).Unwrap();
-                }).Unwrap().Unwrap();
-            })).Unwrap();
-        }
-
-        
 
         private static void OnDialogOpened(this DispatcherObject window)
         {
@@ -156,7 +110,7 @@ namespace Cush.WPF.Controls
 
             dialog.OnClose();
 
-            var closingTask = window.Dispatcher.Invoke(() => dialog._WaitForCloseAsync());
+            var closingTask = window.Dispatcher.Invoke(() => dialog.WaitForCloseAsync());
             return closingTask.ContinueWith(a =>
             {
                 if (DialogClosed != null)
@@ -208,6 +162,53 @@ namespace Cush.WPF.Controls
             dialog.OnShown();
 
             return sizeHandler;
+        }
+
+        /// <summary>
+        ///     Creates a ContentDialog inside of the current window.
+        /// </summary>
+        /// <param name="window">The CushWindow.</param>
+        /// <param name="content">The ContentDialog to display.</param>
+        /// <param name="settings">Optional settings that override the global metro dialog settings.</param>
+        /// <returns>A task promising the result of which button was pressed.</returns>
+        public static Task<MessageDialogResult> ShowDialogAsync(this CushWindow window, ContentDialog content,
+            DialogSettings settings = null)
+        {
+            ThrowHelper.IfNullThenThrow(() => content);
+            if (settings == null)
+                settings = content.DialogSettings ?? window.DialogOptions ?? new DialogSettings();
+
+            window.Dispatcher.VerifyAccess();
+            return HandleOverlayOnShow(settings, window).ContinueWith(z => window.Dispatcher.Invoke(() =>
+            {
+                var dialog = GetDialog(window, content, settings);
+                var sizeHandler = SetupAndOpenDialog(window, dialog);
+                dialog.SizeChangedHandler = sizeHandler;
+
+                return dialog.WaitForLoadAsync().ContinueWith(x =>
+                {
+                    window.OnDialogOpened();
+                    return dialog.WaitForButtonPressAsync().ContinueWith(y =>
+                    {
+                        //once a button as been clicked, begin removing the dialog.
+                        dialog.OnClose();
+                        window.OnDialogClosed();
+
+                        var closingTask = window.Dispatcher.Invoke(dialog.WaitForCloseAsync);
+
+                        return closingTask.ContinueWith(a => (window.Dispatcher.Invoke(() =>
+                        {
+                            window.SizeChanged -= sizeHandler;
+
+                            window.DialogContainer.Children.Remove(dialog);
+                            //remove the dialog from the container
+
+                            return HandleOverlayOnHide(settings, window);
+                            //window.overlayBox.Visibility = System.Windows.Visibility.Hidden; //deactive the overlay effect
+                        })).ContinueWith(y3 => y).Unwrap());
+                    }).Unwrap();
+                }).Unwrap().Unwrap();
+            })).Unwrap();
         }
     }
 }

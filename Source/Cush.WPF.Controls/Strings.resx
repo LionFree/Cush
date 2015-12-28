@@ -117,8 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="BUTTON_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
   <data name="ERROR_PasswordsDoNotMatch" xml:space="preserve">
     <value>Passwords do not match.</value>
+  </data>
+  <data name="TEXT_CancelAction" xml:space="preserve">
+    <value>Please wait while process is cancelled...</value>
   </data>
   <data name="TEXT_OpenOtherFiles" xml:space="preserve">
     <value>OPEN OTHER FILES</value>

@@ -61,11 +61,29 @@ namespace Cush.WPF.Controls {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string BUTTON_Cancel {
+            get {
+                return ResourceManager.GetString("BUTTON_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Passwords do not match..
         /// </summary>
         public static string ERROR_PasswordsDoNotMatch {
             get {
                 return ResourceManager.GetString("ERROR_PasswordsDoNotMatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please wait while process is cancelled....
+        /// </summary>
+        public static string TEXT_CancelAction {
+            get {
+                return ResourceManager.GetString("TEXT_CancelAction", resourceCulture);
             }
         }
         
