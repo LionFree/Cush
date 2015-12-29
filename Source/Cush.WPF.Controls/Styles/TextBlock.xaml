@@ -3,14 +3,14 @@
 
     <!-- note: default style for textblock is now in CushWindow !!! -->
     <!-- never ever make a default style for TextBlock in App.xaml !!!  -->
-    <Style TargetType="{x:Type TextBlock}" x:Key="CushTextBlock">
+    <Style TargetType="{x:Type TextBlock}" x:Key="CushTextBlockStyle">
         <!-- doesn't need this anymore... -->
         <!--<Setter Property="Foreground"
                 Value="{DynamicResource LabelTextBrush}" />-->
     </Style>
 
     <Style TargetType="{x:Type TextBlock}"
-           x:Key="CushAutoCollapsingTextBlock" BasedOn="{StaticResource CushTextBlock}">
+           x:Key="CushAutoCollapsingTextBlock" BasedOn="{StaticResource CushTextBlockStyle}">
         <Style.Triggers>
             <Trigger Property="Text"
                      Value="">

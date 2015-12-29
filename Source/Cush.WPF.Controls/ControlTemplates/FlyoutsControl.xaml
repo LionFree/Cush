@@ -6,7 +6,8 @@
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <Grid TextElement.Foreground="{DynamicResource FlyoutWhiteBrush}" />
+                    <Grid />
+                    <!--<Grid TextElement.Foreground="{DynamicResource FlyoutWhiteBrush}" />-->
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>

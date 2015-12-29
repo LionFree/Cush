@@ -440,10 +440,7 @@ namespace Cush.WPF.Controls
                 }
                 else if (_content == null || !_content.MoveFocus(new TraversalRequest(FocusNavigationDirection.First)))
                 {
-                    if (_header != null)
-                    {
-                        _header.MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
-                    }
+                    _header?.MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
                 }
             }
         }
