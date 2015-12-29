@@ -6,10 +6,9 @@
                 xmlns:controls="clr-namespace:Cush.WPF.Controls;assembly=Cush.WPF.Controls"
                 xmlns:viewModels="clr-namespace:Cush.TestHarness.WPF.ViewModels"
                 xmlns:resources="clr-namespace:Cush.TestHarness.WPF.Views"
-                xmlns:designTime="clr-namespace:Cush.TestHarness.WPF.ViewModels.DesignTime"
                 mc:Ignorable="d" d:DesignWidth="640" d:DesignHeight="500"
-                d:DataContext="{d:DesignInstance Type=designTime:MockStartPageViewModel,
-                                         IsDesignTimeCreatable=true}">
+                d:DataContext="{d:DesignInstance Type=viewModels:StartPageViewModel,
+                                         IsDesignTimeCreatable=false}">
 
     <ContentControl.Resources>
         <ResourceDictionary>

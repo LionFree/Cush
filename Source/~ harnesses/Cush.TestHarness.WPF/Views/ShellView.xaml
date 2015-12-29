@@ -5,10 +5,10 @@
                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                      xmlns:controls="clr-namespace:Cush.WPF.Controls;assembly=Cush.WPF.Controls"
                      xmlns:resources="clr-namespace:Cush.TestHarness.WPF.Views"
-                     xmlns:designTime="clr-namespace:Cush.TestHarness.WPF.ViewModels.DesignTime"
+                     xmlns:viewModels="clr-namespace:Cush.TestHarness.WPF.ViewModels"
                      mc:Ignorable="d"
                      
-                     d:DataContext="{d:DesignInstance Type=designTime:MockShellViewModel, IsDesignTimeCreatable=True}" 
+                     d:DataContext="{d:DesignInstance Type=viewModels:ShellViewModel, IsDesignTimeCreatable=True}" 
                      Title="{x:Static resources:Strings.TEXT_ApplicationName}"
                      Height="768" Width="768">
 

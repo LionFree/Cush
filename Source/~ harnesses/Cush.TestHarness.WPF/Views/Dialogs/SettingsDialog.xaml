@@ -9,11 +9,11 @@
                       xmlns:controls="clr-namespace:Cush.WPF.Controls;assembly=Cush.WPF.Controls"
                       xmlns:resources="clr-namespace:Cush.TestHarness.WPF.Views"
                       xmlns:colorSchemes="clr-namespace:Cush.WPF.ColorSchemes;assembly=Cush.WPF.Controls"
-                      xmlns:designTime="clr-namespace:Cush.TestHarness.WPF.ViewModels.DesignTime"
+                      xmlns:viewModels="clr-namespace:Cush.TestHarness.WPF.ViewModels"
 
                       Foreground="{DynamicResource BlackBrush}"
                       Background="{DynamicResource WhiteBrush}"
-                      mc:Ignorable="d" d:DataContext="{d:DesignInstance designTime:MockSettingsViewModel, IsDesignTimeCreatable=True}">
+                      mc:Ignorable="d" d:DataContext="{d:DesignInstance viewModels:SettingsViewModel, IsDesignTimeCreatable=False}">
     <controls:ContentDialog.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

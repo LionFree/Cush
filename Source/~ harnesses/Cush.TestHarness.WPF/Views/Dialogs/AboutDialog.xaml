@@ -11,7 +11,7 @@
 
                         mc:Ignorable="d"
                         d:DesignWidth="800"
-                        d:DataContext="{d:DesignInstance viewModels:AboutViewModel, IsDesignTimeCreatable=True}">
+                        d:DataContext="{d:DesignInstance viewModels:AboutViewModel, IsDesignTimeCreatable=False}">
 
     <Border Background="{DynamicResource WhiteBrush}">
         <Grid Margin="20">

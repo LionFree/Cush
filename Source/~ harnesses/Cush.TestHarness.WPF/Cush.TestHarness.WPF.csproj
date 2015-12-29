@@ -41,16 +41,11 @@
     <Compile Include="Model\Settings.cs" />
     <Compile Include="ViewModels\AboutViewModel.cs" />
     <Compile Include="ViewModels\ActivityPageViewModel.cs" />
-    <Compile Include="ViewModels\DesignTime\MockActivityPageViewModel.cs" />
     <Compile Include="ViewModels\Interfaces\IAboutViewModel.cs" />
     <Compile Include="ViewModels\Interfaces\IActivityPageViewModel.cs" />
     <Compile Include="ViewModels\Interfaces\ISettingsViewModel.cs" />
-    <Compile Include="ViewModels\DesignTime\MockSettingsViewModel.cs" />
-    <Compile Include="ViewModels\DesignTime\MockAboutViewModel.cs" />
     <Compile Include="ViewModels\Interfaces\IShellViewModel.cs" />
-    <Compile Include="ViewModels\DesignTime\MockShellViewModel.cs" />
     <Compile Include="ViewModels\Interfaces\IStartPageViewModel.cs" />
-    <Compile Include="ViewModels\DesignTime\MockStartPageViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="Views\Events\StartPageEventArgs.cs" />
     <Compile Include="Views\Dialogs\AboutDialog.xaml.cs">
