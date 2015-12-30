@@ -6,7 +6,9 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows;
+using Cush.Common.Annotations;
 using Cush.Common.Exceptions;
 using Cush.Common.Helpers;
 using Cush.Common.Logging;
@@ -20,7 +22,7 @@ namespace Cush.Common.FileHandling
     [SuppressMessage("ReSharper", "ClassWithVirtualMembersNeverInherited.Global")]
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
     [SuppressMessage("ReSharper", "EventNeverSubscribedTo.Global")]
-    public sealed class FileHandler<T> : DependencyObject where T : class
+    public sealed class FileHandler<T> : DependencyObject, INotifyPropertyChanged where T : class
     {
         public delegate void IOEventHandler(object sender, IOEventArgs e);
 
@@ -39,6 +41,8 @@ namespace Cush.Common.FileHandling
         public readonly DependencyProperty FilesProperty =
             DependencyProperty.Register("Files", typeof (ObservableCollection<IFileState<T>>), typeof (FileHandler<T>),
                 new FrameworkPropertyMetadata(null, OnFileCollectionChanged));
+
+        private int _currentFileIndex;
 
         public FileHandler(FileReader reader, FileWriter writer) : this(Loggers.Trace, reader, writer)
         {
@@ -118,7 +122,20 @@ namespace Cush.Common.FileHandling
         public string DefaultFileName { get; set; } = string.Empty;
 
         public int Count => Files.Count;
-        public int CurrentFileIndex { get; set; }
+
+        public int CurrentFileIndex
+        {
+            get
+            {
+                return _currentFileIndex;
+            }
+            set
+            {
+                if (_currentFileIndex == value) return;
+                _currentFileIndex = value;
+                OnPropertyChanged(nameof(CurrentFileIndex));
+            } 
+        }
 
         public T CurrentFile
         {
@@ -130,7 +147,11 @@ namespace Cush.Common.FileHandling
                 }
                 return Files[CurrentFileIndex].Object;
             }
-            set { Files[CurrentFileIndex].Object = value; }
+            set
+            {
+                Files[CurrentFileIndex].Object = value;
+                OnPropertyChanged(nameof(CurrentFile));
+            }
         }
 
         public IFileState<T> CurrentFileState
@@ -144,7 +165,11 @@ namespace Cush.Common.FileHandling
 
                 return Files[CurrentFileIndex];
             }
-            set { Files[CurrentFileIndex] = value; }
+            set
+            {
+                Files[CurrentFileIndex] = value;
+                OnPropertyChanged(nameof(CurrentFileState));
+            }
         }
 
         /// <summary>
@@ -656,6 +681,14 @@ namespace Cush.Common.FileHandling
                 return true;
             }
             return false;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

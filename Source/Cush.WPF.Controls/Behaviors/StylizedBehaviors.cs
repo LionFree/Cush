@@ -28,16 +28,16 @@ namespace Cush.WPF.Controls.Behaviors
 
         private static int GetIndexOf(BehaviorCollection itemBehaviors, Behavior behavior)
         {
-            int index = -1;
+            var index = -1;
 
-            Behavior orignalBehavior = GetOriginalBehavior(behavior);
+            var orignalBehavior = GetOriginalBehavior(behavior);
 
-            for (int i = 0; i < itemBehaviors.Count; i++)
+            for (var i = 0; i < itemBehaviors.Count; i++)
             {
                 Behavior currentBehavior = itemBehaviors[i];
 
-                if (currentBehavior == behavior
-                    || currentBehavior == orignalBehavior)
+                if (Equals(currentBehavior, behavior)
+                    || Equals(currentBehavior, orignalBehavior))
                 {
                     index = i;
                     break;
@@ -45,8 +45,8 @@ namespace Cush.WPF.Controls.Behaviors
 
                 Behavior currentOrignalBehavior = GetOriginalBehavior(currentBehavior);
 
-                if (currentOrignalBehavior == behavior
-                    || currentOrignalBehavior == orignalBehavior)
+                if (Equals(currentOrignalBehavior, behavior)
+                    || Equals(currentOrignalBehavior, orignalBehavior))
                 {
                     index = i;
                     break;
@@ -70,7 +70,7 @@ namespace Cush.WPF.Controls.Behaviors
             var newBehaviors = e.NewValue as StylizedBehaviorCollection;
             var oldBehaviors = e.OldValue as StylizedBehaviorCollection;
 
-            if (newBehaviors == oldBehaviors)
+            if (Equals(newBehaviors, oldBehaviors))
             {
                 return;
             }
@@ -79,7 +79,7 @@ namespace Cush.WPF.Controls.Behaviors
             {
                 foreach (var behavior in oldBehaviors)
                 {
-                    int index = GetIndexOf(itemBehaviors, behavior);
+                    var index = GetIndexOf(itemBehaviors, behavior);
 
                     if (index >= 0)
                     {
@@ -88,20 +88,18 @@ namespace Cush.WPF.Controls.Behaviors
                 }
             }
 
-            if (newBehaviors != null)
-            {
-                foreach (var behavior in newBehaviors)
-                {
-                    int index = GetIndexOf(itemBehaviors, behavior);
+            if (newBehaviors == null) return;
 
-                    if (index < 0)
-                    {
-                        var clone = (Behavior)behavior.Clone();
-                        SetOriginalBehavior(clone, behavior);
-                        itemBehaviors.Add(clone);
-                    }
-                }
+            foreach (var behavior in newBehaviors)
+            {
+                var index = GetIndexOf(itemBehaviors, behavior);
+
+                if (index >= 0) continue;
+                var clone = (Behavior) behavior.Clone();
+                SetOriginalBehavior(clone, behavior);
+                itemBehaviors.Add(clone);
             }
+
         }
 
         private static void SetOriginalBehavior(DependencyObject obj, Behavior value)
