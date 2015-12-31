@@ -15,7 +15,7 @@ namespace Cush.TestHarness.WPF.Model
             get { return _password; }
             set
             {
-                SetNotifyingProperty(ref _password, value, () => EncryptedPassword,
+                SetProperty(ref _password, value, () => EncryptedPassword,
                     new Expression<Func<object>>[] {() => HasPassword});
             }
         }
