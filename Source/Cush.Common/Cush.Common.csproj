@@ -65,6 +65,7 @@
     <Compile Include="FileHandling\MRUEntry.cs" />
     <Compile Include="FileHandling\Progress\ContainerStream.cs" />
     <Compile Include="FileHandling\Progress\WriteProgressStream.cs" />
+    <Compile Include="Helpers\EventExtensions.cs" />
     <Compile Include="Helpers\FileNameHelper.cs" />
     <Compile Include="FileHandling\Enums\SaveType.cs" />
     <Compile Include="FileHandling\Progress\ReadProgressStream.cs" />
