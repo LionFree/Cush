@@ -58,7 +58,7 @@ namespace Cush.TestHarness.WPF.ViewModels
             }
         }
 
-        public bool AreLeftWindowCommandsVisibile => !Equals(Content, _pages.StartPage);
+        public bool IsFileMenuVisible => !Equals(Content, _pages.StartPage);
 
         public ICommand OpenFileMenu
         {
@@ -73,7 +73,11 @@ namespace Cush.TestHarness.WPF.ViewModels
         public ContentControl Content
         {
             get { return _content; }
-            set { SetProperty(ref _content, value); }
+            set
+            {
+                SetProperty(ref _content, value);
+                OnPropertyChanged(nameof(IsFileMenuVisible));
+            }
         }
 
         public event EventHandler<FileProgressEventArgs> FileProgressStatusChanged;

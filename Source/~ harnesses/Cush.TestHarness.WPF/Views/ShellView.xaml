@@ -25,7 +25,7 @@
     </controls:CushWindow.Resources>
 
     <controls:CushWindow.LeftWindowCommands>
-        <controls:WindowCommands ShowLastSeparator="False" Visibility="{Binding AreLeftWindowCommandsVisibile, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <controls:WindowCommands ShowLastSeparator="False" Visibility="{Binding IsFileMenuVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
             <!--Command="{x:Static local:CushShellView.CmdOptions}"-->
             <Button Command="{Binding OpenFileMenu}"
                 ToolTip="{x:Static resources:Strings.TOOLTIP_File}" 
