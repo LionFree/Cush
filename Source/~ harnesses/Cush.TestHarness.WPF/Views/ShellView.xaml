@@ -11,6 +11,7 @@
                      d:DataContext="{d:DesignInstance Type=viewModels:ShellViewModel, IsDesignTimeCreatable=True}" 
                      Title="{x:Static resources:Strings.TEXT_ApplicationName}"
                      TitleAlignment="Center"
+                     GlowBrush="{DynamicResource AccentColorBrush}"
                      Height="768" Width="768">
 
     <controls:CushWindow.Resources>
@@ -39,8 +40,6 @@
             </Button>
         </controls:WindowCommands>
     </controls:CushWindow.LeftWindowCommands>
-
-
 
     <!-- The command bar (left of the window minimize/maximize/close controls) -->
     <controls:CushWindow.RightWindowCommands>
