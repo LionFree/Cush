@@ -2,9 +2,9 @@
 using System.Diagnostics;
 using Cush.Common.FileHandling;
 
-namespace Cush.Common.Helpers
+namespace Cush.Common
 {
-    public static class MRUExtensionMethods
+    public static class MRUExtensions
     {
         /// <summary>
         /// Searches for the specified MRUEntry and returns the zero-based index of the first occurrence within the entire ObservableCollection&lt;MRUEntry&gt;.

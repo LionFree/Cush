@@ -65,13 +65,14 @@
     <Compile Include="FileHandling\MRUEntry.cs" />
     <Compile Include="FileHandling\Progress\ContainerStream.cs" />
     <Compile Include="FileHandling\Progress\WriteProgressStream.cs" />
-    <Compile Include="Helpers\EventExtensions.cs" />
+    <Compile Include="Extensions\EnumExtensions.cs" />
+    <Compile Include="Extensions\EventExtensions.cs" />
     <Compile Include="Helpers\FileNameHelper.cs" />
     <Compile Include="FileHandling\Enums\SaveType.cs" />
     <Compile Include="FileHandling\Progress\ReadProgressStream.cs" />
     <Compile Include="Helpers\Expressions.cs" />
     <Compile Include="Helpers\GuidHelper.cs" />
-    <Compile Include="Helpers\MRUExtensionMethods.cs" />
+    <Compile Include="Extensions\MRUExtensions.cs" />
     <Compile Include="Helpers\MRUEntryHelper.cs" />
     <Compile Include="Interaction\NullDialogs.cs" />
     <Compile Include="Interaction\IDialogs.cs" />
