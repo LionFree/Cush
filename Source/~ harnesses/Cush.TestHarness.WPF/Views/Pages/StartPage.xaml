@@ -72,8 +72,8 @@
                               OpenOtherText="{x:Static resources:Strings.TEXT_OpenOtherFiles}"
                              OpenOtherFileClicked="MRUFileMenu_OnOpenOtherFileClicked"
                               RecentFileSelected="MRUFileMenu_OnRecentFileSelected"
-                              OpenOtherFile="{Binding OpenOtherCommand}"
-                              OpenRecentFile="{Binding OpenRecentCommand}"
+                              OpenOtherFile="{Binding OnOpenOtherFileRequested}"
+                              OpenRecentFile="{Binding OnOpenRecentFileRequested}"
                               OpenACopyVisible="True"
                               BreadcrumbsVisible="True"
                               OpenACopy="MRUMenu_OnOpenACopy" />
@@ -110,18 +110,18 @@
                          Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3"
                          Visibility="Visible">
             <ListBoxItem>
-                <Button Click="AppBarCommand" Style="{StaticResource AppBarCommandStyle}">
-                    Clone a File
-                </Button>
+                <Button Click="AppBarCommand" Style="{StaticResource AppBarCommandStyle}"
+                        Command="{Binding OnMergeFilesRequested}"
+                        Content="Merge Files" />
             </ListBoxItem>
         </controls:NavBar>
 
         <!-- Templates -->
         <WrapPanel x:Name="Templates"
                    Grid.Row="1" Grid.Column="2">
-            <Button Click="NewFromTemplate" Style="{StaticResource TemplateButtonStyle}">
-                New Empty File
-            </Button>
+            <Button Command="{Binding OnNewFileRequested}"
+                    Style="{StaticResource TemplateButtonStyle}"
+                    Content="New Empty File"/>
         </WrapPanel>
 
     </Grid>

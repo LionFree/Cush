@@ -5,11 +5,11 @@
                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                       xmlns:sys="clr-namespace:System;assembly=mscorlib"
-                      xmlns:helpers="clr-namespace:Cush.WPF.Styles.Helpers;assembly=Cush.WPF.Controls"
                       xmlns:controls="clr-namespace:Cush.WPF.Controls;assembly=Cush.WPF.Controls"
                       xmlns:resources="clr-namespace:Cush.TestHarness.WPF.Views"
                       xmlns:colorSchemes="clr-namespace:Cush.WPF.ColorSchemes;assembly=Cush.WPF.Controls"
                       xmlns:viewModels="clr-namespace:Cush.TestHarness.WPF.ViewModels"
+                      xmlns:helpers="clr-namespace:Cush.WPF.Controls.Helpers;assembly=Cush.WPF.Controls"
 
                       Foreground="{DynamicResource BlackBrush}"
                       Background="{DynamicResource WhiteBrush}"

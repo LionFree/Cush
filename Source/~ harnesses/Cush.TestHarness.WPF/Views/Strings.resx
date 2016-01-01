@@ -244,6 +244,9 @@
   <data name="TOOLTIP_About" xml:space="preserve">
     <value>About "App Name"</value>
   </data>
+  <data name="TOOLTIP_File" xml:space="preserve">
+    <value>Open File Menu</value>
+  </data>
   <data name="TOOLTIP_Settings" xml:space="preserve">
     <value>Modify Settings</value>
   </data>

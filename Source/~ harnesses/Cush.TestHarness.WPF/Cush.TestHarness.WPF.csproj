@@ -47,6 +47,8 @@
     <Compile Include="ViewModels\Interfaces\IShellViewModel.cs" />
     <Compile Include="ViewModels\Interfaces\IStartPageViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelPack.cs" />
+    <Compile Include="ViewModels\ViewPages.cs" />
     <Compile Include="Views\Events\StartPageEventArgs.cs" />
     <Compile Include="Views\Dialogs\AboutDialog.xaml.cs">
       <DependentUpon>AboutDialog.xaml</DependentUpon>
@@ -100,6 +102,10 @@
     <Page Include="Views\Pages\StartPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Resources\ShellViewIcons.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\ShellView.xaml">
       <SubType>Designer</SubType>

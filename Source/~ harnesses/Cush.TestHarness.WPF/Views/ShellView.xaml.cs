@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows;
 using Cush.Common;
 using Cush.TestHarness.WPF.ViewModels.Interfaces;
@@ -74,6 +75,11 @@ namespace Cush.TestHarness.WPF.Views
         private async void About_OnClick(object sender, RoutedEventArgs e)
         {
             await this.ShowDialogAsync(_aboutDialog);
+        }
+
+        private void File_OnClick(object sender, RoutedEventArgs e)
+        {
+            Trace.WriteLine("File Menu Clicked!");
         }
     }
 }

@@ -10,17 +10,36 @@
                      
                      d:DataContext="{d:DesignInstance Type=viewModels:ShellViewModel, IsDesignTimeCreatable=True}" 
                      Title="{x:Static resources:Strings.TEXT_ApplicationName}"
+                     TitleAlignment="Center"
                      Height="768" Width="768">
 
     <controls:CushWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/Styles.xaml" />
-                <ResourceDictionary
-                    Source="pack://application:,,,/Cush.TestHarness.WPF;component/Views/Resources/Icons.xaml" />
+                <ResourceDictionary Source="/Views/Resources/ShellViewIcons.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         </ResourceDictionary>
     </controls:CushWindow.Resources>
+
+    <controls:CushWindow.LeftWindowCommands>
+        <controls:WindowCommands ShowLastSeparator="False" Visibility="{Binding AreLeftWindowCommandsVisibile, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <!--Command="{x:Static local:CushShellView.CmdOptions}"-->
+            <Button Command="{Binding OpenFileMenu}"
+                ToolTip="{x:Static resources:Strings.TOOLTIP_File}" 
+                    Foreground="{DynamicResource IdealForegroundColorBrush}"
+                    >
+                <Rectangle Width="16" Height="16" Margin="0,0,3,0">
+                    <Rectangle.Fill>
+                        <VisualBrush Stretch="Fill" Visual="{StaticResource FileCommand}" />
+                    </Rectangle.Fill>
+                </Rectangle>
+            </Button>
+        </controls:WindowCommands>
+    </controls:CushWindow.LeftWindowCommands>
+
 
 
     <!-- The command bar (left of the window minimize/maximize/close controls) -->
@@ -32,7 +51,7 @@
                 <StackPanel Orientation="Horizontal">
                     <Rectangle Width="16" Height="16" Margin="0,0,3,0">
                         <Rectangle.Fill>
-                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_settings}" />
+                            <VisualBrush Stretch="Fill" Visual="{StaticResource SettingsCommand}" />
                         </Rectangle.Fill>
                     </Rectangle>
                     <TextBlock Text="{x:Static resources:Strings.TEXT_Settings}" />
@@ -44,7 +63,7 @@
                 <StackPanel Orientation="Horizontal">
                     <Rectangle Width="16" Height="16" Margin="0,0,3,0">
                         <Rectangle.Fill>
-                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_information_circle}" />
+                            <VisualBrush Stretch="Fill" Visual="{StaticResource AboutCommand}" />
                         </Rectangle.Fill>
                     </Rectangle>
                 </StackPanel>

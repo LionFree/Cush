@@ -7,6 +7,8 @@ namespace Cush.TestHarness.WPF.Model
     [Serializable, XmlRoot("Cush.TestHarness.WPF.DataFile")]
     public class DataFile : BindableBase
     {
+        public static DataFile Default => new DataFile();
+
         public DataFile()
         {
             Settings = new Settings();

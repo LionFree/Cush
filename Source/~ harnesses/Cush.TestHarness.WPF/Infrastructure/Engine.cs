@@ -35,19 +35,24 @@ namespace Cush.TestHarness.WPF.Infrastructure
                 }
                 );
 
-            var shellView = new ShellView(new ShellViewModel(logger, fileClerk,
-               new PagePack
-               {
-                   ActivityPage = new ActivityPage(new ActivityPageViewModel()),
-                   StartPage = new StartPage(new StartPageViewModel())
-               }
-               ));
+            var viewModels = new ViewModelPack
+            {
+                ActivityPageViewModel = new ActivityPageViewModel(fileClerk),
+                StartPageViewModel = new StartPageViewModel(),
+            };
+
+            var pages = new ViewPages
+            {
+                ActivityPage = new ActivityPage(viewModels.ActivityPageViewModel),
+                StartPage = new StartPage(viewModels.StartPageViewModel)
+            };
+
+            var shellView = new ShellView(new ShellViewModel(logger, fileClerk, pages, viewModels));
 
             var dialogs = new DialogPack { 
                 AboutDialog = new AboutDialog(new AboutViewModel(), shellView, null),
                 SettingsDialog=new SettingsDialog(new SettingsViewModel(), shellView, null),
                 ProgressDialog = new ProgressDialog(shellView, ProgressDialogSettings.Cancellable),
-
                 };
 
             shellView.SetDialogs(dialogs);

@@ -439,6 +439,15 @@ namespace Cush.TestHarness.WPF.Views {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open File Menu.
+        /// </summary>
+        public static string TOOLTIP_File {
+            get {
+                return ResourceManager.GetString("TOOLTIP_File", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Modify Settings.
         /// </summary>
         public static string TOOLTIP_Settings {

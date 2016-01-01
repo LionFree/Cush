@@ -40,6 +40,12 @@ namespace Cush.TestHarness.WPF.Model
 
         internal T CurrentFile => _fileHandler?.CurrentFile;
 
+        public bool FileIsDirty => CurrentFileState.Dirty;
+
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+        public IFileState<T> CurrentFileState
+            => _fileHandler.Files.Count == 0 ? new FileState<T>() : _fileHandler.Files[0];
+
         private void OpenFile(string fileName)
         {
             ThrowHelper.IfNullOrEmptyThenThrow(() => fileName);
@@ -72,7 +78,7 @@ namespace Cush.TestHarness.WPF.Model
 
                 // Show the file to whoever's asking.
                 _fileHandler.Files[fileNumber].Shown = true;
-                RaiseEvent(FileOpenedEvent, new FileEventArgs { Fullpath = fileName, Pinned = false });
+                RaiseEvent(FileOpenedEvent, new FileEventArgs {Fullpath = fileName, Pinned = false});
             }
             catch (Exception ex)
             {
@@ -93,7 +99,7 @@ namespace Cush.TestHarness.WPF.Model
         internal void CloseFile()
         {
             _fileHandler.Remove(CurrentFile);
-            RaiseEvent(FileClosedEvent, new FileEventArgs { FileCount = _fileHandler.Files.Count });
+            RaiseEvent(FileClosedEvent, new FileEventArgs {FileCount = _fileHandler.Files.Count});
 
             //if (num == 0)
             //{
@@ -172,6 +178,52 @@ namespace Cush.TestHarness.WPF.Model
             var file = FileNameHelper.StripFileName(fileState.Filename);
             file = FileNameHelper.StripFileExtension(file);
             return file;
+        }
+
+        public bool RequestNewFile(AskUserIfOkayToSaveChangesCallback okayToSaveChanges,
+            T aNewFile)
+        {
+            // If a file already exists, make sure we want to close the first one.
+            if (!OkayToCreateNew(okayToSaveChanges)) return false;
+
+            // Create a new file holder.
+            var fileNumber = _fileHandler.NewFile("Untitled", 0);
+
+            // If the load failed completely, get out.
+            if (fileNumber != 0) return false;
+
+            // Load the default values into the new file.
+            _fileHandler.Files[fileNumber].Object = aNewFile;
+
+            // Set the dirty bit to false.
+            _fileHandler.SetDirtyBit(false);
+
+            // If the file isn't already shown...
+            if (!_fileHandler.Files[fileNumber].Shown)
+            {
+                // Update the CurrentFileIndex to the most recent file.
+                CurrentFileIndex = _fileHandler.Count - 1;
+            }
+
+            RaiseEvent(FileCreated, new FileEventArgs());
+            return true;
+        }
+
+        internal event EventHandler<FileEventArgs> FileCreated;
+
+        internal string Save(SaveType saveType)
+        {
+            return _fileHandler.Save(CurrentFile, CurrentFileState.FullPath == "Untitled" ? SaveType.SaveAs : saveType);
+        }
+
+        public string Save()
+        {
+            return Save(SaveType.Save);
+        }
+
+        public string SaveAs()
+        {
+            return Save(SaveType.SaveAs);
         }
     }
 

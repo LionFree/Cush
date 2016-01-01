@@ -11,41 +11,58 @@ using Cush.Common.FileHandling;
 using Cush.Common.Logging;
 using Cush.TestHarness.WPF.Model;
 using Cush.TestHarness.WPF.ViewModels.Interfaces;
-using Cush.TestHarness.WPF.Views;
-using Cush.TestHarness.WPF.Views.Events;
-using Cush.TestHarness.WPF.Views.Pages;
 using Cush.WPF;
+using Strings = Cush.TestHarness.WPF.Views.Strings;
 
 namespace Cush.TestHarness.WPF.ViewModels
 {
     public class ShellViewModel : BindableBase, IShellViewModel
     {
-        private readonly ActivityPage _activityPage;
         private readonly FileClerk<DataFile> _fileHandler;
         private readonly ILogger _logger;
-
         private readonly ThreadSafeObservableCollection<MRUEntry> _mruList;
-        private readonly StartPage _startPage;
+        private readonly ViewPages _pages;
         private ICommand _backButtonCommand;
         private ContentControl _content;
 
-        internal ShellViewModel(ILogger logger, FileClerk<DataFile> fileHandler, PagePack pages)
+        internal ShellViewModel(ILogger logger, FileClerk<DataFile> fileHandler, ViewPages pages,
+            ViewModelPack viewModels)
         {
-            _mruList = new ThreadSafeObservableCollection<MRUEntry>();
             _logger = logger;
+            _mruList = new ThreadSafeObservableCollection<MRUEntry>();
+
+            fileHandler.FileOpenedEvent += FileOpenedEvent;
+            fileHandler.FileClosedEvent += FileClosedEvent;
+            fileHandler.FileProgressChanged += OnFileProgressChanged;
+            fileHandler.FileProgressStatusChanged += OnFileProgressStatusChanged;
+
+            viewModels.StartPageViewModel.OpenRecentFileRequested += _startPage_OpenRecentFile;
+            viewModels.StartPageViewModel.OpenOtherFileRequested += _startPage_OpenOtherFile;
+            viewModels.StartPageViewModel.NewFileRequested += _startPage_NewFileRequested;
+
+
             _fileHandler = fileHandler;
-            _startPage = pages.StartPage;
-            _activityPage = pages.ActivityPage;
+            _pages = pages;
 
-            _fileHandler.FileOpenedEvent += FileOpenedEvent;
-            _fileHandler.FileClosedEvent += FileClosedEvent;
-            _fileHandler.FileProgressChanged += OnFileProgressChanged;
-            _fileHandler.FileProgressStatusChanged += OnFileProgressStatusChanged;
+            Content = _pages.StartPage;
+        }
 
-            _startPage.FileViewButtonPressed += content_FileViewButtonPressed;
-            _startPage.OpenRecentFile += _startPage_OpenRecentFile;
-            _startPage.OpenOtherFile += _startPage_OpenOtherFile;
-            Content = _startPage;
+        private void _startPage_NewFileRequested(object sender, EventArgs e)
+        {
+            var success = _fileHandler.RequestNewFile(OkayToSaveChanges, DataFile.Default);
+
+            if (success)
+            {
+                // Switch to the Activity editor page.
+                Content = _pages.ActivityPage;
+            }
+        }
+
+        public bool AreLeftWindowCommandsVisibile => !Equals(Content, _pages.StartPage);
+
+        public ICommand OpenFileMenu
+        {
+            get { return new RelayCommand(nameof(OpenFileMenu), param => Content = _pages.StartPage); }
         }
 
 
@@ -59,19 +76,19 @@ namespace Cush.TestHarness.WPF.ViewModels
             set { SetProperty(ref _content, value); }
         }
 
+        public event EventHandler<FileProgressEventArgs> FileProgressStatusChanged;
+        public event EventHandler<ProgressChangedEventArgs> FileProgressChanged;
+
+
         private void OnFileProgressStatusChanged(object sender, FileProgressEventArgs e)
         {
             FileProgressStatusChanged?.Invoke(this, e);
         }
 
-        public event EventHandler<FileProgressEventArgs> FileProgressStatusChanged;
-        public event EventHandler<ProgressChangedEventArgs> FileProgressChanged;
-
         private void OnFileProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             FileProgressChanged?.Invoke(this, e);
         }
-
 
 
         private void FileClosedEvent(object sender, FileEventArgs e)
@@ -92,7 +109,7 @@ namespace Cush.TestHarness.WPF.ViewModels
             FileValidator.ValidateAllActivities(_fileHandler.CurrentFile);
 
             UpdateMRUList(e.Fullpath, e.Pinned);
-            Content = _activityPage;
+            Content = _pages.ActivityPage;
 
             //ShellWindow.SetPage(Page.ActivityEditor);
             //ShellWindow.UpdateLayout();
@@ -114,7 +131,7 @@ namespace Cush.TestHarness.WPF.ViewModels
 
         private void UpdateMRUList(string fullPath, bool pinned)
         {
-            var openedFile = new MRUEntry { FullPath = fullPath, Pinned = pinned };
+            var openedFile = new MRUEntry {FullPath = fullPath, Pinned = pinned};
             //ShellWindow.FileMenuContent.MRUMenu.Add(openedFile);
             _mruList.Add(openedFile);
 
@@ -130,7 +147,7 @@ namespace Cush.TestHarness.WPF.ViewModels
         private bool OkayToSaveChanges(string shortFileName)
         {
             var okay = MessageBox.Show($"Do you want to save the changes to {shortFileName}?",
-                Views.Strings.TEXT_ApplicationName,
+                Strings.TEXT_ApplicationName,
                 MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
 
             switch (okay)
@@ -161,7 +178,7 @@ namespace Cush.TestHarness.WPF.ViewModels
                 // Populate the section with MRUEntries.
                 foreach (var item in mruList)
                 {
-                    var temp = new MRUEntryElement { FullPath = item.FullPath, Pinned = item.Pinned };
+                    var temp = new MRUEntryElement {FullPath = item.FullPath, Pinned = item.Pinned};
                     mruListSection.MRUList.Add(temp);
                 }
 
@@ -183,50 +200,6 @@ namespace Cush.TestHarness.WPF.ViewModels
         private void OnBackButtonClick(object obj)
         {
             Trace.WriteLine("Back Button Clicked");
-        }
-
-        internal void content_FileViewButtonPressed(object sender, FileViewEventArgs e)
-        {
-            try
-            {
-                switch (e.PageEvent)
-                {
-                    case FileViewEvent.ToggleRecentFilePin:
-                        break;
-
-                    case FileViewEvent.OpenOther:
-                        RaiseOpenEvent();
-                        break;
-
-                    //case FileViewEvent.OpenRecentFile:
-                    //    MessageBox.Show("ShellWindow:  OpenRecentFile: " + e.Filename);
-                    //    break;
-
-
-                    case FileViewEvent.OpenACopy:
-                        MessageBox.Show("ShellWindow:  OpenACopy: " + e.Filename);
-                        break;
-
-                    case FileViewEvent.NewFromTemplate:
-                        MessageBox.Show("NewFromTemplate: " + e.Filename);
-                        break;
-
-                    case FileViewEvent.AppBarCommand:
-                        MessageBox.Show("AppbarCommand: " + e.TargetCommand);
-                        break;
-                }
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLine("content_FileViewButtonPressed.Exception: " + ex.Message);
-            }
-        }
-
-        // This method raises the OpenClicked event 
-        private void RaiseOpenEvent()
-        {
-            //var newEventArgs = new RoutedEventArgs(OpenClickedEvent);
-            //RaiseEvent(newEventArgs);
         }
     }
 }

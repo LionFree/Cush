@@ -10,10 +10,10 @@ using Cush.WPF;
 
 namespace Cush.TestHarness.WPF.ViewModels
 {
+    public delegate void OpenRecentFileEventHandler(object sender, FileEventArgs e);
+
     public class StartPageViewModel : BindableBase, IStartPageViewModel
     {
-        public delegate void OpenRecentFileEventHandler(object sender, FileEventArgs e);
-
         private ThreadSafeObservableCollection<MRUEntry> _files;
 
         public StartPageViewModel() : this(new ThreadSafeObservableCollection<MRUEntry>())
@@ -32,42 +32,15 @@ namespace Cush.TestHarness.WPF.ViewModels
             set { SetProperty(ref _files, value); }
         }
 
-        public ICommand OpenOtherCommand
-        {
-            get { return new RelayCommand(nameof(OpenOtherCommand), param => RaiseEvent(OpenOtherFile)); }
-        }
-
-        public ICommand OpenRecentCommand
-        {
-            get { return new RelayCommand(nameof(OpenRecentCommand), OnOpenRecentFile); }
-        }
-
-        public ICommand ImportFileCommand
-        {
-            get
-            {
-                return new RelayCommand(nameof(ImportFileCommand), param => Trace.WriteLine("Import File clicked."));
-            }
-        }
-
-        public ICommand MergeFilesCommand
-        {
-            get
-            {
-                return new RelayCommand(nameof(MergeFilesCommand), param => Trace.WriteLine("Merge Files clicked."));
-            }
-        }
-
-        public ICommand NewEmptyFileCommand
-        {
-            get
-            {
-                return new RelayCommand(nameof(NewEmptyFileCommand), param => Trace.WriteLine("New Empty File clicked."));
-            }
-        }
-
-        internal event OpenRecentFileEventHandler OpenRecentFile;
-        internal event EventHandler OpenOtherFile;
+        public ICommand OnOpenOtherFileRequested=> new RelayCommand(nameof(OpenOtherFileRequested), param => RaiseEvent(OpenOtherFileRequested));
+        public ICommand OnOpenRecentFileRequested => new RelayCommand(nameof(OpenRecentFileRequested), OnOpenRecentFile);
+        public ICommand OnNewFileRequested=> new RelayCommand(nameof(OnNewFileRequested), param => RaiseEvent(NewFileRequested));
+        public ICommand OnImportFileRequested=> new RelayCommand(nameof(OnImportFileRequested), param => Trace.WriteLine("Import File clicked."));
+        public ICommand OnMergeFilesRequested=> new RelayCommand(nameof(OnMergeFilesRequested), param => Trace.WriteLine("Merge Files clicked."));
+        
+        public event OpenRecentFileEventHandler OpenRecentFileRequested;
+        public event EventHandler OpenOtherFileRequested;
+        public event EventHandler NewFileRequested;
 
         private void OnOpenRecentFile(object e)
         {
@@ -77,7 +50,7 @@ namespace Cush.TestHarness.WPF.ViewModels
                 file = (MRUEntry)args.AddedItems[0];
 
             if (file == null) return;
-            OpenRecentFile?.Invoke(this, new FileEventArgs { Fullpath = file.FullPath });
+            OpenRecentFileRequested?.Invoke(this, new FileEventArgs { Fullpath = file.FullPath });
         }
 
         private void RaiseEvent(EventHandler handler, EventArgs args = null)
