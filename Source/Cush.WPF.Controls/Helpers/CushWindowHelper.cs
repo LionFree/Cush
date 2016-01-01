@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Shell;
+using Microsoft.Windows.Shell;
 
 namespace Cush.WPF.Controls.Helpers
 {
@@ -20,15 +20,8 @@ namespace Cush.WPF.Controls.Helpers
         /// <param name="name">The name of the template child.</param>
         public static void SetIsHitTestVisibleInChromeProperty<T>(this CushWindow window, string name) where T : DependencyObject
         {
-            if (window == null)
-            {
-                return;
-            }
-            var elementPart = window.GetPart<T>(name);
-            if (elementPart != null)
-            {
-                elementPart.SetValue(WindowChrome.IsHitTestVisibleInChromeProperty, true);
-            }
+            var elementPart = window?.GetPart<T>(name);
+            elementPart?.SetValue(WindowChrome.IsHitTestVisibleInChromeProperty, true);
         }
 
         /// <summary>
@@ -39,11 +32,7 @@ namespace Cush.WPF.Controls.Helpers
         /// <param name="direction">The direction.</param>
         public static void SetWindowChromeResizeGripDirection(this CushWindow window, string name, ResizeGripDirection direction)
         {
-            if (window == null)
-            {
-                return;
-            }
-            var inputElement = window.GetPart<DependencyObject>(name) as IInputElement;
+            var inputElement = window?.GetPart<DependencyObject>(name) as IInputElement;
             if (inputElement != null)
             {
                 WindowChrome.SetResizeGripDirection(inputElement, direction);

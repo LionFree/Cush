@@ -71,7 +71,6 @@ namespace Cush.WPF.Controls
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            ColorSchemeManager.Register(this);
 
             if (LeftWindowCommands == null)
                 LeftWindowCommands = new WindowCommands();
@@ -83,7 +82,7 @@ namespace Cush.WPF.Controls
 
             LeftWindowCommandsPresenter = GetTemplateChild(PART_LeftWindowCommands) as ContentPresenter;
             RightWindowCommandsPresenter = GetTemplateChild(PART_RightWindowCommands) as ContentPresenter;
-            WindowStateButtons = GetTemplateChild(PART_WindowStateButtons) as WindowCommands;
+            WindowStateButtons = GetTemplateChild(PART_WindowStateButtons) as WindowStateButtons;
 
             if (WindowStateButtons != null)
             {
@@ -104,6 +103,7 @@ namespace Cush.WPF.Controls
             _titleBarBackground = GetTemplateChild(PART_WindowTitleBackground) as UIElement;
             _windowTitleThumb = GetTemplateChild(PART_WindowTitleThumb) as Thumb;
 
+            ColorSchemeManager.Register(this);
             SetVisibiltyForAllTitleElements(TitlebarHeight > 0);
         }
 
@@ -522,9 +522,14 @@ namespace Cush.WPF.Controls
             }
         }
 
+        /// <summary>
+        /// Gets the template child with the given name.
+        /// </summary>
+        /// <typeparam name="T">The interface type inherited from DependencyObject.</typeparam>
+        /// <param name="name">The name of the template child.</param>
         internal T GetPart<T>(string name) where T : DependencyObject
         {
-            return (T) GetTemplateChild(name);
+            return GetTemplateChild(name) as T;
         }
 
         private static void ShowSystemMenuPhysicalCoordinates(Window window, Point physicalScreenLocation)
@@ -1010,7 +1015,7 @@ namespace Cush.WPF.Controls
             set { SetValue(FlyoutsProperty, value); }
         }
 
-        public WindowCommands WindowStateButtons { get; set; }
+        public WindowStateButtons WindowStateButtons { get; set; }
 
         public bool IgnoreTaskbarOnMaximize
         {

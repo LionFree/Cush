@@ -336,8 +336,7 @@
                           Height="{Binding TitlebarHeight, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                           Visibility="{TemplateBinding ShowTitleBar, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <!-- this element is used so that everything still responds to drag -->
-                        <Label HorizontalContentAlignment="Center"
-                               VerticalContentAlignment="Center">
+                        <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                             <ContentControl x:Name="TitleControl"
                                             Focusable="False"
                                             Content="{TemplateBinding Title}"
@@ -394,7 +393,8 @@
                                                  IsTabStop="False"
                                                  UseLayoutRounding="True"
                                                  FocusVisualStyle="{x:Null}"
-                                                 TransitionsEnabled="{TemplateBinding WindowTransitionsEnabled}" />
+                                                 TransitionsEnabled="{TemplateBinding WindowTransitionsEnabled}"
+                                                      Content="{TemplateBinding Content}" />
                     <!--OnlyLoadTransition="True"-->
 
                     <!-- disables the main content when a modal flyout is shown -->
@@ -430,6 +430,15 @@
                           Background="{DynamicResource BlackColorBrush}"
                           Opacity="0"
                           Visibility="Hidden" />
+
+                    <!-- Dialog Container -->
+                    <Grid x:Name="PART_DialogContainer" 
+                          Grid.Row="0" 
+                          Grid.Column="0" 
+                          Grid.ColumnSpan="5"
+                          Grid.RowSpan="2"
+                          Panel.ZIndex="5"
+                          FocusVisualStyle="{x:Null}"/>
                 </Grid>
 
             </AdornerDecorator>
@@ -468,9 +477,9 @@
         </ControlTemplate.Resources>
 
         <ControlTemplate.Triggers>
-            <!--<Trigger Property="UseNoneWindowStyle" Value="True">
+            <Trigger Property="UseNoneWindowStyle" Value="True">
                 <Setter TargetName="PART_WindowTitleThumb" Property="Grid.RowSpan" Value="2" />
-            </Trigger>-->
+            </Trigger>
 
             <!-- handle active/inactive state -->
             <Trigger Property="IsActive"
@@ -505,32 +514,21 @@
                         Value="{Binding Path=BorderBrush, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" />
             </MultiTrigger>
 
-
             <!-- no icon and no icon content template -> collapse the icon content control -->
             <MultiTrigger>
                 <MultiTrigger.Conditions>
-                    <Condition Property="Icon"
-                               Value="{x:Null}" />
-                    <Condition Property="IconTemplate"
-                               Value="{x:Null}" />
+                    <Condition Property="Icon" Value="{x:Null}" />
+                    <Condition Property="IconTemplate" Value="{x:Null}" />
                 </MultiTrigger.Conditions>
-                <Setter TargetName="PART_Icon"
-                        Property="Visibility"
-                        Value="Collapsed" />
-                <Setter TargetName="PART_Icon"
-                        Property="MinWidth"
-                        Value="0" />
+                <Setter TargetName="PART_Icon" Property="Visibility" Value="Collapsed" />
+                <Setter TargetName="PART_Icon" Property="MinWidth" Value="0" />
             </MultiTrigger>
             <MultiTrigger>
                 <MultiTrigger.Conditions>
-                    <Condition Property="ResizeMode"
-                               Value="CanResizeWithGrip" />
-                    <Condition Property="WindowState"
-                               Value="Normal" />
+                    <Condition Property="ResizeMode" Value="CanResizeWithGrip" />
+                    <Condition Property="WindowState" Value="Normal" />
                 </MultiTrigger.Conditions>
-                <Setter Property="Visibility"
-                        TargetName="WindowResizeGrip"
-                        Value="Visible" />
+                <Setter Property="Visibility" TargetName="WindowResizeGrip" Value="Visible" />
             </MultiTrigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
@@ -543,8 +541,7 @@
         <Setter Property="TextElement.FontSize" Value="{DynamicResource ContentFontSize}" />
         <Setter Property="Foreground" Value="{DynamicResource BlackBrush}" />
         <Setter Property="Background" Value="{DynamicResource WhiteBrush}" />
-        <Setter Property="GlowBrush" Value="{DynamicResource AccentColorBrush}" />
-
+        
         <Setter Property="behaviors:StylizedBehaviors.Behaviors">
             <Setter.Value>
                 <behaviors:StylizedBehaviorCollection>
@@ -600,19 +597,14 @@
                     </Setter.Value>
                 </Setter>
             </DataTrigger>
-            <Trigger Property="TitleAlignment"
-                     Value="Center">
-                <Setter Property="Template"
-                        Value="{StaticResource CenterWindowTemplateKey}" />
+            <Trigger Property="TitleAlignment" Value="Center">
+                <Setter Property="Template" Value="{StaticResource CenterWindowTemplateKey}" />
             </Trigger>
             <MultiTrigger>
                 <MultiTrigger.Conditions>
-                    <Condition Property="TitleAlignment"
-                               Value="Stretch" />
-                    <Condition Property="TitleAlignment"
-                               Value="Left" />
-                    <Condition Property="TitleAlignment"
-                               Value="Right" />
+                    <Condition Property="TitleAlignment" Value="Stretch" />
+                    <Condition Property="TitleAlignment" Value="Left" />
+                    <Condition Property="TitleAlignment" Value="Right" />
                 </MultiTrigger.Conditions>
                 <MultiTrigger.Setters>
                     <Setter Property="Template"

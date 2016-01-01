@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using Cush.Common;
 using Cush.Common.Exceptions;
 using Cush.Common.FileHandling;
-using Cush.Common.Helpers;
-using Path = System.IO.Path;
 
 namespace Cush.WPF.Controls.Helpers
 {
@@ -22,40 +18,26 @@ namespace Cush.WPF.Controls.Helpers
     {
         internal static MRUMenuHelper GetInstance()
         {
-            return GetInstance(MRUTextHelper.GetInstance(), MRUVisualHelper.GetInstance(), MRUEntryHelper.GetInstance());
+            return GetInstance(MRUTextHelper.GetInstance(), MRUVisualHelper.GetInstance());
         }
 
-        internal static MRUMenuHelper GetInstance(MRUTextHelper textHelper, MRUVisualHelper mruVisualHelper,
-                                                  MRUEntryHelper entryHelper)
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+        internal static MRUMenuHelper GetInstance(MRUTextHelper textHelper, MRUVisualHelper mruVisualHelper)
         {
-            return new MRUHelperImplementation(textHelper, mruVisualHelper, entryHelper);
+            return new MRUHelperImplementation(textHelper, mruVisualHelper);
         }
 
 
         internal abstract void UpdateSeparators(MRUFileMenu control);
 
-        internal abstract SolidColorBrush AlterBrush(Brush brush1, float modifier);
-
-        #region Methods
-
-        internal abstract void ShortenListEntries(Control menu, IReadOnlyCollection<MRUEntry> fileList, string partName);
-        internal abstract MRUEntry GetItemFromSelectionEvent(SelectionChangedEventArgs e);
-
-        internal abstract void UpdateFileLists(ICollection<MRUEntry> files, IEnumerable<MRUEntry> pinnedList,
-                                               IEnumerable<MRUEntry> unpinnedList);
-
-        internal abstract void UpdateListboxStyle(ListBox listBox, Brush hotColor, Brush coldColor,
-                                                  ICollection<ListBox> alreadyUpdated, bool force = false);
-
-        #endregion
+        //internal abstract SolidColorBrush AlterBrush(Brush brush1, float modifier);
 
         private sealed class MRUHelperImplementation : MRUMenuHelper
         {
             private readonly MRUVisualHelper _mruVisualHelper;
             private readonly MRUTextHelper _textHelper;
 
-            internal MRUHelperImplementation(MRUTextHelper textHelper, MRUVisualHelper mruVisualHelper,
-                                             MRUEntryHelper entryHelper)
+            internal MRUHelperImplementation(MRUTextHelper textHelper, MRUVisualHelper mruVisualHelper)
             {
                 _textHelper = textHelper;
                 _mruVisualHelper = mruVisualHelper;
@@ -80,13 +62,13 @@ namespace Cush.WPF.Controls.Helpers
                 if (unpinSeparator != null)
                 {
                     unpinSeparator.Visibility = control.UnpinnedFiles.Count > 0
-                                                    ? Visibility.Visible
-                                                    : Visibility.Collapsed;
+                        ? Visibility.Visible
+                        : Visibility.Collapsed;
                 }
             }
 
             internal override void UpdateFileLists(ICollection<MRUEntry> files, IEnumerable<MRUEntry> pinnedList,
-                                                   IEnumerable<MRUEntry> unpinnedList)
+                IEnumerable<MRUEntry> unpinnedList)
             {
                 AddFromList(files, pinnedList);
                 AddFromList(files, unpinnedList);
@@ -94,8 +76,9 @@ namespace Cush.WPF.Controls.Helpers
 
             private void AddFromList(ICollection<MRUEntry> files, IEnumerable<MRUEntry> list)
             {
+                // ReSharper disable once PossibleMultipleEnumeration
                 ThrowHelper.IfNullThenThrow(() => list);
-                
+
                 foreach (var file in list.Where(file => !files.Contains(file)))
                 {
                     files.Add(file);
@@ -108,20 +91,20 @@ namespace Cush.WPF.Controls.Helpers
 
                 if (e.AddedItems.Count != 0)
                 {
-                    item = (MRUEntry)e.AddedItems[0];
+                    item = (MRUEntry) e.AddedItems[0];
                 }
 
                 if (null == item)
                 {
                     if (e.RemovedItems.Count != 0)
-                        item = (MRUEntry)e.RemovedItems[0];
+                        item = (MRUEntry) e.RemovedItems[0];
                 }
 
                 return item;
             }
 
             internal override void ShortenListEntries(Control menu, IReadOnlyCollection<MRUEntry> fileList,
-                                                      string partName)
+                string partName)
             {
                 if (fileList.Count == 0) return;
                 //if (Files.Count == 0) return;
@@ -136,7 +119,7 @@ namespace Cush.WPF.Controls.Helpers
                 var fontStretch = FontStretches.Normal;
 
                 // Find the listbox that is generated by the ControlTemplate of the Button
-                var myListBox = (ListBox)menu.Template.FindName(partName, menu);
+                var myListBox = (ListBox) menu.Template.FindName(partName, menu);
 
                 if (null != myListBox)
                 {
@@ -145,7 +128,7 @@ namespace Cush.WPF.Controls.Helpers
                     if (myListBox.HasItems)
                     {
                         var myListBoxItem =
-                            (ListBoxItem)(myListBox.ItemContainerGenerator.ContainerFromItem(myListBox.Items[0]));
+                            (ListBoxItem) (myListBox.ItemContainerGenerator.ContainerFromItem(myListBox.Items[0]));
 
                         if (myListBoxItem != null)
                         {
@@ -156,7 +139,7 @@ namespace Cush.WPF.Controls.Helpers
                             {
                                 // Finding textBlock from the DataTemplate that is set on that ContentPresenter
                                 var myDataTemplate = myContentPresenter.ContentTemplate;
-                                var myTextBlock = (TextBlock)myDataTemplate.FindName("PART_Path", myContentPresenter);
+                                var myTextBlock = (TextBlock) myDataTemplate.FindName("PART_Path", myContentPresenter);
 
                                 // Find the attributes of the textblock
                                 boxWidth = myTextBlock.RenderSize.Width;
@@ -196,59 +179,72 @@ namespace Cush.WPF.Controls.Helpers
             }
 
             internal override void UpdateListboxStyle(ListBox listBox,
-                                                      Brush hotColor,
-                                                      Brush coldColor,
-                                                      ICollection<ListBox> alreadyUpdated,
-                                                      bool force = false)
+                Brush hotColor,
+                Brush coldColor,
+                ICollection<ListBox> alreadyUpdated,
+                bool force = false)
             {
-                if (listBox == null) throw new ArgumentNullException("listBox");
+                ThrowHelper.IfNullThenThrow(()=>listBox);
                 if (!force && alreadyUpdated.Contains(listBox)) return;
 
                 var style = _mruVisualHelper.UpdateRectangleStyle(hotColor, coldColor);
 
                 foreach (MRUEntry item in listBox.Items)
                 {
-                    var listBoxItem = (ListBoxItem)(listBox.ItemContainerGenerator.ContainerFromItem(item));
+                    var listBoxItem = (ListBoxItem) (listBox.ItemContainerGenerator.ContainerFromItem(item));
                     var contentPresenter = _mruVisualHelper.FindVisualChild<ContentPresenter>(listBoxItem);
                     var dataTemplate = contentPresenter.ContentTemplate;
-                    var rectangle = (Rectangle)dataTemplate.FindName("PART_Pin", contentPresenter);
+                    var rectangle = (Rectangle) dataTemplate.FindName("PART_Pin", contentPresenter);
                     rectangle.Style = style;
                 }
 
                 if (!force) alreadyUpdated.Add(listBox);
             }
 
-            internal override SolidColorBrush AlterBrush(Brush brush, float modifier)
-            {
-                if (brush == null) throw new ArgumentNullException(nameof(brush));
-                var newBrush = brush as SolidColorBrush;
-                if (newBrush == null) throw new ArgumentException(nameof(brush));
+            //internal override SolidColorBrush AlterBrush(Brush brush, float modifier)
+            //{
+            //    if (brush == null) throw new ArgumentNullException(nameof(brush));
+            //    var newBrush = brush as SolidColorBrush;
+            //    if (newBrush == null) throw new ArgumentException(nameof(brush));
 
-                var color = newBrush.Color;
+            //    var color = newBrush.Color;
 
-                var red = (float)color.R;
-                var green = (float)color.G;
-                var blue = (float)color.B;
+            //    var red = (float) color.R;
+            //    var green = (float) color.G;
+            //    var blue = (float) color.B;
 
-                if (modifier < 0)
-                {
-                    modifier = 1 + modifier;
-                    red *= modifier;
-                    green *= modifier;
-                    blue *= modifier;
-                }
-                else
-                {
-                    red = (255 - red) * modifier + red;
-                    green = (255 - green) * modifier + green;
-                    blue = (255 - blue) * modifier + blue;
-                }
+            //    if (modifier < 0)
+            //    {
+            //        modifier = 1 + modifier;
+            //        red *= modifier;
+            //        green *= modifier;
+            //        blue *= modifier;
+            //    }
+            //    else
+            //    {
+            //        red = (255 - red)*modifier + red;
+            //        green = (255 - green)*modifier + green;
+            //        blue = (255 - blue)*modifier + blue;
+            //    }
 
-                var alteredColor = Color.FromArgb(color.A, (byte)red, (byte)green, (byte)blue);
+            //    var alteredColor = Color.FromArgb(color.A, (byte) red, (byte) green, (byte) blue);
 
-                return new SolidColorBrush(alteredColor);
-            }
+            //    return new SolidColorBrush(alteredColor);
+            //}
         }
+
+        #region Methods
+
+        internal abstract void ShortenListEntries(Control menu, IReadOnlyCollection<MRUEntry> fileList, string partName);
+        internal abstract MRUEntry GetItemFromSelectionEvent(SelectionChangedEventArgs e);
+
+        internal abstract void UpdateFileLists(ICollection<MRUEntry> files, IEnumerable<MRUEntry> pinnedList,
+            IEnumerable<MRUEntry> unpinnedList);
+
+        internal abstract void UpdateListboxStyle(ListBox listBox, Brush hotColor, Brush coldColor,
+            ICollection<ListBox> alreadyUpdated, bool force = false);
+
+        #endregion
     }
 
     [DebuggerStepThrough]
@@ -260,142 +256,127 @@ namespace Cush.WPF.Controls.Helpers
         }
 
         internal abstract Size MeasureText(string text, FontFamily fontFamily, FontStyle fontStyle,
-                                           FontWeight fontWeight, FontStretch fontStretch, double fontSize);
+            FontWeight fontWeight, FontStretch fontStretch, double fontSize);
 
         internal abstract string GetSubstringForWidth(string text, double width, FontFamily fontFamily,
-                                                      FontStyle fontStyle, FontWeight fontWeight,
-                                                      FontStretch fontStretch, double fontSize);
-
-        #region Methods
-
-        internal abstract Size MeasureTextSize(string text, FontFamily fontFamily, FontStyle fontStyle,
-                                               FontWeight fontWeight, FontStretch fontStretch, double fontSize);
-
-        /// <summary>
-        ///     Attempts to shorten a path to a predetermined maximum length.
-        /// </summary>
-        /// <param name="pathname">The full path to shorten.</param>
-        /// <param name="maxLength">The desired length.</param>
-        /// <returns></returns>
-        protected abstract string GetShortPathname(string pathname, int maxLength);
-
-        #endregion
+            FontStyle fontStyle, FontWeight fontWeight,
+            FontStretch fontStretch, double fontSize);
 
         private sealed class MRUHelperPrivateImplementation : MRUHelperPrivates
         {
-            internal override Size MeasureTextSize(string text, FontFamily fontFamily, FontStyle fontStyle,
-                                                   FontWeight fontWeight, FontStretch fontStretch, double fontSize)
+            private Size MeasureTextSize(string text, FontFamily fontFamily, FontStyle fontStyle,
+                FontWeight fontWeight, FontStretch fontStretch, double fontSize)
             {
                 var ft = new FormattedText(text,
-                                           CultureInfo.CurrentCulture,
-                                           FlowDirection.LeftToRight,
-                                           new Typeface(fontFamily, fontStyle, fontWeight, fontStretch),
-                                           fontSize,
-                                           Brushes.Black);
+                    CultureInfo.CurrentCulture,
+                    FlowDirection.LeftToRight,
+                    new Typeface(fontFamily, fontStyle, fontWeight, fontStretch),
+                    fontSize,
+                    Brushes.Black);
 
                 return new Size(ft.Width, ft.Height);
             }
 
-            protected override string GetShortPathname(String pathname, int maxLength)
-            {
-                if (pathname.Length <= maxLength)
-                    return pathname;
+            //private string GetShortPathname(string pathname, int maxLength)
+            //{
+            //    if (pathname.Length <= maxLength)
+            //        return pathname;
 
-                var root = Path.GetPathRoot(pathname);
-                if (root.Length > 3)
-                    root += Path.DirectorySeparatorChar;
+            //    var root = Path.GetPathRoot(pathname);
+            //    if (root.Length > 3)
+            //        root += Path.DirectorySeparatorChar;
 
-                var elements = pathname.Substring(root.Length)
-                                       .Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            //    var elements = pathname.Substring(root.Length)
+            //        .Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 
-                var filenameIndex = elements.GetLength(0) - 1;
+            //    var filenameIndex = elements.GetLength(0) - 1;
 
-                if (elements.GetLength(0) == 1)
-                {
-                    // pathname is just a root and filename
+            //    if (elements.GetLength(0) == 1)
+            //    {
+            //        // pathname is just a root and filename
 
-                    if (elements[0].Length > 5)
-                    {
-                        //It's long enough to shorten
-                        // If path is a UNC path, root may be
-                        // rather long.
-                        if (root.Length + 6 >= maxLength)
-                        {
-                            return root + elements[0].Substring(0, 3) + "...";
-                        }
+            //        if (elements[0].Length > 5)
+            //        {
+            //            //It's long enough to shorten
+            //            // If path is a UNC path, root may be
+            //            // rather long.
+            //            if (root.Length + 6 >= maxLength)
+            //            {
+            //                return root + elements[0].Substring(0, 3) + "...";
+            //            }
 
-                        return pathname.Substring(0, maxLength - 3) + "...";
-                    }
-                }
-                else if ((root.Length + 4 + elements[filenameIndex].Length) > maxLength)
-                {
-                    // pathname is just a root and filename
-                    root += "...\\";
+            //            return pathname.Substring(0, maxLength - 3) + "...";
+            //        }
+            //    }
+            //    else if ((root.Length + 4 + elements[filenameIndex].Length) > maxLength)
+            //    {
+            //        // pathname is just a root and filename
+            //        root += "...\\";
 
-                    int len = elements[filenameIndex].Length;
+            //        var len = elements[filenameIndex].Length;
 
-                    if (len < 6)
-                        return root + elements[filenameIndex];
+            //        if (len < 6)
+            //            return root + elements[filenameIndex];
 
-                    if ((root.Length + 6) >= maxLength)
-                    {
-                        len = 3;
-                    }
-                    else
-                    {
-                        len = maxLength - root.Length - 3;
-                    }
-                    return root + elements[filenameIndex].Substring(0, len) + "...";
-                }
-                else if (elements.GetLength(0) == 2)
-                {
-                    return root + "...\\" + elements[1];
-                }
-                else
-                {
-                    // cut some elements out.
-                    int begin = 0;
-                    int len = elements[0].Length;
+            //        if ((root.Length + 6) >= maxLength)
+            //        {
+            //            len = 3;
+            //        }
+            //        else
+            //        {
+            //            len = maxLength - root.Length - 3;
+            //        }
+            //        return root + elements[filenameIndex].Substring(0, len) + "...";
+            //    }
+            //    else if (elements.GetLength(0) == 2)
+            //    {
+            //        return root + "...\\" + elements[1];
+            //    }
+            //    else
+            //    {
+            //        // cut some elements out.
+            //        var begin = 0;
+            //        var len = elements[0].Length;
 
-                    int totalLength = pathname.Length - len + 3;
-                    int end = begin + 1;
+            //        var totalLength = pathname.Length - len + 3;
+            //        var end = begin + 1;
 
-                    while (totalLength > maxLength)
-                    {
-                        if (begin > 0)
-                            totalLength -= elements[--begin].Length - 1;
+            //        while (totalLength > maxLength)
+            //        {
+            //            if (begin > 0)
+            //                totalLength -= elements[--begin].Length - 1;
 
-                        if (totalLength <= maxLength)
-                            break;
+            //            if (totalLength <= maxLength)
+            //                break;
 
-                        if (end < filenameIndex)
-                            totalLength -= elements[++end].Length - 1;
+            //            if (end < filenameIndex)
+            //                totalLength -= elements[++end].Length - 1;
 
-                        if (begin == 0 && end == filenameIndex)
-                            break;
-                    }
+            //            if (begin == 0 && end == filenameIndex)
+            //                break;
+            //        }
 
-                    // assemble final string.
+            //        // assemble final string.
 
-                    for (int i = 0; i < begin; i++)
-                    {
-                        root += elements[i] + "\\";
-                    }
+            //        for (var i = 0; i < begin; i++)
+            //        {
+            //            root += elements[i] + "\\";
+            //        }
 
-                    root += "...\\";
+            //        root += "...\\";
 
-                    for (int i = end; i < filenameIndex; i++)
-                    {
-                        root += elements[i] + "\\";
-                    }
-                    return root + elements[filenameIndex];
-                }
-                return pathname;
-            }
+            //        for (var i = end; i < filenameIndex; i++)
+            //        {
+            //            root += elements[i] + "\\";
+            //        }
+            //        return root + elements[filenameIndex];
+            //    }
+            //    return pathname;
+            //}
 
             internal override Size MeasureText(string text, FontFamily fontFamily, FontStyle fontStyle,
-                                               FontWeight fontWeight,
-                                               FontStretch fontStretch, double fontSize)
+                FontWeight fontWeight,
+                FontStretch fontStretch, double fontSize)
             {
                 var typeface = new Typeface(fontFamily, fontStyle, fontWeight, fontStretch);
                 GlyphTypeface glyphTypeface;
@@ -408,11 +389,11 @@ namespace Cush.WPF.Controls.Helpers
                 double totalWidth = 0;
                 double height = 0;
 
-                foreach (char t in text)
+                foreach (var t in text)
                 {
                     var glyphIndex = glyphTypeface.CharacterToGlyphMap[t];
-                    var width = glyphTypeface.AdvanceWidths[glyphIndex] * fontSize;
-                    var glyphHeight = glyphTypeface.AdvanceHeights[glyphIndex] * fontSize;
+                    var width = glyphTypeface.AdvanceWidths[glyphIndex]*fontSize;
+                    var glyphHeight = glyphTypeface.AdvanceHeights[glyphIndex]*fontSize;
 
                     if (glyphHeight > height)
                     {
@@ -425,9 +406,9 @@ namespace Cush.WPF.Controls.Helpers
 
 
             internal override string GetSubstringForWidth(string text, double width, FontFamily fontFamily,
-                                                          FontStyle fontStyle,
-                                                          FontWeight fontWeight, FontStretch fontStretch,
-                                                          double fontSize)
+                FontStyle fontStyle,
+                FontWeight fontWeight, FontStretch fontStretch,
+                double fontSize)
             {
                 //Trace.WriteLine("  Path string too long... shortening.");
                 if (width <= 0)
@@ -435,17 +416,17 @@ namespace Cush.WPF.Controls.Helpers
                     return "";
                 }
 
-                int length = text.Length;
-                string testString = text;
+                var length = text.Length;
+                var testString = text;
 
                 while (true)
                 {
                     var ft = new FormattedText(testString,
-                                               CultureInfo.CurrentCulture,
-                                               FlowDirection.LeftToRight,
-                                               new Typeface(fontFamily, fontStyle, fontWeight, fontStretch),
-                                               fontSize,
-                                               Brushes.Black);
+                        CultureInfo.CurrentCulture,
+                        FlowDirection.LeftToRight,
+                        new Typeface(fontFamily, fontStyle, fontWeight, fontStretch),
+                        fontSize,
+                        Brushes.Black);
                     if (ft.Width <= width) break;
 
                     // remove a bit.
@@ -466,6 +447,21 @@ namespace Cush.WPF.Controls.Helpers
                 return testString;
             }
         }
+
+        #region Methods
+
+        //internal abstract Size MeasureTextSize(string text, FontFamily fontFamily, FontStyle fontStyle,
+        //    FontWeight fontWeight, FontStretch fontStretch, double fontSize);
+
+        ///// <summary>
+        /////     Attempts to shorten a path to a predetermined maximum length.
+        ///// </summary>
+        ///// <param name="pathname">The full path to shorten.</param>
+        ///// <param name="maxLength">The desired length.</param>
+        ///// <returns></returns>
+        //protected abstract string GetShortPathname(string pathname, int maxLength);
+
+        #endregion
     }
 
     [DebuggerStepThrough]
@@ -476,6 +472,7 @@ namespace Cush.WPF.Controls.Helpers
             return GetInstance(MRUVisualHelperInternals.GetInstance());
         }
 
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         internal static MRUVisualHelper GetInstance(MRUVisualHelperInternals helper)
         {
             return new MRUVisualHelperImplementation(helper);
@@ -508,14 +505,14 @@ namespace Cush.WPF.Controls.Helpers
                 var coldPinnedVisualBrush = _helper.CreateVisualBrush(_pinnedPathData, coldColor);
                 var hotUnpinnedVisualBrush = _helper.CreateVisualBrush(_unpinnedPathData, hotColor);
                 var coldUnpinnedVisualBrush = _helper.CreateVisualBrush(_unpinnedPathData,
-                                                                        new SolidColorBrush(Colors.Transparent));
+                    new SolidColorBrush(Colors.Transparent));
 
                 var hotPinnedTrigger = _helper.CreateDataTrigger(true, true, hotPinnedVisualBrush);
                 var coldPinnedTrigger = _helper.CreateDataTrigger(true, false, coldPinnedVisualBrush);
                 var hotUnpinnedTrigger = _helper.CreateDataTrigger(false, true, hotUnpinnedVisualBrush);
                 var coldUnpinnedTrigger = _helper.CreateDataTrigger(false, false, coldUnpinnedVisualBrush);
 
-                var style = new Style(typeof(Rectangle));
+                var style = new Style(typeof (Rectangle));
                 style.Triggers.Add(hotPinnedTrigger);
                 style.Triggers.Add(hotUnpinnedTrigger);
                 style.Triggers.Add(coldPinnedTrigger);
@@ -530,8 +527,9 @@ namespace Cush.WPF.Controls.Helpers
                 for (var i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
                 {
                     var child = VisualTreeHelper.GetChild(obj, i);
-                    if (child is TChildItem)
-                        return (TChildItem)child;
+                    var item = child as TChildItem;
+                    if (item != null)
+                        return item;
 
                     var childOfChild = FindVisualChild<TChildItem>(child);
                     if (childOfChild != null)
@@ -559,26 +557,26 @@ namespace Cush.WPF.Controls.Helpers
                 var trigger = new MultiDataTrigger
                 {
                     Conditions =
-                            {
-                                new Condition {Binding = new Binding("Pinned"), Value = pinned},
-                                new Condition
-                                    {
-                                        Binding =
-                                            new Binding("IsMouseOver")
-                                                {
-                                                    RelativeSource =
-                                                        new RelativeSource(RelativeSourceMode.FindAncestor,
-                                                                           typeof (DockPanel), 1)
-                                                },
-                                        Value = isMouseOver
-                                    },
-                            },
+                    {
+                        new Condition {Binding = new Binding("Pinned"), Value = pinned},
+                        new Condition
+                        {
+                            Binding =
+                                new Binding("IsMouseOver")
+                                {
+                                    RelativeSource =
+                                        new RelativeSource(RelativeSourceMode.FindAncestor,
+                                            typeof (DockPanel), 1)
+                                },
+                            Value = isMouseOver
+                        }
+                    },
                     Setters =
-                            {
-                                new Setter(Shape.FillProperty, visualBrush),
-                                new Setter(FrameworkElement.WidthProperty, pinned ? 9.0 : 15.0),
-                                new Setter(FrameworkElement.HeightProperty, pinned ? 15.0 : 9.0)
-                            }
+                    {
+                        new Setter(Shape.FillProperty, visualBrush),
+                        new Setter(FrameworkElement.WidthProperty, pinned ? 9.0 : 15.0),
+                        new Setter(FrameworkElement.HeightProperty, pinned ? 15.0 : 9.0)
+                    }
                 };
 
                 return trigger;
@@ -588,7 +586,7 @@ namespace Cush.WPF.Controls.Helpers
             {
                 var canvas = new Canvas();
 
-                var path = new System.Windows.Shapes.Path
+                var path = new Path
                 {
                     Stretch = Stretch.Fill,
                     Width = 20.028,
@@ -600,7 +598,7 @@ namespace Cush.WPF.Controls.Helpers
                 Canvas.SetTop(path, 12.0017);
 
                 canvas.Children.Add(path);
-                return new VisualBrush { Stretch = Stretch.Fill, Visual = canvas };
+                return new VisualBrush {Stretch = Stretch.Fill, Visual = canvas};
             }
         }
     }

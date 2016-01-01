@@ -126,10 +126,14 @@
     <Compile Include="ColorSchemes\Themes\Neutral.xaml.cs">
       <DependentUpon>Neutral.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\TabItemCloseButtonWidthConverter.cs" />
     <Compile Include="Helpers\ComboBoxHelper.cs" />
+    <Compile Include="Helpers\GroupBoxHelper.cs" />
     <Compile Include="Helpers\MRUTextHelper.cs" />
     <Compile Include="Helpers\ScrollBarHelper.cs" />
+    <Compile Include="Helpers\TabControlHelper.cs" />
     <Compile Include="Helpers\TextboxHelper.cs" />
+    <Compile Include="Controls\TransitionType.cs" />
     <Compile Include="Native\Constants.cs" />
     <Compile Include="Native\Helpers\Assert.cs" />
     <Compile Include="Native\Helpers\DoubleUtilities.cs" />
@@ -137,6 +141,7 @@
     <Compile Include="Native\Helpers\StreamHelper.cs" />
     <Compile Include="Native\Helpers\Verify.cs" />
     <Compile Include="Native\Enums.cs" />
+    <Compile Include="Native\Helpers\WPFUtilities.cs" />
     <Compile Include="Native\Shell\Enums.cs" />
     <Compile Include="Native\Shell\ErrorCodes.cs" />
     <Compile Include="Native\Shell\IID.cs" />

@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace Cush.WPF.Styles.Helpers
+namespace Cush.WPF.Controls.Helpers
 {
     /// <summary>
     ///     Password watermarking code from: http://prabu-guru.blogspot.com/2010/06/how-to-add-watermark-text-to-textbox.html

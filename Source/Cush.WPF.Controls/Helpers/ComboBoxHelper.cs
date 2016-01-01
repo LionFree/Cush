@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace Cush.WPF.Styles.Helpers
+namespace Cush.WPF.Controls.Helpers
 {
     /// <summary>
     /// A helper class that provides various attached properties for the ComboBox control.
@@ -14,14 +14,11 @@ namespace Cush.WPF.Styles.Helpers
         private static void EnableVirtualizationWithGroupingPropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
         {
             var comboBox = dependencyObject as ComboBox;
-            if (comboBox != null && e.NewValue != e.OldValue)
-            {
-#if NET4_5
-                comboBox.SetValue(VirtualizingStackPanel.IsVirtualizingProperty, e.NewValue);
-                comboBox.SetValue(VirtualizingPanel.IsVirtualizingWhenGroupingProperty, e.NewValue);
-                comboBox.SetValue(ScrollViewer.CanContentScrollProperty, e.NewValue);
-#endif
-            }
+            if (comboBox == null || e.NewValue == e.OldValue) return;
+
+            comboBox.SetValue(VirtualizingStackPanel.IsVirtualizingProperty, e.NewValue);
+            comboBox.SetValue(VirtualizingPanel.IsVirtualizingWhenGroupingProperty, e.NewValue);
+            comboBox.SetValue(ScrollViewer.CanContentScrollProperty, e.NewValue);
         }
 
         public static void SetEnableVirtualizationWithGrouping(DependencyObject obj, bool value)

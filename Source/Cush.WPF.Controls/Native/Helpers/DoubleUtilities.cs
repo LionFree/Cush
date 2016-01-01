@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace Cush.Native.Helpers
+namespace Cush.WPF.Controls.Native.Helpers
 {
     /// <summary>
     /// DoubleUtilities uses fixed eps to provide fuzzy comparison functionality for doubles.
@@ -35,6 +35,17 @@ namespace Cush.Native.Helpers
 
             double delta = value1 - value2;
             return (delta < Epsilon) && (delta > -Epsilon);
+        }
+
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        public static bool IsFiniteAndNonNegative(this double d)
+        {
+            if (double.IsNaN(d) || double.IsInfinity(d) || d < 0)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>

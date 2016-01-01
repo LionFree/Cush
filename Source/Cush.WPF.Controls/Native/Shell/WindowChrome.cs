@@ -1,35 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Data;
-using System.Windows.Shell;
+//using System.Windows.Shell;
 using Cush.Native.Helpers;
+using Cush.Native.Shell;
+using Cush.WPF.Controls.Native.Helpers;
 
-namespace Cush.Native.Shell
+namespace Microsoft.Windows.Shell
 {
     public class WindowChrome : Freezable
     {
-        public static readonly DependencyProperty ResizeGripDirectionProperty = DependencyProperty.RegisterAttached(
-            "ResizeGripDirection",
-            typeof(ResizeGripDirection),
-            typeof(WindowChrome),
-            new FrameworkPropertyMetadata(ResizeGripDirection.None, FrameworkPropertyMetadataOptions.Inherits));
-
-        [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0")]
-        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
-        public static void SetResizeGripDirection(IInputElement inputElement, ResizeGripDirection direction)
+        private struct _SystemParameterBoundProperty
         {
-            Verify.IsNotNull(inputElement, "inputElement");
-            var dobj = inputElement as DependencyObject;
-            if (dobj == null)
-            {
-                throw new ArgumentException("The element must be a DependencyObject", "inputElement");
-            }
-            dobj.SetValue(ResizeGripDirectionProperty, direction);
+            public string SystemParameterPropertyName { get; set; }
+            public DependencyProperty DependencyProperty { get; set; }
         }
 
+        // Named property available for fully extending the glass frame.
+        public static Thickness GlassFrameCompleteThickness { get { return new Thickness(-1); } }
+
+        #region Attached Properties
 
         public static readonly DependencyProperty WindowChromeProperty = DependencyProperty.RegisterAttached(
             "WindowChrome",
@@ -37,133 +29,13 @@ namespace Cush.Native.Shell
             typeof(WindowChrome),
             new PropertyMetadata(null, _OnChromeChanged));
 
-        public static readonly DependencyProperty CaptionHeightProperty = DependencyProperty.Register(
-            "CaptionHeight",
-            typeof(double),
-            typeof(WindowChrome),
-            new PropertyMetadata(
-                0d,
-                (d, e) => ((WindowChrome)d)._OnPropertyChangedThatRequiresRepaint()),
-            value => (double)value >= 0d);
-
-        public static readonly DependencyProperty ResizeBorderThicknessProperty = DependencyProperty.Register(
-            "ResizeBorderThickness",
-            typeof(Thickness),
-            typeof(WindowChrome),
-            new PropertyMetadata(default(Thickness)),
-            value => Utility.IsThicknessNonNegative((Thickness)value));
-
-        public static readonly DependencyProperty IsHitTestVisibleInChromeProperty = DependencyProperty.RegisterAttached
-            (
-                "IsHitTestVisibleInChrome",
-                typeof(bool),
-                typeof(WindowChrome),
-                new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.Inherits));
-
-        public static readonly DependencyProperty GlassFrameThicknessProperty = DependencyProperty.Register(
-            "GlassFrameThickness",
-            typeof(Thickness),
-            typeof(WindowChrome),
-            new PropertyMetadata(
-                default(Thickness),
-                (d, e) => ((WindowChrome)d)._OnPropertyChangedThatRequiresRepaint(),
-                (d, o) => _CoerceGlassFrameThickness((Thickness)o)));
-
-        public static readonly DependencyProperty CornerRadiusProperty = DependencyProperty.Register(
-            "CornerRadius",
-            typeof(CornerRadius),
-            typeof(WindowChrome),
-            new PropertyMetadata(
-                default(CornerRadius),
-                (d, e) => ((WindowChrome)d)._OnPropertyChangedThatRequiresRepaint()),
-            value => Utility.IsCornerRadiusValid((CornerRadius)value));
-
-        private static readonly List<SystemParameterBoundProperty> _BoundProperties = new List
-            <SystemParameterBoundProperty>
-        {
-            new SystemParameterBoundProperty
-            {
-                DependencyProperty = CornerRadiusProperty,
-                SystemParameterPropertyName = "WindowCornerRadius"
-            },
-            new SystemParameterBoundProperty
-            {
-                DependencyProperty = CaptionHeightProperty,
-                SystemParameterPropertyName = "WindowCaptionHeight"
-            },
-            new SystemParameterBoundProperty
-            {
-                DependencyProperty = ResizeBorderThicknessProperty,
-                SystemParameterPropertyName = "WindowResizeBorderThickness"
-            },
-            new SystemParameterBoundProperty
-            {
-                DependencyProperty = GlassFrameThicknessProperty,
-                SystemParameterPropertyName = "WindowNonClientFrameThickness"
-            }
-        };
-
-        public WindowChrome()
-        {
-            // Effective default values for some of these properties are set to be bindings
-            // that set them to system defaults.
-            // A more correct way to do this would be to Coerce the value iff the source of the DP was the default value.
-            // Unfortunately with the current property system we can't detect whether the value being applied at the time
-            // of the coersion is the default.
-            foreach (var bp in _BoundProperties)
-            {
-                // This list must be declared after the DP's are assigned.
-                Assert.IsNotNull(bp.DependencyProperty);
-                BindingOperations.SetBinding(
-                    this,
-                    bp.DependencyProperty,
-                    new Binding
-                    {
-                        Source = SystemParameters.Current,
-                        Path = new PropertyPath(bp.SystemParameterPropertyName),
-                        Mode = BindingMode.OneWay,
-                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-                    });
-            }
-        }
-
-        // Named property available for fully extending the glass frame.
-        public static Thickness GlassFrameCompleteThickness
-        {
-            get { return new Thickness(-1); }
-        }
-
-        protected override Freezable CreateInstanceCore()
-        {
-            return new WindowChrome();
-        }
-
-        private void _OnPropertyChangedThatRequiresRepaint()
-        {
-            var handler = PropertyChangedThatRequiresRepaint;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
-        }
-
-        internal event EventHandler PropertyChangedThatRequiresRepaint;
-
-        private struct SystemParameterBoundProperty
-        {
-            public string SystemParameterPropertyName { get; set; }
-            public DependencyProperty DependencyProperty { get; set; }
-        }
-
-        #region Attached Properties
-
         private static void _OnChromeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             // The different design tools handle drawing outside their custom window objects differently.
             // Rather than try to support this concept in the design surface let the designer draw its own
             // chrome anyways.
             // There's certainly room for improvement here.
-            if (DesignerProperties.GetIsInDesignMode(d))
+            if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(d))
             {
                 return;
             }
@@ -176,8 +48,8 @@ namespace Cush.Native.Shell
             // Update the ChromeWorker with this new object.
 
             // If there isn't currently a worker associated with the Window then assign a new one.
-            // There can be a many:1 relationship of to Window to WindowChrome objects, but a 1:1 for a Window and a WindowChromeWorker.
-            var chromeWorker = WindowChromeWorker.GetWindowChromeWorker(window);
+            // There can be a many:1 relationship of Window to WindowChrome objects, but a 1:1 for a Window and a WindowChromeWorker.
+            WindowChromeWorker chromeWorker = WindowChromeWorker.GetWindowChromeWorker(window);
             if (chromeWorker == null)
             {
                 chromeWorker = new WindowChromeWorker();
@@ -203,6 +75,11 @@ namespace Cush.Native.Shell
             window.SetValue(WindowChromeProperty, chrome);
         }
 
+        public static readonly DependencyProperty IsHitTestVisibleInChromeProperty = DependencyProperty.RegisterAttached(
+            "IsHitTestVisibleInChrome",
+            typeof(bool),
+            typeof(WindowChrome),
+            new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.Inherits));
 
         [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
@@ -230,9 +107,50 @@ namespace Cush.Native.Shell
             dobj.SetValue(IsHitTestVisibleInChromeProperty, hitTestVisible);
         }
 
+        public static readonly DependencyProperty ResizeGripDirectionProperty = DependencyProperty.RegisterAttached(
+            "ResizeGripDirection",
+            typeof(ResizeGripDirection),
+            typeof(WindowChrome),
+            new FrameworkPropertyMetadata(ResizeGripDirection.None, FrameworkPropertyMetadataOptions.Inherits));
+
+        [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0")]
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        public static ResizeGripDirection GetResizeGripDirection(IInputElement inputElement)
+        {
+            Verify.IsNotNull(inputElement, "inputElement");
+            var dobj = inputElement as DependencyObject;
+            if (dobj == null)
+            {
+                throw new ArgumentException("The element must be a DependencyObject", "inputElement");
+            }
+            return (ResizeGripDirection)dobj.GetValue(ResizeGripDirectionProperty);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0")]
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        public static void SetResizeGripDirection(IInputElement inputElement, ResizeGripDirection direction)
+        {
+            Verify.IsNotNull(inputElement, "inputElement");
+            var dobj = inputElement as DependencyObject;
+            if (dobj == null)
+            {
+                throw new ArgumentException("The element must be a DependencyObject", "inputElement");
+            }
+            dobj.SetValue(ResizeGripDirectionProperty, direction);
+        }
+
         #endregion
 
         #region Dependency Properties
+
+        public static readonly DependencyProperty CaptionHeightProperty = DependencyProperty.Register(
+            "CaptionHeight",
+            typeof(double),
+            typeof(WindowChrome),
+            new PropertyMetadata(
+                0d,
+                (d, e) => ((WindowChrome)d)._OnPropertyChangedThatRequiresRepaint()),
+            value => (double)value >= 0d);
 
         /// <summary>The extent of the top of the window to treat as the caption.</summary>
         public double CaptionHeight
@@ -241,6 +159,12 @@ namespace Cush.Native.Shell
             set { SetValue(CaptionHeightProperty, value); }
         }
 
+        public static readonly DependencyProperty ResizeBorderThicknessProperty = DependencyProperty.Register(
+            "ResizeBorderThickness",
+            typeof(Thickness),
+            typeof(WindowChrome),
+            new PropertyMetadata(default(Thickness)),
+            (value) => ((Thickness)value).IsNonNegative());
 
         public Thickness ResizeBorderThickness
         {
@@ -248,12 +172,20 @@ namespace Cush.Native.Shell
             set { SetValue(ResizeBorderThicknessProperty, value); }
         }
 
+        public static readonly DependencyProperty GlassFrameThicknessProperty = DependencyProperty.Register(
+            "GlassFrameThickness",
+            typeof(Thickness),
+            typeof(WindowChrome),
+            new PropertyMetadata(
+                default(Thickness),
+                (d, e) => ((WindowChrome)d)._OnPropertyChangedThatRequiresRepaint(),
+                (d, o) => _CoerceGlassFrameThickness((Thickness)o)));
 
         private static object _CoerceGlassFrameThickness(Thickness thickness)
         {
             // If it's explicitly set, but set to a thickness with at least one negative side then 
             // coerce the value to the stock GlassFrameCompleteThickness.
-            if (!Utility.IsThicknessNonNegative(thickness))
+            if (!thickness.IsNonNegative())
             {
                 return GlassFrameCompleteThickness;
             }
@@ -267,6 +199,50 @@ namespace Cush.Native.Shell
             set { SetValue(GlassFrameThicknessProperty, value); }
         }
 
+        public static readonly DependencyProperty UseAeroCaptionButtonsProperty = DependencyProperty.Register(
+            "UseAeroCaptionButtons",
+            typeof(bool),
+            typeof(WindowChrome),
+            new FrameworkPropertyMetadata(true));
+
+        public bool UseAeroCaptionButtons
+        {
+            get { return (bool)GetValue(UseAeroCaptionButtonsProperty); }
+            set { SetValue(UseAeroCaptionButtonsProperty, value); }
+        }
+
+        public static readonly DependencyProperty IgnoreTaskbarOnMaximizeProperty = DependencyProperty.Register(
+            "IgnoreTaskbarOnMaximize",
+            typeof(bool),
+            typeof(WindowChrome),
+            new FrameworkPropertyMetadata(false, (d, e) => ((WindowChrome)d)._OnPropertyChangedThatRequiresRepaint()));
+
+        public bool IgnoreTaskbarOnMaximize
+        {
+            get { return (bool)GetValue(IgnoreTaskbarOnMaximizeProperty); }
+            set { SetValue(IgnoreTaskbarOnMaximizeProperty, value); }
+        }
+
+        public static readonly DependencyProperty UseNoneWindowStyleProperty = DependencyProperty.Register(
+            "UseNoneWindowStyle",
+            typeof(bool),
+            typeof(WindowChrome),
+            new FrameworkPropertyMetadata(false, (d, e) => ((WindowChrome)d)._OnPropertyChangedThatRequiresRepaint()));
+
+        public bool UseNoneWindowStyle
+        {
+            get { return (bool)GetValue(UseNoneWindowStyleProperty); }
+            set { SetValue(UseNoneWindowStyleProperty, value); }
+        }
+
+        public static readonly DependencyProperty CornerRadiusProperty = DependencyProperty.Register(
+            "CornerRadius",
+            typeof(CornerRadius),
+            typeof(WindowChrome),
+            new PropertyMetadata(
+                default(CornerRadius),
+                (d, e) => ((WindowChrome)d)._OnPropertyChangedThatRequiresRepaint()),
+            (value) => ((CornerRadius)value).IsValid());
 
         public CornerRadius CornerRadius
         {
@@ -274,6 +250,129 @@ namespace Cush.Native.Shell
             set { SetValue(CornerRadiusProperty, value); }
         }
 
+        public static readonly DependencyProperty SacrificialEdgeProperty = DependencyProperty.Register(
+            "SacrificialEdge",
+            typeof(SacrificialEdge),
+            typeof(WindowChrome),
+            new PropertyMetadata(
+                SacrificialEdge.None,
+                (d, e) => ((WindowChrome)d)._OnPropertyChangedThatRequiresRepaint()),
+                _IsValidSacrificialEdge);
+
+        private static readonly SacrificialEdge SacrificialEdge_All = SacrificialEdge.Bottom | SacrificialEdge.Top | SacrificialEdge.Left | SacrificialEdge.Right;
+
+        private static bool _IsValidSacrificialEdge(object value)
+        {
+            SacrificialEdge se = SacrificialEdge.None;
+            try
+            {
+                se = (SacrificialEdge)value;
+            }
+            catch (InvalidCastException)
+            {
+                return false;
+            }
+
+            if (se == SacrificialEdge.None)
+            {
+                return true;
+            }
+
+            // Does this only contain valid bits?
+            if ((se | SacrificialEdge_All) != SacrificialEdge_All)
+            {
+                return false;
+            }
+
+            // It can't sacrifice all 4 edges.  Weird things happen.
+            if (se == SacrificialEdge_All)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public SacrificialEdge SacrificialEdge
+        {
+            get { return (SacrificialEdge)GetValue(SacrificialEdgeProperty); }
+            set { SetValue(SacrificialEdgeProperty, value); }
+        }
+
         #endregion
+
+        protected override Freezable CreateInstanceCore()
+        {
+            return new WindowChrome();
+        }
+
+        private static readonly List<_SystemParameterBoundProperty> _BoundProperties = new List<_SystemParameterBoundProperty>
+        {
+            new _SystemParameterBoundProperty { DependencyProperty = CornerRadiusProperty, SystemParameterPropertyName = "WindowCornerRadius" },
+            new _SystemParameterBoundProperty { DependencyProperty = CaptionHeightProperty, SystemParameterPropertyName = "WindowCaptionHeight" },
+            new _SystemParameterBoundProperty { DependencyProperty = ResizeBorderThicknessProperty, SystemParameterPropertyName = "WindowResizeBorderThickness" },
+            new _SystemParameterBoundProperty { DependencyProperty = GlassFrameThicknessProperty, SystemParameterPropertyName = "WindowNonClientFrameThickness" },
+        };
+
+        public WindowChrome()
+        {
+            // Effective default values for some of these properties are set to be bindings
+            // that set them to system defaults.
+            // A more correct way to do this would be to Coerce the value iff the source of the DP was the default value.
+            // Unfortunately with the current property system we can't detect whether the value being applied at the time
+            // of the coersion is the default.
+            foreach (var bp in _BoundProperties)
+            {
+                // This list must be declared after the DP's are assigned.
+                Assert.IsNotNull(bp.DependencyProperty);
+                BindingOperations.SetBinding(
+                    this,
+                    bp.DependencyProperty,
+                    new Binding
+                    {
+                        Path = new PropertyPath("(SystemParameters." + bp.SystemParameterPropertyName + ")"),
+                        Mode = BindingMode.OneWay,
+                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+                    });
+            }
+        }
+
+        private void _OnPropertyChangedThatRequiresRepaint()
+        {
+            var handler = PropertyChangedThatRequiresRepaint;
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
+            }
+        }
+
+        internal event EventHandler PropertyChangedThatRequiresRepaint;
     }
+
+    public enum ResizeGripDirection
+    {
+        None,
+        TopLeft,
+        Top,
+        TopRight,
+        Right,
+        BottomRight,
+        Bottom,
+        BottomLeft,
+        Left,
+        Caption,
+    }
+
+    [Flags]
+    public enum SacrificialEdge
+    {
+        None = 0,
+        Left = 1,
+        Top = 2,
+        Right = 4,
+        Bottom = 8,
+
+        Office = Left | Right | Bottom,
+    }
+
 }

@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace Cush.WPF.Styles.Helpers
+namespace Cush.WPF.Controls.Helpers
 {
     /// <summary>
     /// A helper class that provides various controls.
@@ -63,55 +63,55 @@ namespace Cush.WPF.Styles.Helpers
             element.SetValue(ContentCharacterCasingProperty, value);
         }
 
-        //public static readonly DependencyProperty HeaderFontSizeProperty =
-        //    DependencyProperty.RegisterAttached("HeaderFontSize", typeof(double), typeof(ControlsHelper), new FrameworkPropertyMetadata(26.67, HeaderFontSizePropertyChangedCallback) { Inherits = true });
+        public static readonly DependencyProperty HeaderFontSizeProperty =
+            DependencyProperty.RegisterAttached("HeaderFontSize", typeof(double), typeof(ControlsHelper), new FrameworkPropertyMetadata(26.67, HeaderFontSizePropertyChangedCallback) { Inherits = true });
 
-        //private static void HeaderFontSizePropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
-        //{
-        //    if (e.NewValue is double)
-        //    {
-        //        // close button only for MetroTabItem
-        //        var metroTabItem = dependencyObject as CushTabItem;
-        //        if (metroTabItem == null)
-        //        {
-        //            return;
-        //        }
+        private static void HeaderFontSizePropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.NewValue is double)
+            {
+                // close button only for MetroTabItem
+                var tabItem = dependencyObject as CushTabItem;
+                if (tabItem == null)
+                {
+                    return;
+                }
 
-        //        if (metroTabItem.closeButton == null)
-        //        {
-        //            metroTabItem.ApplyTemplate();
-        //        }
+                if (tabItem.CloseButton == null)
+                {
+                    tabItem.ApplyTemplate();
+                }
 
-        //        if (metroTabItem.closeButton != null && metroTabItem.contentSite != null)
-        //        {
-        //            // punker76: i don't like this! i think this must be done with xaml.
-        //            var fontDpiSize = (double)e.NewValue;
-        //            var fontHeight = Math.Ceiling(fontDpiSize * metroTabItem.FontFamily.LineSpacing);
-        //            var newMargin = (Math.Round(fontHeight) / 2.8)
-        //                            - metroTabItem.Padding.Top - metroTabItem.Padding.Bottom
-        //                            - metroTabItem.contentSite.Margin.Top - metroTabItem.contentSite.Margin.Bottom;
+                if (tabItem.CloseButton != null && tabItem.ContentSite != null)
+                {
+                    // punker76: i don't like this! i think this must be done with xaml.
+                    var fontDpiSize = (double)e.NewValue;
+                    var fontHeight = Math.Ceiling(fontDpiSize * tabItem.FontFamily.LineSpacing);
+                    var newMargin = (Math.Round(fontHeight) / 2.8)
+                                    - tabItem.Padding.Top - tabItem.Padding.Bottom
+                                    - tabItem.ContentSite.Margin.Top - tabItem.ContentSite.Margin.Bottom;
 
-        //            var previousMargin = metroTabItem.closeButton.Margin;
-        //            metroTabItem.newButtonMargin = new Thickness(previousMargin.Left, newMargin, previousMargin.Right, previousMargin.Bottom);
-        //            metroTabItem.closeButton.Margin = metroTabItem.newButtonMargin;
+                    var previousMargin = tabItem.CloseButton.Margin;
+                    tabItem.NewButtonMargin = new Thickness(previousMargin.Left, newMargin, previousMargin.Right, previousMargin.Bottom);
+                    tabItem.CloseButton.Margin = tabItem.NewButtonMargin;
 
-        //            metroTabItem.closeButton.UpdateLayout();
-        //        }
-        //    }
-        //}
+                    tabItem.CloseButton.UpdateLayout();
+                }
+            }
+        }
 
-        //[AttachedPropertyBrowsableForType(typeof(CushTabItem))]
-        //[AttachedPropertyBrowsableForType(typeof(TabItem))]
-        //[AttachedPropertyBrowsableForType(typeof(GroupBox))]
-        //public static double GetHeaderFontSize(UIElement element)
-        //{
-        //    return (double)element.GetValue(HeaderFontSizeProperty);
-        //}
+        [AttachedPropertyBrowsableForType(typeof(CushTabItem))]
+        [AttachedPropertyBrowsableForType(typeof(TabItem))]
+        [AttachedPropertyBrowsableForType(typeof(GroupBox))]
+        public static double GetHeaderFontSize(UIElement element)
+        {
+            return (double)element.GetValue(HeaderFontSizeProperty);
+        }
 
-        //public static void SetHeaderFontSize(UIElement element, double value)
-        //{
-        //    element.SetValue(HeaderFontSizeProperty, value);
-        //}
+        public static void SetHeaderFontSize(UIElement element, double value)
+        {
+            element.SetValue(HeaderFontSizeProperty, value);
+        }
 
         public static readonly DependencyProperty HeaderFontStretchProperty =
             DependencyProperty.RegisterAttached("HeaderFontStretch", typeof(FontStretch), typeof(ControlsHelper), new UIPropertyMetadata(FontStretches.Normal));

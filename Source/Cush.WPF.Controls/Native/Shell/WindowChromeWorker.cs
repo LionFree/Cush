@@ -8,6 +8,8 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
 using Cush.Native.Helpers;
+using Cush.WPF.Controls.Native.Helpers;
+using Microsoft.Windows.Shell;
 
 namespace Cush.Native.Shell
 {
