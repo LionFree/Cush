@@ -232,6 +232,15 @@ namespace Cush.TestHarness.WPF.Views {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Back.
+        /// </summary>
+        public static string TEXT_Back {
+            get {
+                return ResourceManager.GetString("TEXT_Back", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bold.
         /// </summary>
         public static string TEXT_Bold {

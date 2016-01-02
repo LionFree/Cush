@@ -29,38 +29,65 @@
         <controls:WindowCommands ShowLastSeparator="False">
             <Button Foreground="{DynamicResource IdealForegroundColorBrush}"
                     Command="{Binding PageSwapRequested}">
-                <Rectangle Width="16" Height="16" Margin="0,0,3,0">
-                    <Rectangle.Style>
+                <StackPanel Orientation="Horizontal" Background="{DynamicResource TransparentWhiteBrush}">
+                    <Rectangle Width="16" Height="16" Margin="0,0,3,0">
+                        <Rectangle.Style>
+                            <Style>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsFileMenuVisible}" Value="True">
+                                        <Setter Property="Rectangle.Fill">
+                                            <Setter.Value>
+                                                <VisualBrush Stretch="Fill" Visual="{StaticResource HamburgerMenu}" />
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsForwardButtonVisible}" Value="True">
+                                        <Setter Property="Rectangle.Fill">
+                                            <Setter.Value>
+                                                <VisualBrush Stretch="Fill" Visual="{StaticResource ForwardButton}" />
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Rectangle.Style>
+                    </Rectangle>
+                    <Label Foreground="{DynamicResource IdealForegroundColorBrush}">
+                        <Label.Style>
+                            <Style>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsFileMenuVisible}" Value="True">
+                                        <Setter Property="Label.Content" Value="{x:Static resources:Strings.TEXT_File}" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsForwardButtonVisible}" Value="True">
+                                        <Setter Property="Label.Content" Value="{x:Static resources:Strings.TEXT_Back}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Label.Style>
+                    </Label>
+                    <StackPanel.Style>
                         <Style>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding IsFileMenuVisible}" Value="True">
-                                    <Setter Property="Rectangle.Fill">
-                                        <Setter.Value>
-                                            <VisualBrush Stretch="Fill" Visual="{StaticResource HamburgerMenu}"/>
-                                        </Setter.Value>
-                                    </Setter>
-                                    <Setter Property="Button.ToolTip" Value="{x:Static resources:Strings.TOOLTIP_File}" />
+                                    <Setter Property="StackPanel.ToolTip" Value="{x:Static resources:Strings.TOOLTIP_File}" />
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding IsForwardButtonVisible}" Value="True">
-                                    <Setter Property="Rectangle.Fill">
-                                        <Setter.Value>
-                                            <VisualBrush Stretch="Fill" Visual="{StaticResource ForwardButton}"/>
-                                        </Setter.Value>
-                                    </Setter>
-                                    <Setter Property="Button.ToolTip" Value="{x:Static resources:Strings.TOOLTIP_ReturnToOpenFile}" />
+                                    <Setter Property="StackPanel.ToolTip" Value="{x:Static resources:Strings.TOOLTIP_ReturnToOpenFile}" />
                                 </DataTrigger>
                                 <MultiDataTrigger>
                                     <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding IsFileMenuVisible}" Value="False"/>
-                                        <Condition Binding="{Binding IsForwardButtonVisible}" Value="False"/>
+                                        <Condition Binding="{Binding IsFileMenuVisible}" Value="False" />
+                                        <Condition Binding="{Binding IsForwardButtonVisible}" Value="False" />
                                     </MultiDataTrigger.Conditions>
-                                    <Setter Property="Button.Visibility" Value="Collapsed" />
+                                    <Setter Property="StackPanel.Visibility" Value="Collapsed" />
                                 </MultiDataTrigger>
                             </Style.Triggers>
                         </Style>
-                    </Rectangle.Style>
-                </Rectangle>
+                    </StackPanel.Style>
+                </StackPanel>
             </Button>
+
         </controls:WindowCommands>
 
     </controls:CushWindow.LeftWindowCommands>
