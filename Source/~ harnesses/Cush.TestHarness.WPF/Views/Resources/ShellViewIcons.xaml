@@ -10,8 +10,19 @@
         <Path Width="24" Height="24" Canvas.Left="12" Canvas.Top="12" Stretch="Fill" Fill="{DynamicResource IdealForegroundColorBrush}" Data="F1 M 24,12C 30.6274,12 36,17.3726 36,24C 36,30.6274 30.6274,36 24,36C 17.3726,36 12,30.6274 12,24C 12,17.3726 17.3726,12 24,12 Z M 21,21L 21,23L 23,23L 23,30L 21,30L 21,32L 28,32L 28,30L 26,30L 26,23L 26,21L 21,21 Z M 24.5,16C 23.6716,16 23,16.6716 23,17.5C 23,18.3284 23.6716,19 24.5,19C 25.3284,19 26,18.3284 26,17.5C 26,16.6716 25.3284,16 24.5,16 Z " />
     </Canvas>
 
-    <Canvas Width="48" Height="48" Clip="F1 M 0,0L 48,0L 48,48L 0,48L 0,0" UseLayoutRounding="False" x:Key="FileCommand">
-        <Path Width="26.5833" Height="19" Canvas.Left="13" Canvas.Top="13" Stretch="Fill" Fill="{DynamicResource IdealForegroundColorBrush}" Data="F1 M 16.6668,20L 13,28.5336L 13,16L 23,16L 23,15C 23,13.8954 23.8954,13 25,13L 32,13C 33.1046,13 35,14.8954 35,16L 35,20L 16.6668,20 Z M 35,32L 28,32L 13,32L 17.5833,21L 39.5833,21L 35,32 Z " />
+    <Canvas x:Key="HamburgerMenu" Width="36" Height="36" ClipToBounds="True" >
+        <Path Fill="{DynamicResource IdealForegroundColorBrush}">
+            <Path.Data>
+                <PathGeometry FillRule="Nonzero" Figures="M4,10L28,10C29.104,10 30,9.104 30,8 30,6.896 29.104,6 28,6L4,6C2.896,6 2,6.896 2,8 2,9.104 2.896,10 4,10z M28,14L4,14C2.896,14 2,14.896 2,16 2,17.104 2.896,18 4,18L28,18C29.104,18 30,17.104 30,16 30,14.896 29.104,14 28,14z M28,22L4,22C2.896,22 2,22.896 2,24 2,25.104 2.896,26 4,26L28,26C29.104,26 30,25.104 30,24 30,22.896 29.104,22 28,22z" />
+            </Path.Data>
+        </Path>
+    </Canvas>
+
+    <Canvas x:Key="ForwardButton" Width="24" Height="24" Margin="252.583,148,240.416,147">
+        <Path Height="16" Width="20" Canvas.Top="4.083" Canvas.Left="2.083" Stretch="Fill" 
+              Fill="{DynamicResource IdealForegroundColorBrush}" Stroke="{DynamicResource IdealForegroundColorBrush}" 
+                Data="M1.2099991,0.5 L19.5,8 1.2099991,15.5 0.5,14.79 3.5,8 0.5,1.2100005 z" />
     </Canvas>
     
+
 </ResourceDictionary>

@@ -247,6 +247,9 @@
   <data name="TOOLTIP_File" xml:space="preserve">
     <value>Open File Menu</value>
   </data>
+  <data name="TOOLTIP_ReturnToOpenFile" xml:space="preserve">
+    <value>Return to open file</value>
+  </data>
   <data name="TOOLTIP_Settings" xml:space="preserve">
     <value>Modify Settings</value>
   </data>

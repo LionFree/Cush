@@ -448,6 +448,15 @@ namespace Cush.TestHarness.WPF.Views {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Return to open file.
+        /// </summary>
+        public static string TOOLTIP_ReturnToOpenFile {
+            get {
+                return ResourceManager.GetString("TOOLTIP_ReturnToOpenFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Modify Settings.
         /// </summary>
         public static string TOOLTIP_Settings {

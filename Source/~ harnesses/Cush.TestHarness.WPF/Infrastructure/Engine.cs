@@ -35,13 +35,13 @@ namespace Cush.TestHarness.WPF.Infrastructure
                 }
                 );
 
-            var viewModels = new ViewModelPack
+            var viewModels = new ViewModelProvider
             {
                 ActivityPageViewModel = new ActivityPageViewModel(fileClerk),
                 StartPageViewModel = new StartPageViewModel(),
             };
 
-            var pages = new ViewPages
+            var pages = new PageProvider
             {
                 ActivityPage = new ActivityPage(viewModels.ActivityPageViewModel),
                 StartPage = new StartPage(viewModels.StartPageViewModel)

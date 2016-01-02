@@ -2,7 +2,7 @@
 
 namespace Cush.TestHarness.WPF.ViewModels
 {
-    internal class ViewModelPack
+    internal class ViewModelProvider
     {
         internal IStartPageViewModel StartPageViewModel { get; set; }
         internal IActivityPageViewModel ActivityPageViewModel { get; set; }

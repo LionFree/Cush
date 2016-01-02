@@ -7,10 +7,11 @@
                      xmlns:resources="clr-namespace:Cush.TestHarness.WPF.Views"
                      xmlns:viewModels="clr-namespace:Cush.TestHarness.WPF.ViewModels"
                      mc:Ignorable="d"
-                     
-                     d:DataContext="{d:DesignInstance Type=viewModels:ShellViewModel, IsDesignTimeCreatable=True}" 
+
+                     d:DataContext="{d:DesignInstance Type=viewModels:ShellViewModel, IsDesignTimeCreatable=True}"
                      Title="{x:Static resources:Strings.TEXT_ApplicationName}"
                      TitleAlignment="Center"
+                     TitlebarHeight="35"
                      GlowBrush="{DynamicResource AccentColorBrush}"
                      Height="768" Width="768">
 
@@ -20,25 +21,48 @@
                 <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/Styles.xaml" />
                 <ResourceDictionary Source="/Views/Resources/ShellViewIcons.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            
-            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         </ResourceDictionary>
     </controls:CushWindow.Resources>
 
+    <!--The File menu button-->
     <controls:CushWindow.LeftWindowCommands>
-        <controls:WindowCommands ShowLastSeparator="False" Visibility="{Binding IsFileMenuVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <!--Command="{x:Static local:CushShellView.CmdOptions}"-->
-            <Button Command="{Binding OpenFileMenu}"
-                ToolTip="{x:Static resources:Strings.TOOLTIP_File}" 
-                    Foreground="{DynamicResource IdealForegroundColorBrush}"
-                    >
+        <controls:WindowCommands ShowLastSeparator="False">
+            <Button Foreground="{DynamicResource IdealForegroundColorBrush}"
+                    Command="{Binding PageSwapRequested}">
                 <Rectangle Width="16" Height="16" Margin="0,0,3,0">
-                    <Rectangle.Fill>
-                        <VisualBrush Stretch="Fill" Visual="{StaticResource FileCommand}" />
-                    </Rectangle.Fill>
+                    <Rectangle.Style>
+                        <Style>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsFileMenuVisible}" Value="True">
+                                    <Setter Property="Rectangle.Fill">
+                                        <Setter.Value>
+                                            <VisualBrush Stretch="Fill" Visual="{StaticResource HamburgerMenu}"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="Button.ToolTip" Value="{x:Static resources:Strings.TOOLTIP_File}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsForwardButtonVisible}" Value="True">
+                                    <Setter Property="Rectangle.Fill">
+                                        <Setter.Value>
+                                            <VisualBrush Stretch="Fill" Visual="{StaticResource ForwardButton}"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="Button.ToolTip" Value="{x:Static resources:Strings.TOOLTIP_ReturnToOpenFile}" />
+                                </DataTrigger>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding IsFileMenuVisible}" Value="False"/>
+                                        <Condition Binding="{Binding IsForwardButtonVisible}" Value="False"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter Property="Button.Visibility" Value="Collapsed" />
+                                </MultiDataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Rectangle.Style>
                 </Rectangle>
             </Button>
         </controls:WindowCommands>
+
     </controls:CushWindow.LeftWindowCommands>
 
     <!-- The command bar (left of the window minimize/maximize/close controls) -->

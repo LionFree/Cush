@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using Cush.Common;
 using Cush.Common.Configuration;
 using Cush.Common.FileHandling;
@@ -21,12 +20,12 @@ namespace Cush.TestHarness.WPF.ViewModels
         private readonly FileClerk<DataFile> _fileHandler;
         private readonly ILogger _logger;
         private readonly ThreadSafeObservableCollection<MRUEntry> _mruList;
-        private readonly ViewPages _pages;
-        private ICommand _backButtonCommand;
+        private readonly PageProvider _pages;
+
         private ContentControl _content;
 
-        internal ShellViewModel(ILogger logger, FileClerk<DataFile> fileHandler, ViewPages pages,
-            ViewModelPack viewModels)
+        internal ShellViewModel(ILogger logger, FileClerk<DataFile> fileHandler, PageProvider pages,
+            ViewModelProvider viewModels)
         {
             _logger = logger;
             _mruList = new ThreadSafeObservableCollection<MRUEntry>();
@@ -39,8 +38,7 @@ namespace Cush.TestHarness.WPF.ViewModels
             viewModels.StartPageViewModel.OpenRecentFileRequested += _startPage_OpenRecentFile;
             viewModels.StartPageViewModel.OpenOtherFileRequested += _startPage_OpenOtherFile;
             viewModels.StartPageViewModel.NewFileRequested += _startPage_NewFileRequested;
-
-
+            
             _fileHandler = fileHandler;
             _pages = pages;
 
@@ -58,17 +56,15 @@ namespace Cush.TestHarness.WPF.ViewModels
             }
         }
 
+
         public bool IsFileMenuVisible => !Equals(Content, _pages.StartPage);
 
-        public ICommand OpenFileMenu
+        public bool IsForwardButtonVisible => (!IsFileMenuVisible) && (_fileHandler.CurrentFile != null);
+
+        public object PageSwapRequested => new RelayCommand(nameof(PageSwapRequested), param =>
         {
-            get { return new RelayCommand(nameof(OpenFileMenu), param => Content = _pages.StartPage); }
-        }
-
-
-        public ICommand BackButtonClickCommand => _backButtonCommand ??
-                                                  (_backButtonCommand =
-                                                      new RelayCommand("BackButtonCommand", OnBackButtonClick));
+            Content = (IsForwardButtonVisible ? (ContentControl)_pages.ActivityPage : (ContentControl)_pages.StartPage);
+        });
 
         public ContentControl Content
         {
@@ -77,8 +73,11 @@ namespace Cush.TestHarness.WPF.ViewModels
             {
                 SetProperty(ref _content, value);
                 OnPropertyChanged(nameof(IsFileMenuVisible));
+                OnPropertyChanged(nameof(IsForwardButtonVisible));
             }
         }
+
+        
 
         public event EventHandler<FileProgressEventArgs> FileProgressStatusChanged;
         public event EventHandler<ProgressChangedEventArgs> FileProgressChanged;
