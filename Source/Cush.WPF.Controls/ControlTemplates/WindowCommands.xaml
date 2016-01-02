@@ -21,11 +21,8 @@
         </Grid>
 
         <ControlTemplate.Triggers>
-            <Trigger Property="IsMouseOver"
-                     Value="True">
-                <Setter TargetName="contentPresenter"
-                        Property="Opacity"
-                        Value="1" />
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="contentPresenter" Property="Opacity" Value="1" />
             </Trigger>
         </ControlTemplate.Triggers>
 
@@ -66,36 +63,31 @@
 
     </ControlTemplate>
 
-    <Style x:Key="WindowCommandsControlStyle"
-           TargetType="{x:Type Control}">
-
-        <Setter Property="Foreground"
-                Value="{Binding Foreground, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type controls:WindowCommands}}}" />
-        <Setter Property="Background"
-                Value="{DynamicResource TransparentWhiteBrush}" />
-        <Setter Property="HorizontalContentAlignment"
-                Value="Center" />
-        <Setter Property="VerticalContentAlignment"
-                Value="Center" />
-        <Setter Property="Padding"
-                Value="1" />
-        <Setter Property="Focusable"
-                Value="False" />
-        <Setter Property="FocusVisualStyle"
-                Value="{x:Null}" />
+    <Style x:Key="WindowCommandsControlStyle" TargetType="{x:Type Control}">
+        <Setter Property="Foreground" Value="{Binding Foreground, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type controls:WindowCommands}}}" />
+        <Setter Property="Background" Value="{DynamicResource TransparentWhiteBrush}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Padding" Value="1" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
 
         <Style.Triggers>
-            <Trigger Property="IsEnabled"
-                     Value="False">
-                <Setter Property="Foreground"
-                        Value="{DynamicResource GrayBrush4}" />
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{DynamicResource GrayBrush4}" />
             </Trigger>
+            
+            <!-- Makes the background light up on mouseover,
+            but also depends on the size of the control 
+            (lit up area doesn't fill the titlebar) -->
+            <!--<Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource SemiTransparentWhiteBrush}" />
+            </Trigger>-->
         </Style.Triggers>
 
     </Style>
 
-    <ControlTemplate x:Key="LightWindowCommandsTemplate"
-                     TargetType="controls:WindowCommands">
+    <ControlTemplate x:Key="LightWindowCommandsTemplate" TargetType="controls:WindowCommands">
         <ItemsPresenter />
         <ControlTemplate.Resources>
             <ResourceDictionary>
@@ -117,27 +109,19 @@
         <ItemsPresenter />
         <ControlTemplate.Resources>
             <ResourceDictionary>
-                <Style TargetType="{x:Type Button}"
-                       BasedOn="{StaticResource WindowCommandsControlStyle}">
-                    <Setter Property="Template"
-                            Value="{StaticResource WindowCommandsButtonTemplate}" />
+                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource WindowCommandsControlStyle}">
+                    <Setter Property="Template" Value="{StaticResource WindowCommandsButtonTemplate}" />
                     <Style.Triggers>
-                        <Trigger Property="IsPressed"
-                                 Value="True">
-                            <Setter Property="Foreground"
-                                    Value="{DynamicResource AccentColorBrush}" />
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Foreground" Value="{DynamicResource AccentColorBrush}" />
                         </Trigger>
                     </Style.Triggers>
                 </Style>
-                <Style TargetType="{x:Type ToggleButton}"
-                       BasedOn="{StaticResource WindowCommandsControlStyle}">
-                    <Setter Property="Template"
-                            Value="{StaticResource WindowCommandsToggleButtonTemplate}" />
+                <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource WindowCommandsControlStyle}">
+                    <Setter Property="Template" Value="{StaticResource WindowCommandsToggleButtonTemplate}" />
                     <Style.Triggers>
-                        <Trigger Property="IsPressed"
-                                 Value="True">
-                            <Setter Property="Foreground"
-                                    Value="{DynamicResource AccentColorBrush}" />
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Foreground" Value="{DynamicResource AccentColorBrush}" />
                         </Trigger>
                     </Style.Triggers>
                 </Style>
@@ -148,22 +132,14 @@
     <Style TargetType="{x:Type controls:WindowCommands}">
 
         <Setter Property="helpers:ChromeButtonHelper.ContentCharacterCasing" Value="Normal" />
-        <Setter Property="Template"
-                Value="{StaticResource LightWindowCommandsTemplate}" />
-        <Setter Property="LightTemplate"
-                Value="{StaticResource LightWindowCommandsTemplate}" />
-        <Setter Property="DarkTemplate"
-                Value="{StaticResource DarkWindowCommandsTemplate}" />
-        <Setter Property="Foreground"
-                Value="{DynamicResource BlackBrush}" />
-        <Setter Property="Background"
-                Value="{DynamicResource TransparentWhiteBrush}" />
-        <Setter Property="IsTabStop"
-                Value="False" />
-        <Setter Property="VerticalContentAlignment"
-                Value="Center" />
-        <Setter Property="FocusVisualStyle"
-                Value="{x:Null}" />
+        <Setter Property="Template" Value="{StaticResource LightWindowCommandsTemplate}" />
+        <Setter Property="LightTemplate" Value="{StaticResource LightWindowCommandsTemplate}" />
+        <Setter Property="DarkTemplate" Value="{StaticResource DarkWindowCommandsTemplate}" />
+        <Setter Property="Foreground" Value="{DynamicResource BlackBrush}" />
+        <Setter Property="Background" Value="{DynamicResource TransparentWhiteBrush}" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
                 <Style TargetType="{x:Type controls:WindowCommandsItem}">
@@ -188,11 +164,8 @@
                                                Opacity="0.25" />
                                 </StackPanel>
                                 <ControlTemplate.Triggers>
-                                    <Trigger Property="IsSeparatorVisible"
-                                             Value="False">
-                                        <Setter TargetName="PART_Separator"
-                                                Property="Visibility"
-                                                Value="Collapsed" />
+                                    <Trigger Property="IsSeparatorVisible" Value="False">
+                                        <Setter TargetName="PART_Separator" Property="Visibility" Value="Collapsed" />
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
@@ -210,11 +183,10 @@
         </Setter>
 
         <Style.Triggers>
-            <DataTrigger Binding="{Binding ParentWindow.ShowTitleBar, RelativeSource={RelativeSource Self}}"
-                         Value="True">
-                <Setter Property="Foreground"
-                        Value="{DynamicResource IdealForegroundColorBrush}" />
+            <DataTrigger Binding="{Binding ParentWindow.ShowTitleBar, RelativeSource={RelativeSource Self}}" Value="True"> 
+                <Setter Property="Foreground" Value="{DynamicResource IdealForegroundColorBrush}" />
             </DataTrigger>
+            
         </Style.Triggers>
 
     </Style>

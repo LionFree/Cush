@@ -63,7 +63,6 @@
                       Fill="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" />
             </Button>
 
-
             <Button x:Name="PART_Close"
                     Focusable="False"
                     RenderOptions.EdgeMode="Aliased"
