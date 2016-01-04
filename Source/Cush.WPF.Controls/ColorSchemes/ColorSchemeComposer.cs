@@ -14,7 +14,7 @@ namespace Cush.WPF.Controls.ColorSchemes
 
         internal ColorSchemeComposer(ILogger logger)
             : this(
-                logger, new ColorSchemeExtensionContainer())
+                logger, new ColorSchemeExtensionContainer(logger))
         {
         }
 

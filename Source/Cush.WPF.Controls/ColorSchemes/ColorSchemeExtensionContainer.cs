@@ -2,6 +2,7 @@
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Linq;
+using Cush.Common.Logging;
 using Cush.Composition;
 using Cush.WPF.Interfaces;
 // ReSharper disable once CheckNamespace
@@ -9,6 +10,13 @@ namespace Cush.WPF.ColorSchemes
 {
     public class ColorSchemeExtensionContainer : ImportContainer, IColorSchemeExtensionContainer
     {
+        private readonly ILogger _logger;
+
+        public ColorSchemeExtensionContainer(ILogger logger)
+        {
+            _logger = logger;
+        }
+
         [Import("BaseTheme", typeof (IResourceExtension), AllowRecomposition = false)]
         public IKeyedResourceContainer BaseTheme { get; set; }
 
@@ -23,10 +31,10 @@ namespace Cush.WPF.ColorSchemes
 
         public void OnImportsSatisfied()
         {
-            Trace.WriteLine("    ColorSchemeExtensionContainer Satisfied.");
+            _logger.Trace("    ColorSchemeExtensionContainer Satisfied.");
             Themes = GetUniqueExtensions(Themes);
             Accents = GetUniqueExtensions(Accents);
-            Trace.WriteLine("    Themes and Accents are Unique.");
+            _logger.Trace("    Themes and Accents are Unique.");
         }
 
         private List<IKeyedResourceContainer> GetUniqueExtensions(List<IKeyedResourceContainer> list)
