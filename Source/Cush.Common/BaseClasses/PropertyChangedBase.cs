@@ -179,5 +179,22 @@ namespace Cush.Common
             return (null != _propertyChanged) && 
                 _propertyChanged.GetInvocationList().Contains(@delegate);
         }
+
+
+        /// <summary>
+        ///     Raises the given event.
+        /// </summary>
+        protected void RaiseEvent(EventHandler handler, EventArgs args = null)
+        {
+            handler?.Invoke(this, args);
+        }
+
+        /// <summary>
+        ///     Raises the given event.
+        /// </summary>
+        protected void RaiseEvent<TArgs>(EventHandler<TArgs> handler, TArgs args = null) where TArgs : EventArgs
+        {
+            handler?.Invoke(this, args);
+        }
     }
 }
