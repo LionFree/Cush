@@ -52,10 +52,5 @@ namespace Cush.TestHarness.WPF.ViewModels
             if (file == null) return;
             OpenRecentFileRequested?.Invoke(this, new FileEventArgs { Fullpath = file.FullPath });
         }
-
-        private void RaiseEvent(EventHandler handler, EventArgs args = null)
-        {
-            handler?.Invoke(this, args ?? new EventArgs());
-        }
     }
 }

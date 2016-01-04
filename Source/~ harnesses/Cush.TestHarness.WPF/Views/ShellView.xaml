@@ -87,9 +87,7 @@
                     </StackPanel.Style>
                 </StackPanel>
             </Button>
-
         </controls:WindowCommands>
-
     </controls:CushWindow.LeftWindowCommands>
 
     <!-- The command bar (left of the window minimize/maximize/close controls) -->
