@@ -15,7 +15,7 @@ namespace Cush.TestHarness.WPF.Infrastructure
 
         internal Composer(ILogger logger)
             : this(
-                logger, new ColorSchemeExtensionContainer())
+                logger, new ColorSchemeExtensionContainer(logger))
         {
         }
 
