@@ -515,26 +515,13 @@ namespace Cush.WPF.Controls
                     break;
 
                 case "_Open":
-                    Select(item,
-                        new SelectionChangedEventArgs(RecentFileSelectedEvent,
-                            new List<MRUEntry>(),
-                            new List<MRUEntry> {item}));
-                    OpenRecentFileCommand?.Execute(item);
+                    OnOpenRecentFile(item);
                     break;
 
                 case "Ope_n a copy":
-                    Select(item,
-                        new SelectionChangedEventArgs(OpenACopyEvent,
-                            new List<MRUEntry>(),
-                            new List<MRUEntry> { item }));
-                    OpenACopyCommand?.Execute(item);
+                    OnOpenACopy(item);
                     break;
-                    //var openCopyArgs = new SelectionChangedEventArgs(OpenACopyEvent,
-                    //    new List<MRUEntry>(),
-                    //    new List<MRUEntry> {item});
-                    //RaiseEvent(openCopyArgs);
-                    //break;
-
+                    
                 case "_Copy path to clipboard":
                     Clipboard.SetText(item.FullPath);
                     break;
@@ -552,6 +539,21 @@ namespace Cush.WPF.Controls
                 default:
                     throw new ArgumentException("Bad command from context menu.");
             }
+        }
+
+        private void OnOpenACopy(MRUEntry entry)
+        {
+            RaiseEvent(new SelectionChangedEventArgs(OpenACopyEvent, new List<MRUEntry>(), new List<MRUEntry> {entry}));
+            OpenACopyCommand?.Execute(entry);
+        }
+
+        private void OnOpenRecentFile(MRUEntry entry)
+        {
+            // Move the item to the top of the list.
+            MRUItemsSource.Move(MRUItemsSource.IndexOf(entry), 0);
+
+            RaiseEvent(new SelectionChangedEventArgs(RecentFileSelectedEvent, new List<MRUEntry>(), new List<MRUEntry> { entry }));
+            OpenRecentFileCommand?.Execute(entry);
         }
 
         private void ClearUnpinnedFiles()
@@ -704,20 +706,15 @@ namespace Cush.WPF.Controls
                 new PointHitTestParameters(pt));
             box.UnselectAll();
 
-            Select(mruEntry, e);
+            OnOpenRecentFile(mruEntry);
+
 
             _unselecting = false;
         }
 
-        private void Select(MRUEntry mruEntry, SelectionChangedEventArgs e)
-        {
-            // Move the item to the top of the list.
-            MRUItemsSource.Remove(mruEntry);
-            MRUItemsSource.Insert(0, mruEntry);
-            
-            RaiseEvent(new SelectionChangedEventArgs(e.RoutedEvent, e.RemovedItems, e.AddedItems));
-            
-        }
+
+
+        
 
         #endregion
 
