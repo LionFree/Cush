@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using Cush.Common;
@@ -19,16 +21,16 @@ namespace Cush.TestHarness.WPF.ViewModels
     {
         private readonly FileClerk<DataFile> _fileHandler;
         private readonly ILogger _logger;
-        private readonly ThreadSafeObservableCollection<MRUEntry> _mruList;
+        private readonly ObservableCollection<MRUEntry> _mruList;
         private readonly PageProvider _pages;
 
         private ContentControl _content;
 
-        internal ShellViewModel(ILogger logger, FileClerk<DataFile> fileHandler, PageProvider pages,
-            ViewModelProvider viewModels)
+        internal ShellViewModel(ILogger logger, FileClerk<DataFile> fileHandler, 
+            PageProvider pages, ViewModelProvider viewModels)
         {
             _logger = logger;
-            _mruList = new ThreadSafeObservableCollection<MRUEntry>();
+            _mruList = new ObservableCollection<MRUEntry>();
 
             fileHandler.FileOpenedEvent += FileOpenedEvent;
             fileHandler.FileClosedEvent += FileClosedEvent;

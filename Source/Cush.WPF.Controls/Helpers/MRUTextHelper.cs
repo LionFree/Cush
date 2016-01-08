@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Media;
 
@@ -9,7 +10,7 @@ namespace Cush.WPF.Controls.Helpers
     {
         internal static MRUTextHelper GetInstance()
         {
-            return GetInstance(MRUHelperPrivates.GetInstance());
+            return GetInstance(new MRUHelperPrivates());
         }
 
         internal static MRUTextHelper GetInstance(MRUHelperPrivates helper)
@@ -72,4 +73,95 @@ namespace Cush.WPF.Controls.Helpers
             }
         }
     }
+
+    [DebuggerStepThrough]
+    internal class MRUHelperPrivates
+    {
+        private Size MeasureTextSize(string text, FontFamily fontFamily, FontStyle fontStyle,
+            FontWeight fontWeight, FontStretch fontStretch, double fontSize)
+        {
+            var ft = new FormattedText(text,
+                CultureInfo.CurrentCulture,
+                FlowDirection.LeftToRight,
+                new Typeface(fontFamily, fontStyle, fontWeight, fontStretch),
+                fontSize,
+                Brushes.Black);
+
+            return new Size(ft.Width, ft.Height);
+        }
+
+        internal Size MeasureText(string text, FontFamily fontFamily, FontStyle fontStyle,
+            FontWeight fontWeight,
+            FontStretch fontStretch, double fontSize)
+        {
+            var typeface = new Typeface(fontFamily, fontStyle, fontWeight, fontStretch);
+            GlyphTypeface glyphTypeface;
+
+            if (!typeface.TryGetGlyphTypeface(out glyphTypeface))
+            {
+                return MeasureTextSize(text, fontFamily, fontStyle, fontWeight, fontStretch, fontSize);
+            }
+
+            double totalWidth = 0;
+            double height = 0;
+
+            foreach (var t in text)
+            {
+                var glyphIndex = glyphTypeface.CharacterToGlyphMap[t];
+                var width = glyphTypeface.AdvanceWidths[glyphIndex] * fontSize;
+                var glyphHeight = glyphTypeface.AdvanceHeights[glyphIndex] * fontSize;
+
+                if (glyphHeight > height)
+                {
+                    height = glyphHeight;
+                }
+                totalWidth += width;
+            }
+            return new Size(totalWidth, height);
+        }
+
+
+        internal string GetSubstringForWidth(string text, double width, FontFamily fontFamily,
+            FontStyle fontStyle,
+            FontWeight fontWeight, FontStretch fontStretch,
+            double fontSize)
+        {
+            //Trace.WriteLine("  Path string too long... shortening.");
+            if (width <= 0)
+            {
+                return "";
+            }
+
+            var length = text.Length;
+            var testString = text;
+
+            while (true)
+            {
+                var ft = new FormattedText(testString,
+                    CultureInfo.CurrentCulture,
+                    FlowDirection.LeftToRight,
+                    new Typeface(fontFamily, fontStyle, fontWeight, fontStretch),
+                    fontSize,
+                    Brushes.Black);
+                if (ft.Width <= width) break;
+
+                // remove a bit.
+                length--;
+                testString = text.Substring(0, length);
+            }
+
+            // Do we need an ellipsis?
+            if (testString != text)
+            {
+                // Strip off a character.
+                testString = testString.Substring(0, testString.Length - 3);
+
+                // Add an ellipsis.
+                testString += "…";
+            }
+
+            return testString;
+        }
+    }
+
 }

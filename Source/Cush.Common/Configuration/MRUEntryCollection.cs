@@ -1,4 +1,5 @@
 ﻿using System.Configuration;
+using System.Linq;
 
 namespace Cush.Common.Configuration
 {
@@ -75,8 +76,25 @@ namespace Cush.Common.Configuration
 
         #region Methods
 
+        //public void AddIfNew(MRUEntryElement thing)
+        //{
+        //    var items = BaseGetAllKeys();
+        //    if(!items.Any(item=>Equals((MRUEntryElement)item, thing)))
+        //        Add(thing);
+        //}
+        public int IndexOf(MRUEntryElement thing)
+        {
+            return base.BaseIndexOf(thing);
+        }
+
+        public bool Contains(MRUEntryElement thing)
+        {
+            return IndexOf(thing) != -1;
+        }
+
         public void Add(MRUEntryElement thing)
         {
+
             base.BaseAdd(thing);
         }
 

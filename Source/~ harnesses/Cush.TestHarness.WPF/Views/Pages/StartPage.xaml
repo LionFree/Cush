@@ -62,17 +62,20 @@
         <controls:MRUFileMenu Grid.Column="0" Grid.Row="0"
                               Foreground="{DynamicResource BlackBrush}"
                               AccentColor="{DynamicResource AccentColorBrush}"
-                              HighlightBackgroundColor="{StaticResource HighlightColor}"
-                              Files="{Binding Files}"
+                              HighlightBackgroundColorBrush="{StaticResource HighlightColor}"
+                              MRUItemsSource="{Binding Files}"
                               Margin="10,10,10,5"
-                              OpenOtherText="{x:Static resources:Strings.TEXT_OpenOtherFiles}"
-                             OpenOtherFileClicked="MRUFileMenu_OnOpenOtherFileClicked"
+                              OpenOtherText="OPEN OTHER FILES"
+                              OpenOtherFileClicked="MRUFileMenu_OnOpenOtherFileClicked"
                               RecentFileSelected="MRUFileMenu_OnRecentFileSelected"
-                              OpenOtherFile="{Binding OnOpenOtherFileRequested}"
-                              OpenRecentFile="{Binding OnOpenRecentFileRequested}"
+                              OpenOtherFileCommand="{Binding OnOpenOtherFileRequested}"
+                              OpenRecentFileCommand="{Binding OnOpenRecentFileRequested}"
+                              OpenACopyCommand="{Binding OnOpenACopyRequested}"
                               OpenACopyVisible="True"
                               BreadcrumbsVisible="True"
-                              OpenACopy="MRUMenu_OnOpenACopy" />
+                              OpenACopy="MRUMenu_OnOpenACopy" 
+                              ValidateFiles="False"
+                              />
         <!--RecentFileSelected="MRUMenu_OnRecentFileSelected"-->
 
         <!-- GridSplitter -->

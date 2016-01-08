@@ -1,8 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
-using Cush.Common.FileHandling;
 
-namespace Cush.Common
+namespace Cush.Common.FileHandling
 {
     public static class MRUExtensions
     {
@@ -12,7 +12,7 @@ namespace Cush.Common
         /// <param name="collection"></param>
         /// <param name="fullPath">The full path of the MRUEntry to locate in the ObservableCollection&lt;MRUEntry&gt;.</param>
         /// <returns></returns>
-        public static int IndexOf(this ObservableCollection<MRUEntry> collection, string fullPath)
+        public static int IndexOf(this IList<MRUEntry> collection, string fullPath)
         {
             // Set the return value to -1.
             // If we receive this value, then the fullPath doesn't exist in the collection.
@@ -31,7 +31,7 @@ namespace Cush.Common
             return returnValue;
         }
 
-        public static void AddItem(this ObservableCollection<MRUEntry> collection, MRUEntry item)
+        public static void AddItem(this IList<MRUEntry> collection, MRUEntry item)
         {
             Trace.WriteLine("Adding item...");
             collection.Add(item);
@@ -42,7 +42,7 @@ namespace Cush.Common
         /// <param name="collection"></param>
         /// <param name="fullpath">The full path of the MRUEntry to locate in the ObservableCollection&lt;MRUEntry&gt;.</param>
         /// <returns></returns>
-        public static bool Contains(this ObservableCollection<MRUEntry> collection, string fullpath)
+        public static bool Contains(this IList<MRUEntry> collection, string fullpath)
         {
             bool result = false;
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using Cush.Common.FileHandling;
 
 namespace Cush.Common
 {
@@ -13,5 +14,6 @@ namespace Cush.Common
         public string Fullpath { get; set; }
         public bool Pinned { get; set; }
         public string TargetCommand { get; set; }
+        public MRUEntry MRUEntry { get; set; }
     }
 }

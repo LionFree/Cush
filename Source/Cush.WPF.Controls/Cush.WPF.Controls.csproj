@@ -160,6 +160,7 @@
     <Compile Include="Native\Win32\NativeMethods.cs" />
     <Compile Include="Native\Win32\SafeLibraryHandle.cs" />
     <Compile Include="Native\Win32\UnsafeNativeMethods.cs" />
+    <Compile Include="Converters\UnpinnedToVisibilityConverter.cs" />
   </ItemGroup>
   <!-- Native -->
   <ItemGroup>

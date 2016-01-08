@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Cush.Common;
 using Cush.Common.FileHandling;
@@ -7,7 +8,7 @@ namespace Cush.TestHarness.WPF.ViewModels.Interfaces
 {
     public interface IStartPageViewModel
     {
-        ThreadSafeObservableCollection<MRUEntry> Files { get; set; }
+        ObservableCollection<MRUEntry> Files { get; set; }
         ICommand OnOpenOtherFileRequested { get; }
         ICommand OnOpenRecentFileRequested { get; }
         ICommand OnNewFileRequested { get; }

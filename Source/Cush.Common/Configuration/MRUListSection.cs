@@ -1,13 +1,40 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Reflection;
 using System.Xml;
+using Cush.Common.FileHandling;
 
 namespace Cush.Common.Configuration
 {
     public sealed class MRUListSection : ConfigurationSection
     {
+
+        // ReSharper disable once UnusedMember.Global
+        public static void Write(IEnumerable<MRUEntry> mruList)
+        {
+            // Get the app.config section.
+            var mruListSection = MRUListSection.Open();
+
+            // Clear the section's MRU List.
+            mruListSection.MRUList.Clear();
+
+            // Populate the section with MRUEntries.
+            foreach (var item in mruList)
+            {
+                var element = new MRUEntryElement {FullPath = item.FullPath, Pinned = item.Pinned};
+
+                if (!mruListSection.MRUList.Contains(element))
+                    mruListSection.MRUList.Add(element);
+            }
+
+            // Save the full configuration file and force save even if the file was not modified.
+            mruListSection.Save();
+        }
+
+
         #region Constructors
 
         /// <summary>

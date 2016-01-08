@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Windows.Controls;
 using System.Windows.Input;
 using Cush.Common;
 using Cush.Common.FileHandling;
@@ -14,19 +14,15 @@ namespace Cush.TestHarness.WPF.ViewModels
 
     public class StartPageViewModel : BindableBase, IStartPageViewModel
     {
-        private ThreadSafeObservableCollection<MRUEntry> _files;
-
-        public StartPageViewModel() : this(new ThreadSafeObservableCollection<MRUEntry>())
-        {
-        }
+        private ObservableCollection<MRUEntry> _files;
 
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-        internal StartPageViewModel(ThreadSafeObservableCollection<MRUEntry> files)
+        internal StartPageViewModel(ref ObservableCollection<MRUEntry> files)
         {
             _files = files;
         }
 
-        public ThreadSafeObservableCollection<MRUEntry> Files
+        public ObservableCollection<MRUEntry> Files
         {
             get { return _files; }
             set { SetProperty(ref _files, value); }
@@ -37,18 +33,25 @@ namespace Cush.TestHarness.WPF.ViewModels
         public ICommand OnNewFileRequested=> new RelayCommand(nameof(OnNewFileRequested), param => RaiseEvent(NewFileRequested));
         public ICommand OnImportFileRequested=> new RelayCommand(nameof(OnImportFileRequested), param => Trace.WriteLine("Import File clicked."));
         public ICommand OnMergeFilesRequested=> new RelayCommand(nameof(OnMergeFilesRequested), param => Trace.WriteLine("Merge Files clicked."));
-        
+
+        public ICommand OnOpenACopyRequested => new RelayCommand(nameof(OnOpenACopyRequested), OpenACopy);
+
+        private void OpenACopy(object obj)
+        {
+            var file = obj as MRUEntry;
+            if (file == null) return;
+            Trace.WriteLine($"Opening a copy of {file.FullPath}.");
+        }
+
+       
+
         public event OpenRecentFileEventHandler OpenRecentFileRequested;
         public event EventHandler OpenOtherFileRequested;
         public event EventHandler NewFileRequested;
 
         private void OnOpenRecentFile(object e)
         {
-            MRUEntry file = null;
-            var args = e as SelectionChangedEventArgs;
-            if (args != null && args.AddedItems.Count != 0)
-                file = (MRUEntry)args.AddedItems[0];
-
+            var file = e as MRUEntry;
             if (file == null) return;
             OpenRecentFileRequested?.Invoke(this, new FileEventArgs { Fullpath = file.FullPath });
         }

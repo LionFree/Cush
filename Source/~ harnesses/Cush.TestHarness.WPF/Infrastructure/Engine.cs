@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Windows;
 using Cush.Common.FileHandling;
 using Cush.Common.Logging;
@@ -25,6 +27,7 @@ namespace Cush.TestHarness.WPF.Infrastructure
         {
             ColorSchemeManager.ComposeColorSchemeExtensions(logger);
 
+            var mruEntries = PopulateDebugEntries();
             var fileClerk = new FileClerk<DataFile>(logger,
                 new FileHandler<DataFile>(
                     logger, new XmlFileReader(logger), new XmlFileWriter(logger))
@@ -38,7 +41,7 @@ namespace Cush.TestHarness.WPF.Infrastructure
             var viewModels = new ViewModelProvider
             {
                 ActivityPageViewModel = new ActivityPageViewModel(fileClerk),
-                StartPageViewModel = new StartPageViewModel(),
+                StartPageViewModel = new StartPageViewModel(ref mruEntries),
             };
 
             var pages = new PageProvider
@@ -47,7 +50,8 @@ namespace Cush.TestHarness.WPF.Infrastructure
                 StartPage = new StartPage(viewModels.StartPageViewModel)
             };
 
-            var shellView = new ShellView(new ShellViewModel(logger, fileClerk, pages, viewModels));
+            var shellView = new ShellView(new ShellViewModel(logger, fileClerk,
+                pages, viewModels));
 
             var dialogs = new DialogPack { 
                 AboutDialog = new AboutDialog(new AboutViewModel(), shellView, null),
@@ -58,6 +62,19 @@ namespace Cush.TestHarness.WPF.Infrastructure
             shellView.SetDialogs(dialogs);
 
             return new Implementation(shellView, logger);
+        }
+
+        private static ObservableCollection<MRUEntry> PopulateDebugEntries()
+        {
+            return new ObservableCollection<MRUEntry>
+            {
+                new MRUEntry {FullPath = "1+" + Path.GetRandomFileName(), Pinned = true},
+                new MRUEntry {FullPath = "2+" + Path.GetRandomFileName(), Pinned = true},
+                new MRUEntry {FullPath = "3+" + Path.GetRandomFileName(), Pinned = true},
+                new MRUEntry {FullPath = "4+" + Path.GetRandomFileName(), Pinned = false},
+                new MRUEntry {FullPath = "5+" + Path.GetRandomFileName(), Pinned = false},
+                new MRUEntry {FullPath = "6+" + Path.GetRandomFileName(), Pinned = false}
+            };
         }
 
         internal abstract void Start(params string[] args);

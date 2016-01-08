@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.IO;
 using System.Xml.Serialization;
 using Cush.Common.Helpers;
 
@@ -46,6 +47,8 @@ namespace Cush.Common.FileHandling
                 return temp;
             }
         }
+
+        public bool IsValid => !string.IsNullOrEmpty(FullPath) && File.Exists(FullPath);
 
         public override string ToString()
         {

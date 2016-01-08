@@ -1,173 +1,127 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using Cush.Common;
-using Cush.Common.Exceptions;
 using Cush.Common.FileHandling;
-using Cush.Common.Helpers;
 using Cush.WPF.Controls.Helpers;
 
 namespace Cush.WPF.Controls
 {
-    // TemplatePart 
-    // Represents an attribute that is applied to the class definition to identify the types of the named parts that are used for control templating.
-    // http://msdn.microsoft.com/en-us/library/system.windows.templatepartattribute(v=vs.95).aspx
-    //
-    // http://xamlcoder.com/cs/blogs/joe/archive/2007/12/13/building-custom-template-able-wpf-controls.aspx
-    //
-    // Guidelines for Designing Stylable Controls
-    // http://msdn.microsoft.com/en-us/library/ms752339.aspx
-
-    [TemplatePart(Name = "Files", Type = typeof (ObservableCollection<MRUEntry>))]
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-    [SuppressMessage("ReSharper", "FieldCanBeMadeReadOnly.Global")]
-    [SuppressMessage("ReSharper", "UnusedMember.Global")]
-    [SuppressMessage("ReSharper", "EventNeverSubscribedTo.Global")]
+    //[StyleTypedProperty(Property = "ItemContainerStyle", StyleTargetType = typeof (ListBoxItem))]
+    [TemplatePart(Name = nameof(OpenOtherFileButton), Type = typeof (Button))]
     public sealed class MRUFileMenu : Control
     {
+        //-------------------------------------------------------------------
+        //
+        //  Public Methods
+        //
+        //-------------------------------------------------------------------
+
+        #region Public Methods
+
+        public override void OnApplyTemplate()
+        {
+            // Happens before ControlLoaded.
+            base.OnApplyTemplate();
+
+            // Attach binding for control loaded event
+            Loaded += ControlLoaded;
+            var openOtherButton = GetTemplateChild(OpenOtherFileButton) as Button;
+            if (openOtherButton != null)
+            {
+                openOtherButton.Click += OnOpenOtherClick;
+            }
+
+            WireUpMouseEvents(PART_PinnedList);
+            WireUpMouseEvents(PART_UnpinnedList);
+
+            var contextMenuCommandBinding = new CommandBinding(
+                ContextMenuRoutedCommand, ExecutedContextMenuCommand, (s, e) => { e.CanExecute = true; });
+
+            // attach CommandBinding to root control
+            CommandBindings.Add(contextMenuCommandBinding);
+            WireUpContextMenu("PART_PinnedContext");
+            WireUpContextMenu("PART_UnpinnedContext");
+        }
+
+        private void OnOpenOtherClick(object sender, RoutedEventArgs e)
+        {
+            RaiseEvent(new RoutedEventArgs(OpenOtherFileClickedEvent));
+        }
+
+        #endregion
+
+        //-------------------------------------------------------------------
+        //
+        //  Constructors
+        //
+        //-------------------------------------------------------------------
+
         #region Constructors
+
+        /// <summary>
+        ///     Default DependencyObject constructor
+        /// </summary>
+        /// <remarks>
+        ///     Automatic determination of current Dispatcher. Use alternative constructor
+        ///     that accepts a Dispatcher for best performance.
+        /// </remarks>
+        public MRUFileMenu()
+        {
+            SizeChanged += MRUFileMenu_SizeChanged;
+            SetCurrentValue(MRUItemsSourceProperty, new ObservableCollection<MRUEntry>());
+        }
 
         static MRUFileMenu()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof (MRUFileMenu),
-                new FrameworkPropertyMetadata(
-                    typeof (MRUFileMenu)));
+                new FrameworkPropertyMetadata(typeof (MRUFileMenu)));
         }
 
-        // public constructor
-        public MRUFileMenu()
+        #endregion
+
+        //-------------------------------------------------------------------
+        //
+        //  Public Properties
+        //
+        //-------------------------------------------------------------------
+
+        #region Public Properties
+
+        public static readonly RoutedCommand ContextMenuRoutedCommand = new RoutedCommand();
+
+        public static readonly DependencyProperty OpenRecentFileCommandProperty
+            = DependencyProperty.Register(
+                "OpenRecentFileCommand", typeof (ICommand), typeof (MRUFileMenu));
+
+        public ICommand OpenRecentFileCommand
         {
-            SizeChanged += MRUFileMenu_SizeChanged;
+            get { return (ICommand) GetValue(OpenRecentFileCommandProperty); }
+            set { SetValue(OpenRecentFileCommandProperty, value); }
         }
 
-        #endregion
+        public static readonly DependencyProperty OpenACopyCommandProperty
+            = DependencyProperty.Register(
+                "OpenACopyCommand", typeof(ICommand), typeof(MRUFileMenu));
 
-        #region Static Properties
+        public ICommand OpenACopyCommand
+        {
+            get { return (ICommand)GetValue(OpenACopyCommandProperty); }
+            set { SetValue(OpenACopyCommandProperty, value); }
+        }
 
-        private static readonly MRUMenuHelper Helper = MRUMenuHelper.GetInstance();
-
-        public static RoutedCommand OpenOtherFileCommand = new RoutedCommand();
-        public static RoutedCommand ContextMenuCommand = new RoutedCommand();
-
-        public static readonly RoutedEvent OpenOtherFileClickedEvent = EventManager.RegisterRoutedEvent(
-            "OpenOtherFileClicked", RoutingStrategy.Bubble, typeof (RoutedEventHandler), typeof (MRUFileMenu));
-
-        public static readonly DependencyProperty OpenOtherFileCommandProperty = DependencyProperty.Register(
-            "OpenOtherFile", typeof (ICommand), typeof (MRUFileMenu),
-            new FrameworkPropertyMetadata(null, OnOpenOtherFileChanged));
-
-        public static readonly RoutedEvent RecentFileSelectedEvent = EventManager.RegisterRoutedEvent(
-            "RecentFileSelected", RoutingStrategy.Bubble, typeof (SelectionChangedEventHandler), typeof (MRUFileMenu));
-
-        public static DependencyProperty OpenRecentFileCommandProperty = DependencyProperty.Register(
-            "OpenRecentFile", typeof (ICommand), typeof (MRUFileMenu),
-            new FrameworkPropertyMetadata(null));
-
-        public static readonly RoutedEvent OpenACopyEvent = EventManager.RegisterRoutedEvent(
-            "OpenACopy", RoutingStrategy.Bubble, typeof (SelectionChangedEventHandler), typeof (MRUFileMenu));
-
-        public static readonly RoutedEvent PinClickedEvent = EventManager.RegisterRoutedEvent(
-            "PinClicked", RoutingStrategy.Bubble, typeof (RoutedEventHandler), typeof (MRUFileMenu));
-
-        public static readonly DependencyProperty UnpinnedFilesProperty = DependencyProperty.Register(
-            "UnpinnedFiles",
-            typeof (ObservableCollection<MRUEntry>),
-            typeof (MRUFileMenu),
-            new PropertyMetadata(new ObservableCollection<MRUEntry>()));
-
-        public static readonly DependencyProperty PinnedFilesProperty = DependencyProperty.Register(
-            "PinnedFiles",
-            typeof (ObservableCollection<MRUEntry>),
-            typeof (MRUFileMenu),
-            new PropertyMetadata(new ObservableCollection<MRUEntry>()));
-
-
-        public static DependencyProperty HotForegroundColorProperty = DependencyProperty.Register(
-            "HotForegroundColor",
-            typeof (SolidColorBrush),
-            typeof (MRUFileMenu),
-            new UIPropertyMetadata(new SolidColorBrush {Color = ColorHelper.HexToMediaColor("#FF9D9D9D")}));
-
-        public static DependencyProperty ColdForegroundColorProperty = DependencyProperty.Register(
-            "ColdForegroundColor",
-            typeof (Brush),
-            typeof (MRUFileMenu),
-            new UIPropertyMetadata(new SolidColorBrush {Color = Colors.Black}));
-
-        public static DependencyProperty HighlightDarkColorProperty = DependencyProperty.Register(
-            "HighlightDarkColor",
-            typeof (Brush),
-            typeof (MRUFileMenu),
-            new UIPropertyMetadata(new SolidColorBrush {Color = ColorHelper.HexToMediaColor("#FF086F9E")}));
-
-        public static readonly DependencyProperty BreadcrumbsVisibleProperty = DependencyProperty.Register(
-            "BreadcrumbsVisible",
-            typeof (bool),
-            typeof (MRUFileMenu),
-            new PropertyMetadata(true));
-
-        public static readonly DependencyProperty OpenOtherTextProperty = DependencyProperty.Register(
-            "OpenOtherText",
-            typeof (string),
-            typeof (MRUFileMenu),
-            new UIPropertyMetadata(Strings.TEXT_OpenOtherFiles));
-
-        public static DependencyProperty VerticalScrollBarVisibilityProperty = DependencyProperty.Register(
-            "VerticalScrollBarVisibility",
-            typeof (ScrollBarVisibility),
-            typeof (MRUFileMenu),
-            new UIPropertyMetadata(ScrollBarVisibility.Disabled));
-
-        public static readonly DependencyProperty CornerRadiusProperty = DependencyProperty.Register(
-            "CornerRadius",
-            typeof (CornerRadius),
-            typeof (MRUFileMenu),
-            new UIPropertyMetadata(new CornerRadius(0)));
-
-        public static readonly DependencyProperty HighlightBackgroundColorProperty = DependencyProperty.Register(
-            "HighlightBackgroundColor",
-            typeof (Brush),
-            typeof (MRUFileMenu),
-            new UIPropertyMetadata(Brushes.Red));
-
-        public static readonly DependencyProperty HighlightForegroundColorProperty = DependencyProperty.Register(
-            "HighlightForegroundColor",
-            typeof (Brush),
-            typeof (MRUFileMenu),
-            new UIPropertyMetadata(Brushes.White));
-
-        public static readonly DependencyProperty AccentColorProperty = DependencyProperty.Register(
-            "AccentColor",
-            typeof (Brush),
-            typeof (MRUFileMenu),
-            new UIPropertyMetadata(Brushes.Black));
-
-        public static readonly DependencyProperty OpenACopyVisibleProperty = DependencyProperty.Register(
-            "OpenACopyVisible",
-            typeof (bool),
-            typeof (MRUFileMenu),
-            new PropertyMetadata(false));
-
-        public static readonly DependencyProperty FilesProperty = DependencyProperty.Register(
-            "Files", typeof (ObservableCollection<MRUEntry>), typeof (MRUFileMenu),
-            new UIPropertyMetadata(new ObservableCollection<MRUEntry>(), OnFilesChanged));
-
-        public static readonly RoutedEvent FilesChangedEvent =
-            EventManager.RegisterRoutedEvent("FilesChanged",
-                RoutingStrategy.Bubble,
-                typeof (RoutedEventHandler),
-                typeof (MRUFileMenu));
-
-        #endregion
-
-        #region Static Methods
+        public static readonly DependencyProperty OpenOtherFileCommandProperty
+            = DependencyProperty.Register(
+                "OpenOtherFileCommand",
+                typeof (ICommand),
+                typeof (MRUFileMenu),
+                new FrameworkPropertyMetadata(null, OnOpenOtherFileChanged));
 
         private static void OnOpenOtherFileChanged(
             DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -179,6 +133,13 @@ namespace Cush.WPF.Controls
                 ref b._openOtherCanExecuteChangedHandler);
         }
 
+        private void OnOpenOtherCanExecuteChanged(object sender, EventArgs e)
+        {
+            OnCommandCanExecuteChanged(OpenOtherFileCommand,
+                _isOpenOtherCommandExecuting,
+                value => _isOpenOtherCommandExecuting = value);
+        }
+        
         private static void OnCommandChanged(ICommand oldCommand,
             ICommand newCommand,
             EventHandler handler,
@@ -203,56 +164,6 @@ namespace Cush.WPF.Controls
             }
         }
 
-        private static void OnFilesChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
-        {
-            var mruFileMenu = o as MRUFileMenu;
-            mruFileMenu?.OnFilesChanged((ObservableCollection<MRUEntry>) e.OldValue,
-                (ObservableCollection<MRUEntry>) e.NewValue);
-        }
-
-        #endregion
-
-        #region Internal / Private Properties
-
-        private readonly List<ListBox> _alreadyUpdated = new List<ListBox>();
-        private EventHandler _openOtherCanExecuteChangedHandler;
-        private bool _unselecting;
-        private bool _isOpenOtherCommandExecuting;
-
-        internal ObservableCollection<MRUEntry> UnpinnedFiles => (ObservableCollection<MRUEntry>) GetValue(UnpinnedFilesProperty);
-
-        internal ObservableCollection<MRUEntry> PinnedFiles => (ObservableCollection<MRUEntry>) GetValue(PinnedFilesProperty);
-
-        private void OnOpenOtherCanExecuteChanged(object sender, EventArgs e)
-        {
-            OnCommandCanExecuteChanged(OpenOtherFile,
-                _isOpenOtherCommandExecuting,
-                value => _isOpenOtherCommandExecuting = value);
-        }
-
-        private void OnFilesChanged(ICollection<MRUEntry> oldValue,
-            ObservableCollection<MRUEntry> newValue)
-        {
-            // fire text changed event
-            Files = newValue;
-
-            foreach (var item in oldValue.Where(item => !newValue.Contains(item)))
-            {
-                RemoveFromLists(item);
-            }
-
-            foreach (var item in newValue.Where(item => !oldValue.Contains(item)))
-            {
-                AddToLists(item);
-            }
-
-            RaiseEvent(new RoutedEventArgs(FilesChangedEvent, this));
-        }
-
-        #endregion
-
-        #region Private Methods
-
         private void OnCommandCanExecuteChanged(ICommand command,
             bool executing,
             Action<bool> setExecuting)
@@ -273,6 +184,312 @@ namespace Cush.WPF.Controls
         }
 
 
+        public ICommand OpenOtherFileCommand
+        {
+            get { return (ICommand) GetValue(OpenOtherFileCommandProperty); }
+            set { SetValue(OpenOtherFileCommandProperty, value); }
+        }
+
+        public bool ValidateFiles
+        {
+            get { return (bool) GetValue(ValidateFilesProperty); }
+            set { SetValue(ValidateFilesProperty, value); }
+        }
+
+        public static readonly DependencyProperty MRUItemsSourceProperty
+            = DependencyProperty.Register("MRUItemsSource",
+                typeof (ObservableCollection<MRUEntry>),
+                typeof (MRUFileMenu),
+                new FrameworkPropertyMetadata(new ObservableCollection<MRUEntry>(),
+                    OnMRUItemsSourceChanged));
+
+
+        public ObservableCollection<MRUEntry> MRUItemsSource
+        {
+            private get { return (ObservableCollection<MRUEntry>) GetValue(MRUItemsSourceProperty); }
+            set { SetValue(MRUItemsSourceProperty, value); }
+        }
+
+        public static readonly DependencyProperty ValidateFilesProperty = DependencyProperty.Register(
+            "ValidateFiles",
+            typeof (bool),
+            typeof (MRUFileMenu),
+            new PropertyMetadata(true));
+        
+        public static readonly DependencyProperty BreadcrumbsVisibleProperty = DependencyProperty.Register(
+            "BreadcrumbsVisible", typeof (bool), typeof (MRUFileMenu), new PropertyMetadata(true));
+
+        public static readonly DependencyProperty OpenOtherTextProperty = DependencyProperty.Register(
+            "OpenOtherText", typeof (string), typeof (MRUFileMenu), new UIPropertyMetadata("Open other files"));
+
+        public static readonly DependencyProperty VerticalScrollBarVisibilityProperty =
+            DependencyProperty.Register("VerticalScrollBarVisibility", typeof (ScrollBarVisibility),
+                typeof (MRUFileMenu), new UIPropertyMetadata(ScrollBarVisibility.Disabled));
+
+        public static readonly DependencyProperty CornerRadiusProperty = DependencyProperty.Register(
+            "CornerRadius", typeof (CornerRadius), typeof (MRUFileMenu), new UIPropertyMetadata(new CornerRadius(0)));
+
+        public static readonly DependencyProperty OpenACopyVisibleProperty = DependencyProperty.Register(
+            "OpenACopyVisible", typeof (bool), typeof (MRUFileMenu), new PropertyMetadata(false));
+
+        public static readonly DependencyProperty HotForegroundColorProperty = DependencyProperty.Register(
+            "HotForegroundColor", typeof (SolidColorBrush), typeof (MRUFileMenu),
+            new UIPropertyMetadata(new SolidColorBrush {Color = ColorHelper.HexToMediaColor("#FF9D9D9D")}));
+
+        public static readonly DependencyProperty ColdForegroundColorProperty = DependencyProperty.Register(
+            "ColdForegroundColor", typeof (Brush), typeof (MRUFileMenu),
+            new UIPropertyMetadata(new SolidColorBrush {Color = Colors.Black}));
+
+        public static readonly DependencyProperty HighlightDarkColorProperty = DependencyProperty.Register(
+            "HighlightDarkColor", typeof (Brush), typeof (MRUFileMenu),
+            new UIPropertyMetadata(new SolidColorBrush {Color = ColorHelper.HexToMediaColor("#FF086F9E")}));
+
+        public static readonly DependencyProperty HighlightBackgroundColorBrushProperty =
+            DependencyProperty.Register("HighlightBackgroundColorBrush", typeof (Brush), typeof (MRUFileMenu),
+                new UIPropertyMetadata(Brushes.Red));
+
+        public static readonly DependencyProperty HighlightForegroundColorProperty = DependencyProperty.Register(
+            "HighlightForegroundColor", typeof (Brush), typeof (MRUFileMenu), new UIPropertyMetadata(Brushes.White));
+
+        public static readonly DependencyProperty AccentColorProperty = DependencyProperty.Register(
+            "AccentColor", typeof (Brush), typeof (MRUFileMenu), new UIPropertyMetadata(Brushes.Black));
+
+        public static readonly DependencyProperty HotBackgroundColorProperty = DependencyProperty.Register(
+            "HotBackgroundColor",
+            typeof (SolidColorBrush),
+            typeof (MRUFileMenu),
+            new UIPropertyMetadata(new SolidColorBrush {Color = Colors.DarkGray}));
+
+        public static readonly DependencyProperty ColdBackgroundColorProperty = DependencyProperty.Register(
+            "ColdBackgroundColor",
+            typeof (Brush),
+            typeof (MRUFileMenu),
+            new UIPropertyMetadata(new SolidColorBrush {Color = ColorHelper.HexToMediaColor("#D5D5D5")}));
+
+        public SolidColorBrush HotBackgroundColor
+        {
+            get { return (SolidColorBrush) GetValue(HotBackgroundColorProperty); }
+            set { SetValue(HotBackgroundColorProperty, value); }
+        }
+
+        public SolidColorBrush ColdBackgroundColor
+        {
+            get { return (SolidColorBrush) GetValue(ColdBackgroundColorProperty); }
+            set { SetValue(ColdBackgroundColorProperty, value); }
+        }
+
+        public SolidColorBrush HotForegroundColor
+        {
+            get { return (SolidColorBrush) GetValue(HotForegroundColorProperty); }
+            set { SetValue(HotForegroundColorProperty, value); }
+        }
+
+        public SolidColorBrush ColdForegroundColor
+        {
+            get { return (SolidColorBrush) GetValue(ColdForegroundColorProperty); }
+            set { SetValue(ColdForegroundColorProperty, value); }
+        }
+
+        public SolidColorBrush HighlightDarkColor
+        {
+            get { return (SolidColorBrush) GetValue(HighlightDarkColorProperty); }
+            set { SetValue(HighlightDarkColorProperty, value); }
+        }
+
+        public ScrollBarVisibility VerticalScrollBarVisibility
+        {
+            get { return (ScrollBarVisibility) GetValue(VerticalScrollBarVisibilityProperty); }
+            set { SetValue(VerticalScrollBarVisibilityProperty, value); }
+        }
+
+        public CornerRadius CornerRadius
+        {
+            get { return (CornerRadius) GetValue(CornerRadiusProperty); }
+            set { SetValue(CornerRadiusProperty, value); }
+        }
+
+        public Brush HighlightBackgroundColorBrush
+        {
+            get { return (Brush) GetValue(HighlightBackgroundColorBrushProperty); }
+            set { SetValue(HighlightBackgroundColorBrushProperty, value); }
+        }
+
+        public Brush HighlightForegroundColor
+        {
+            get { return (Brush) GetValue(HighlightForegroundColorProperty); }
+            set { SetValue(HighlightForegroundColorProperty, value); }
+        }
+
+        public Brush AccentColor
+        {
+            get { return (Brush) GetValue(AccentColorProperty); }
+            set { SetValue(AccentColorProperty, value); }
+        }
+
+        public bool OpenACopyVisible
+        {
+            get { return (bool) GetValue(OpenACopyVisibleProperty); }
+            set { SetValue(OpenACopyVisibleProperty, value); }
+        }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether the file's path should
+        ///     be displayed as breadcrumbs within the MRU entry.
+        /// </summary>
+        public bool BreadcrumbsVisible
+        {
+            get { return (bool) GetValue(BreadcrumbsVisibleProperty); }
+            set { SetValue(BreadcrumbsVisibleProperty, value); }
+        }
+
+        /// <summary>
+        ///     Gets or sets the text shown on the "Open Other Files" button.
+        /// </summary>
+        public string OpenOtherText
+        {
+            get { return (string) GetValue(OpenOtherTextProperty); }
+            set { SetValue(OpenOtherTextProperty, value); }
+        }
+
+        public event RoutedEventHandler OpenOtherFileClicked
+        {
+            add { AddHandler(OpenOtherFileClickedEvent, value); }
+            remove { RemoveHandler(OpenOtherFileClickedEvent, value); }
+        }
+
+        public event SelectionChangedEventHandler RecentFileSelected
+        {
+            add { AddHandler(RecentFileSelectedEvent, value); }
+            remove { RemoveHandler(RecentFileSelectedEvent, value); }
+        }
+
+        public event SelectionChangedEventHandler OpenACopy
+        {
+            add { AddHandler(OpenACopyEvent, value); }
+            remove { RemoveHandler(OpenACopyEvent, value); }
+        }
+
+        // Provide CLR accessors for the event 
+        // ReSharper disable once EventNeverSubscribedTo.Global
+        public event RoutedEventHandler PinClicked
+        {
+            add { AddHandler(PinClickedEvent, value); }
+            remove { RemoveHandler(PinClickedEvent, value); }
+        }
+
+
+        public static readonly RoutedEvent OpenOtherFileClickedEvent = EventManager.RegisterRoutedEvent(
+            "OpenOtherFileClicked", RoutingStrategy.Bubble, typeof (RoutedEventHandler), typeof (MRUFileMenu));
+
+        public static readonly RoutedEvent RecentFileSelectedEvent = EventManager.RegisterRoutedEvent(
+            "RecentFileSelected", RoutingStrategy.Bubble, typeof (SelectionChangedEventHandler), typeof (MRUFileMenu));
+
+        public static readonly RoutedEvent OpenACopyEvent = EventManager.RegisterRoutedEvent(
+            "OpenACopy", RoutingStrategy.Bubble, typeof (SelectionChangedEventHandler), typeof (MRUFileMenu));
+
+        public static readonly RoutedEvent PinClickedEvent = EventManager.RegisterRoutedEvent(
+            "PinClicked", RoutingStrategy.Bubble, typeof (RoutedEventHandler), typeof (MRUFileMenu));
+
+        #endregion
+
+        //-------------------------------------------------------------------
+        //
+        //  Protected Methods
+        //
+        //-------------------------------------------------------------------
+
+        #region Protected Methods
+
+        #endregion
+
+        //-------------------------------------------------------------------
+        //
+        //  Private Methods
+        //
+        //-------------------------------------------------------------------
+
+        #region Private Methods
+
+        private static void OnMRUItemsSourceChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+            var control = obj as MRUFileMenu;
+            if (control == null) return;
+
+            var oldList = e.OldValue as INotifyCollectionChanged;
+            var newList = e.NewValue as INotifyCollectionChanged;
+
+            if (oldList != null)
+                oldList.CollectionChanged -= control.OnItemsCollectionChanged;
+
+            if (newList != null)
+                newList.CollectionChanged += control.OnItemsCollectionChanged;
+
+            control.UpdateSeparators();
+        }
+        
+        private void OnItemsCollectionChanged(object source, NotifyCollectionChangedEventArgs args)
+        {
+            InvalidateVisual(); //Re-render MyControl
+
+            switch (args.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    foreach (MRUEntry item in args.NewItems)
+                    {
+                        item.PropertyChanged += OnItemPropertyChanged;
+                    }
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    foreach (MRUEntry item in args.OldItems)
+                    {
+                        item.PropertyChanged -= OnItemPropertyChanged;
+                    }
+                    break;
+                case NotifyCollectionChangedAction.Replace:
+                    foreach (MRUEntry item in args.NewItems)
+                    {
+                        item.PropertyChanged += OnItemPropertyChanged;
+                    }
+                    foreach (MRUEntry item in args.OldItems)
+                    {
+                        item.PropertyChanged -= OnItemPropertyChanged;
+                    }
+                    break;
+                case NotifyCollectionChangedAction.Reset:
+                    var src = source as IEnumerable<MRUEntry>;
+                    if (src == null) return;
+                    foreach (var item in src)
+                        item.PropertyChanged += OnItemPropertyChanged;
+                    break;
+            }
+        }
+
+        private void OnItemPropertyChanged(object source, PropertyChangedEventArgs args)
+        {
+            InvalidateVisual(); //Just re-render.
+            UpdateSeparators();
+        }
+        
+        private void WireUpMouseEvents(string partName)
+        {
+            var list = GetTemplateChild(partName) as ListBox;
+            if (list == null) return;
+            list.PreviewMouseDown += HitTestForPin;
+            list.SelectionChanged += OnRecentFileSelected;
+        }
+        
+        private void WireUpContextMenu(string partName)
+        {
+            var contextMenu = GetTemplateChild(partName) as ContextMenu;
+            if (contextMenu == null) return;
+
+            foreach (MenuItem item in contextMenu.Items)
+            {
+                item.Command = ContextMenuRoutedCommand;
+                item.CommandParameter = item.Header;
+            }
+        }
+        
         private void MRUFileMenu_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (IsLoaded)
@@ -294,7 +511,7 @@ namespace Cush.WPF.Controls
             switch (command)
             {
                 case "_Remove from list":
-                    RemoveFromLists(item);
+                    MRUItemsSource.Remove(item);
                     break;
 
                 case "_Open":
@@ -302,14 +519,21 @@ namespace Cush.WPF.Controls
                         new SelectionChangedEventArgs(RecentFileSelectedEvent,
                             new List<MRUEntry>(),
                             new List<MRUEntry> {item}));
+                    OpenRecentFileCommand?.Execute(item);
                     break;
 
                 case "Ope_n a copy":
-                    var openCopyArgs = new SelectionChangedEventArgs(OpenACopyEvent,
-                        new List<MRUEntry>(),
-                        new List<MRUEntry> {item});
-                    RaiseEvent(openCopyArgs);
+                    Select(item,
+                        new SelectionChangedEventArgs(OpenACopyEvent,
+                            new List<MRUEntry>(),
+                            new List<MRUEntry> { item }));
+                    OpenACopyCommand?.Execute(item);
                     break;
+                    //var openCopyArgs = new SelectionChangedEventArgs(OpenACopyEvent,
+                    //    new List<MRUEntry>(),
+                    //    new List<MRUEntry> {item});
+                    //RaiseEvent(openCopyArgs);
+                    //break;
 
                 case "_Copy path to clipboard":
                     Clipboard.SetText(item.FullPath);
@@ -321,11 +545,8 @@ namespace Cush.WPF.Controls
                     break;
 
                 case "Cl_ear unpinned files":
-                    UnpinnedFiles.Clear();
-
-                    Helper.UpdateFileLists(Files, PinnedFiles, UnpinnedFiles);
-
-                    Helper.UpdateSeparators(this);
+                    ClearUnpinnedFiles();
+                    UpdateSeparators();
                     break;
 
                 default:
@@ -333,57 +554,63 @@ namespace Cush.WPF.Controls
             }
         }
 
+        private void ClearUnpinnedFiles()
+        {
+            for (var i = 0; i < MRUItemsSource.Count; i++)
+            {
+                if (MRUItemsSource[i].Pinned) continue;
+                MRUItemsSource.RemoveAt(i);
+                i--;
+            }
+        }
+
+        private List<MRUEntry> PinnedFiles2 => MRUItemsSource.Where(item => item.Pinned).ToList();
+        private List<MRUEntry> UnpinnedFiles2 => MRUItemsSource.Where(item => !item.Pinned).ToList();
+
+
+        private void UpdateSeparators()
+        {
+            // try to find the template
+            var temp = Template;
+            if (temp == null) return;
+
+            var pinSeparator = Template.FindName(PART_PinnedSeparator, this) as Border;
+            var unpinSeparator = Template.FindName(PART_UnpinnedSeparator, this) as Border;
+
+            InvalidateVisual();
+            
+            if (pinSeparator != null)
+            {
+                pinSeparator.Visibility = PinnedFiles2.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+            }
+
+            if (unpinSeparator != null)
+            {
+                unpinSeparator.Visibility = UnpinnedFiles2.Count > 0
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+            }
+        }
+
         private void ControlLoaded(object sender, RoutedEventArgs e)
         {
             // Do this only after the template is applied (e.g., in the control's Loaded event handler).
             ResizeListEntries();
-            Helper.UpdateSeparators(this);
+            UpdateSeparators();
         }
 
-        private void PinClickAction(MRUEntry data)
+        private void PinClickAction(MRUEntry entry)
         {
-            // Move it from one list to the other.
-            MoveItemBetweenLists(data, data.Pinned ? PinnedFiles : UnpinnedFiles,
-                data.Pinned ? UnpinnedFiles : PinnedFiles);
-
+            // Move it to the top of the list.
+            MRUItemsSource.Move(MRUItemsSource.IndexOf(entry), 0);
+            
             // Change the pin.
-            data.Pinned = !data.Pinned;
-        }
-
-        private void MoveItemBetweenLists(MRUEntry item, ICollection<MRUEntry> source, IList<MRUEntry> target)
-        {
-            // The simple method
-            source.Remove(item);
-            target.Insert(0, item);
-
-            // Update the Files collection.
-            Helper.UpdateFileLists(Files, PinnedFiles, UnpinnedFiles);
-
-
-            // TODO: Add the graphical animation from one listbox to the other.
-
-
-            // Resize the paths to fit the listboxItems.
-            if (IsLoaded)
-            {
-                ResizeListEntries();
-            }
+            entry.Pinned = !entry.Pinned;
 
             // Update the separator borders
-            Helper.UpdateSeparators(this);
-
-            // Update the listbox styles
-            var pinnedList = GetTemplateChild("PART_PinnedList") as ListBox;
-            if (pinnedList != null)
-                Helper.UpdateListboxStyle(
-                    pinnedList, HotForegroundColor, HighlightBackgroundColor, _alreadyUpdated, true);
-
-            var unpinnedList = GetTemplateChild("PART_UnpinnedList") as ListBox;
-            if (unpinnedList != null)
-                Helper.UpdateListboxStyle(
-                    unpinnedList, HotForegroundColor, HighlightBackgroundColor, _alreadyUpdated, true);
+            UpdateSeparators();
         }
-
+      
         private void HitTestForPin(object sender, MouseButtonEventArgs e)
         {
             var obj = sender as Visual;
@@ -424,125 +651,29 @@ namespace Cush.WPF.Controls
             return HitTestFilterBehavior.Continue;
         }
 
-        private void ExecutedOpenOtherFileCommand(object sender, ExecutedRoutedEventArgs e)
-        {
-            RaiseEvent(new RoutedEventArgs(OpenOtherFileClickedEvent));
-            OpenOtherFile?.Execute(null);
-        }
-
-        private void AddToLists(MRUEntry item)
-        {
-            ThrowHelper.IfNullThenThrow(() => item);
-
-            // The 'collection' refers to the ObservableCollection.
-            // The 'list' refers to the pinned and unpinned ListBox UI elements.
-
-            // The user may be attempting to populate the list with a stored MRU list.
-            // Check to see if the file still exists before adding it.
-            if (string.IsNullOrEmpty(item.FullPath) || (!File.Exists(item.FullPath)))
-            {
-                HandleMissingFile(item.FullPath);
-                return;
-            }
-
-            // Check if the item is already in the collection.
-            var j = IndexOf(item.FullPath);
-            if (j != -1)
-            {
-                // If it is already in the collection, then remove it so it can be placed at the top of the list.
-                item = Files[j];
-
-                if (item.Pinned)
-                {
-                    var k = PinnedFiles.IndexOf(item.FullPath);
-                    PinnedFiles.RemoveAt(k);
-                }
-                else if (!item.Pinned)
-                {
-                    var k = UnpinnedFiles.IndexOf(item.FullPath);
-                    UnpinnedFiles.RemoveAt(k);
-                }
-            }
-
-            // Add Item To its list
-            if (item.Pinned)
-            {
-                PinnedFiles.Insert(0, item);
-            }
-            else if (!item.Pinned)
-            {
-                UnpinnedFiles.Insert(0, item);
-            }
-
-            // Adjust the Files list to match the Pinned and Unpinned lists.
-            Helper.UpdateFileLists(Files, PinnedFiles, UnpinnedFiles);
-
-            // Shorten the list Entries.
-
-            if (IsLoaded)
-            {
-                //Trace.WriteLine("--------------------- Resize from Add");
-                ResizeListEntries();
-            }
-
-            // Update the separators.
-            Helper.UpdateSeparators(this);
-        }
-
-        private void RemoveFromLists(MRUEntry item)
-        {
-            ThrowHelper.IfNullThenThrow(()=>item);
-            
-            // Check if the item is already in the collection.
-            var j = Files.IndexOf(item.FullPath);
-            if (j == -1) return;
-
-            // If it is already in the collection, then remove it so it can be placed at the top of the list.
-            item = Files[j];
-
-            if (item.Pinned)
-            {
-                var k = PinnedFiles.IndexOf(item.FullPath);
-                PinnedFiles.RemoveAt(k);
-            }
-            else if (!item.Pinned)
-            {
-                var k = UnpinnedFiles.IndexOf(item.FullPath);
-                UnpinnedFiles.RemoveAt(k);
-            }
-
-            // Adjust the Files list to match the Pinned and Unpinned lists.
-            Helper.UpdateFileLists(Files, PinnedFiles, UnpinnedFiles);
-
-            // Update the separators.
-            Helper.UpdateSeparators(this);
-        }
-
-        private int IndexOf(string fullPath)
-        {
-            var pinnedIndex = PinnedFiles.IndexOf(fullPath);
-            var unpinnedIndex = UnpinnedFiles.IndexOf(fullPath);
-            var index = (pinnedIndex != -1) ? pinnedIndex : unpinnedIndex;
-            return index;
-        }
-
         private void ResizeListEntries()
         {
             // This method resizes the path string such that it will fit within the 
             // boundaries of the listboxitem, with or without ellipses.
+            if (MRUItemsSource.Count <= 0) return;
 
             // Update the Layout to prevent the app from not seeing the ListBoxItem.
-            UpdateLayout();
+            InvalidateVisual();
 
             // Do this only after the template is applied (e.g., in the control's Loaded event handler).
-            if (PinnedFiles.Count + UnpinnedFiles.Count > 0)
+            Helper.ShortenListEntries(this, MRUItemsSource, nameof(PART_PinnedList));
+            Helper.ShortenListEntries(this, MRUItemsSource, nameof(PART_UnpinnedList));
 
-                if (PinnedFiles.Count > 0)
-                    Helper.ShortenListEntries(this, PinnedFiles, "PART_PinnedList");
+            //if (PinnedFiles2.Count + UnpinnedFiles2.Count > 0)
 
-            if (UnpinnedFiles.Count > 0)
-                Helper.ShortenListEntries(this, UnpinnedFiles, "PART_UnpinnedList");
+            //    if (PinnedFiles2.Count > 0)
+            //        Helper.ShortenListEntries(this, PinnedFiles2, "PART_PinnedList");
+
+            //if (UnpinnedFiles2.Count > 0)
+            //    Helper.ShortenListEntries(this, UnpinnedFiles2, "PART_UnpinnedList");
         }
+
+        
 
         private void OnRecentFileSelected(object sender, SelectionChangedEventArgs e)
         {
@@ -556,7 +687,7 @@ namespace Cush.WPF.Controls
             if (Mouse.LeftButton != MouseButtonState.Pressed)
             {
                 box.UnselectAll();
-                UpdateLayout();
+                InvalidateVisual();
                 _unselecting = false;
                 return;
             }
@@ -581,275 +712,32 @@ namespace Cush.WPF.Controls
         private void Select(MRUEntry mruEntry, SelectionChangedEventArgs e)
         {
             // Move the item to the top of the list.
-            var list = mruEntry.Pinned ? PinnedFiles : UnpinnedFiles;
-
-            MoveItemBetweenLists(mruEntry, list, list);
-
-            UpdateLayout();
-
-            RaiseEvent(new SelectionChangedEventArgs(RecentFileSelectedEvent, e.RemovedItems, e.AddedItems));
-            OpenRecentFile.Execute(e);
+            MRUItemsSource.Remove(mruEntry);
+            MRUItemsSource.Insert(0, mruEntry);
+            
+            RaiseEvent(new SelectionChangedEventArgs(e.RoutedEvent, e.RemovedItems, e.AddedItems));
+            
         }
 
         #endregion
 
-        #region Public Methods
+        //-------------------------------------------------------------------
+        //
+        //  Private Fields
+        //
+        //-------------------------------------------------------------------
 
-        public override void OnApplyTemplate()
-        {
-            // Happens before ControlLoaded.
-            base.OnApplyTemplate();
+        #region Private Fields
 
-            #region Attach binding for control loaded event
-
-            Loaded += ControlLoaded;
-
-            #endregion
-
-            #region Attach binding for Open Other Sheets button
-
-            var openOtherCommandBinding = new CommandBinding(OpenOtherFileCommand, ExecutedOpenOtherFileCommand,
-                (s, e) => { e.CanExecute = true; });
-
-            // attach CommandBinding to root control
-            CommandBindings.Add(openOtherCommandBinding);
-
-            var openOtherButton = GetTemplateChild("PART_OpenOtherFileButton") as Button;
-            if (openOtherButton != null)
-            {
-                openOtherButton.Command = OpenOtherFileCommand;
-            }
-
-            #endregion
-
-            #region Wire up the Open Recent Sheet commands and events
-
-            var pinnedList = GetTemplateChild("PART_PinnedList") as ListBox;
-            var unpinnedList = GetTemplateChild("PART_UnpinnedList") as ListBox;
-
-            if (pinnedList != null)
-            {
-                pinnedList.PreviewMouseDown += HitTestForPin;
-                pinnedList.SelectionChanged += OnRecentFileSelected;
-                pinnedList.LayoutUpdated += (s, e) => Helper.UpdateListboxStyle(
-                    pinnedList, HotForegroundColor, HighlightBackgroundColor, _alreadyUpdated);
-            }
-
-            if (unpinnedList != null)
-            {
-                unpinnedList.PreviewMouseDown += HitTestForPin;
-                unpinnedList.SelectionChanged += OnRecentFileSelected;
-                unpinnedList.LayoutUpdated += (s, e) => Helper.UpdateListboxStyle(
-                    unpinnedList, HotForegroundColor, HighlightBackgroundColor, _alreadyUpdated);
-            }
-
-            #endregion
-
-            #region Attach binding for context menu
-
-            var contextMenuCommandBinding = new CommandBinding(
-                ContextMenuCommand, ExecutedContextMenuCommand, (s, e) => { e.CanExecute = true; });
-
-            // attach CommandBinding to root control
-            CommandBindings.Add(contextMenuCommandBinding);
-
-            var pinnedContextMenu = GetTemplateChild("PART_PinnedContext") as ContextMenu;
-            if (pinnedContextMenu != null)
-            {
-                foreach (MenuItem item in pinnedContextMenu.Items)
-                {
-                    item.Command = ContextMenuCommand;
-                    item.CommandParameter = item.Header;
-                }
-            }
-            var unpinnedContextMenu = GetTemplateChild("PART_UnpinnedContext") as ContextMenu;
-            if (unpinnedContextMenu != null)
-            {
-                foreach (MenuItem item in unpinnedContextMenu.Items)
-                {
-                    item.Command = ContextMenuCommand;
-                    item.CommandParameter = item.Header;
-                }
-            }
-
-            #endregion
-        }
-
-        /// <summary>
-        ///     Adds an <see cref="MRUEntry" /> to the Files list.
-        /// </summary>
-        /// <param name="item">
-        ///     The <see cref="MRUEntry" /> to add.
-        /// </param>
-        public void Add(MRUEntry item)
-        {
-            Files.Add(item);
-        }
-
-        /// <summary>
-        ///     Handle add a file that does not exist or has no path.
-        /// </summary>
-        public void HandleMissingFile(string fullPath)
-        {
-            //if (string.IsNullOrEmpty(fullPath))
-            //{
-            //    Trace.WriteLine("fullPath was passed empty or null.");
-            //}
-        }
-
-        #endregion
-
-        #region Public Properties
-
-        public ICommand OpenOtherFile
-        {
-            get { return (ICommand) GetValue(OpenOtherFileCommandProperty); }
-            set { SetValue(OpenOtherFileCommandProperty, value); }
-        }
-
-        public ICommand OpenRecentFile
-        {
-            get { return (ICommand) GetValue(OpenRecentFileCommandProperty); }
-            set { SetValue(OpenRecentFileCommandProperty, value); }
-        }
-
-        public static DependencyProperty HotBackgroundColorProperty = DependencyProperty.Register(
-            "HotBackgroundColor",
-            typeof (SolidColorBrush),
-            typeof (MRUFileMenu),
-            new UIPropertyMetadata(new SolidColorBrush {Color = Colors.DarkGray}));
-
-        public static DependencyProperty ColdBackgroundColorProperty = DependencyProperty.Register(
-            "ColdBackgroundColor",
-            typeof (Brush),
-            typeof (MRUFileMenu),
-            new UIPropertyMetadata(new SolidColorBrush {Color = ColorHelper.HexToMediaColor("#D5D5D5")}));
-
-        public SolidColorBrush HotBackgroundColor
-        {
-            get { return (SolidColorBrush)GetValue(HotBackgroundColorProperty); }
-            set { SetValue(HotBackgroundColorProperty, value); }
-        }
-
-        public SolidColorBrush ColdBackgroundColor
-        {
-            get { return (SolidColorBrush) GetValue(ColdBackgroundColorProperty); }
-            set { SetValue(ColdBackgroundColorProperty, value); }
-        }
-
-        public SolidColorBrush HotForegroundColor
-        {
-            get { return (SolidColorBrush) GetValue(HotForegroundColorProperty); }
-            set { SetValue(HotForegroundColorProperty, value); }
-        }
-
-        public SolidColorBrush ColdForegroundColor
-        {
-            get { return (SolidColorBrush) GetValue(ColdForegroundColorProperty); }
-            set { SetValue(ColdForegroundColorProperty, value); }
-        }
-
-        public SolidColorBrush HighlightDarkColor
-        {
-            get { return (SolidColorBrush) GetValue(HighlightDarkColorProperty); }
-            set { SetValue(HighlightDarkColorProperty, value); }
-        }
-
-        public ScrollBarVisibility VerticalScrollBarVisibility
-        {
-            get { return (ScrollBarVisibility) GetValue(VerticalScrollBarVisibilityProperty); }
-            set { SetValue(VerticalScrollBarVisibilityProperty, value); }
-        }
-
-        public CornerRadius CornerRadius
-        {
-            get { return (CornerRadius) GetValue(CornerRadiusProperty); }
-            set { SetValue(CornerRadiusProperty, value); }
-        }
-
-        public Brush HighlightBackgroundColor
-        {
-            get { return (Brush) GetValue(HighlightBackgroundColorProperty); }
-            set { SetValue(HighlightBackgroundColorProperty, value); }
-        }
-
-        public Brush HighlightForegroundColor
-        {
-            get { return (Brush) GetValue(HighlightForegroundColorProperty); }
-            set { SetValue(HighlightForegroundColorProperty, value); }
-        }
-
-        public Brush AccentColor
-        {
-            get { return (Brush) GetValue(AccentColorProperty); }
-            set { SetValue(AccentColorProperty, value); }
-        }
-
-        public bool OpenACopyVisible
-        {
-            get { return (bool) GetValue(OpenACopyVisibleProperty); }
-            set { SetValue(OpenACopyVisibleProperty, value); }
-        }
-
-        /// <summary>
-        ///     Gets or sets a value indicating whether the file's path should
-        ///     be displayed as breadcrumbs within the MRU entry.
-        /// </summary>
-        public bool BreadcrumbsVisible
-        {
-            get { return (bool) GetValue(BreadcrumbsVisibleProperty); }
-            set { SetValue(BreadcrumbsVisibleProperty, value); }
-        }
-
-        /// <summary>
-        ///     Gets or sets the text shown on the "Open Other Files" button.
-        /// </summary>
-        public string OpenOtherText
-        {
-            get { return (string) GetValue(OpenOtherTextProperty); }
-            set { SetValue(OpenOtherTextProperty, value); }
-        }
-
-        /// <summary>
-        ///     Gets or sets the collection of MRUEntries stored
-        ///     in this <see cref="MRUFileMenu" />.
-        /// </summary>
-        public ObservableCollection<MRUEntry> Files
-        {
-            get { return (ObservableCollection<MRUEntry>) GetValue(FilesProperty); }
-            set { SetValue(FilesProperty, value); }
-        }
-
-        public event RoutedEventHandler OpenOtherFileClicked
-        {
-            add { AddHandler(OpenOtherFileClickedEvent, value); }
-            remove { RemoveHandler(OpenOtherFileClickedEvent, value); }
-        }
-
-        public event SelectionChangedEventHandler RecentFileSelected
-        {
-            add { AddHandler(RecentFileSelectedEvent, value); }
-            remove { RemoveHandler(RecentFileSelectedEvent, value); }
-        }
-
-        public event SelectionChangedEventHandler OpenACopy
-        {
-            add { AddHandler(OpenACopyEvent, value); }
-            remove { RemoveHandler(OpenACopyEvent, value); }
-        }
-
-        // Provide CLR accessors for the event 
-        public event RoutedEventHandler PinClicked
-        {
-            add { AddHandler(PinClickedEvent, value); }
-            remove { RemoveHandler(PinClickedEvent, value); }
-        }
-
-        public event RoutedEventHandler FilesChanged
-        {
-            add { AddHandler(FilesChangedEvent, value); }
-            remove { RemoveHandler(FilesChangedEvent, value); }
-        }
+        private const string PART_PinnedSeparator = "PART_PinnedSeparator";
+        private const string PART_UnpinnedSeparator = "PART_UnpinnedSeparator";
+        private const string PART_PinnedList = "PART_PinnedList";
+        private const string PART_UnpinnedList = "PART_UnpinnedList";
+        private const string OpenOtherFileButton = "PART_OpenOtherFileButton";
+        private static readonly MRUMenuHelper Helper = MRUMenuHelper.GetInstance();
+        private bool _unselecting;
+        private bool _isOpenOtherCommandExecuting;
+        private EventHandler _openOtherCanExecuteChangedHandler;
 
         #endregion
     }

@@ -72,7 +72,7 @@
     <Compile Include="FileHandling\Progress\ReadProgressStream.cs" />
     <Compile Include="Helpers\Expressions.cs" />
     <Compile Include="Helpers\GuidHelper.cs" />
-    <Compile Include="Extensions\MRUExtensions.cs" />
+    <Compile Include="FileHandling\MRUExtensions.cs" />
     <Compile Include="Helpers\MRUEntryHelper.cs" />
     <Compile Include="Interaction\NullDialogs.cs" />
     <Compile Include="Interaction\IDialogs.cs" />
