@@ -1,0 +1,730 @@
+CUSH.AUTHENTICATION
+(** implement when needed / problem domain is better understood)
+(?? consider)
+====================================================================================
+Cush.Authentication
+	- NEED DISCLAIMERS IN LICENSE/CODE TO AVOID POTENTIAL LAWSUITS
+	
+	Client-Side authentication methods
+	
+	Server-Side Authentication methods
+	- A user should be able to login to a single endpoint and "gain access to all associated applications"
+		- All associated applications require a specific token
+
+BASIC AUTH
+	- if server requires authentication, it returns a 401 (unauthorized) message
+	- If user is unauthorized (for the feature), then return a 403 (forbidden) message
+		- response includes a WWW-Authenticate header, indicating that server supports Basic authentication
+
+
+====================================================================================
+	TOKENS
+====================================================================================
+	Sending the bearer token as a header vs as a query parameter:
+	Pass bearer tokens as Headers or in the http request entity-body.
+	
+	MUST support passing tokens in headers.  The RIGHT place for this is in the headers.
+	MUST also provide an alternate method for passing bearer tokens, as PROXIES MAY NOT PASS ON CUSTOM HEADERS
+		SHOULD NOT pass tokens in query parameters (security issues) unless it is impossible to transport the access token in the "Authorization" request header or the HTTP request entity-body.
+		Resource servers MAY support query parameters. 
+		
+		It's harder to have a custom request header set when consuming the API from Javascript so, if this is necessary, then this is a plus for sending as query parameter.
+			
+	Support Both.  Prefer the header.
+	http://www.google.com/url?q=http%3A%2F%2Ftools.ietf.org%2Fhtml%2Fdraft-ietf-oauth-v2-bearer-18%23section-3&sa=D&sntz=1&usg=AFQjCNEq7r71ZvTItuLxRRb3fnEZhyOPdA)
+	
+	Client MUST NOT use more than one method to transmit the token in each request.
+	If a client transmits a token in multiple ways in the same request, return a 400 (bad request).
+
+
+
+====================================================================================
+	SAML SSO
+====================================================================================
+
+	Three (possibly) machines
+		Client
+		Server
+		Identity Provider (IDP) / Authorization Server
+
+	CLIENT accesses URL (Chetco/Resource Server) on --> SERVER
+	SERVER generates auth request, with a redirect.  Returns this to the --> CLIENT
+	CLIENT accepts redirect and sends request on to  --> IDP
+	IDP inspects request, serves login form to  --> CLIENT
+	CLIENT enters/generates credentials, sends to  --> IDP
+	IDP inspects credentials, authenticates and authorizes the user, generates SAML Assertion, returns Assertion with a redirect to --> CLIENT
+	CLIENT accepts redirect and sends request on to  --> SERVER
+	SERVER verifies Assertion, extracts identity/permissions info, logs user into system, serves application page --> CLIENT
+	
+	
+	Mobile apps don't have access to the HTTP POST body.
+	They only have access to the URL used to launch the application.
+	A workaround is to implement a proxy server which can receive the HTTP POST, extract the SAML token, and then make a URL that includes the SAML token (e.g.: "myphotos://authenticate/?SAMLRequest=asdfsdfsdf") The proxy server could then use an HTTP Redirect to cause the device to open the MyPhotos app. And since the SAML token is a part of the URL the MyPhotos app can extract it, and use that to log in.
+
+====================================================================================
+	OAUTH 2.0 SSO
+====================================================================================
+	USER agent
+	CLIENT application
+	IDP / Authorization System
+	SERVER / resource server
+	
+	0 USER accesses URL (Chetco/Resource Server) on --> CLIENT
+	1a CLIENT redirects to IDP with a request for auth --> USER
+	1b USER logs in and sends credentials on to --> IDP
+	2a IDP redirects USER back to SERVER with authorization code --> USER
+	2b USER accepts redirect, sends authorization code on to --> CLIENT
+	3 CLIENT sends auth code to IDP, requests access token --> IDP
+	4 IDP sends access token and refresh token to --> CLIENT
+	5 CLIENT uses access token to authenticate to web API on SERVER --> SERVER
+	6 SERVER returns data --> CLIENT
+	
+	
+	 +--------+                               +---------------+
+     |        |--(A)- Authorization Request ->|   Resource    |
+     |        |                               |     Owner     |
+     |        |<-(B)-- Authorization Grant ---|               |
+     |        |                               +---------------+
+     |        |
+     |        |                               +---------------+
+     |        |--(C)-- Authorization Grant -->| Authorization |
+     | Client |                               |     Server    |
+     |        |<-(D)----- Access Token -------|               |
+     |        |                               +---------------+
+     |        |
+     |        |                               +---------------+
+     |        |--(E)----- Access Token ------>|    Resource   |
+     |        |                               |     Server    |
+     |        |<-(F)--- Protected Resource ---|               |
+     +--------+                               +---------------+
+	
+	 The abstract OAuth 2.0 flow illustrated in Figure 1 describes the
+   interaction between the four roles and includes the following steps:
+
+   (A)  The client requests authorization from the resource owner.  The
+        authorization request can be made directly to the resource owner
+        (as shown), or preferably indirectly via the authorization
+        server as an intermediary.
+
+   (B)  The client receives an authorization grant, which is a
+        credential representing the resource owner's authorization,
+        expressed using one of four grant types defined in this
+        specification or using an extension grant type.  The
+        authorization grant type depends on the method used by the
+        client to request authorization and the types supported by the
+        authorization server.
+
+   (C)  The client requests an access token by authenticating with the
+        authorization server and presenting the authorization grant.
+
+   (D)  The authorization server authenticates the client and validates
+        the authorization grant, and if valid, issues an access token.
+
+   (E)  The client requests the protected resource from the resource
+        server and authenticates by presenting the access token.
+
+   (F)  The resource server validates the access token, and if valid,
+        serves the request.
+
+   The preferred method for the client to obtain an authorization grant
+   from the resource owner (depicted in steps (A) and (B)) is to use the
+   authorization server as an intermediary, which is illustrated in
+   Figure 3 in Section 4.1.
+
+	
+	4.1.  Authorization Code Grant
+
+   The authorization code grant type is used to obtain both access
+   tokens and refresh tokens and is optimized for confidential clients.
+   Since this is a redirection-based flow, the client must be capable of
+   interacting with the resource owner's user-agent (typically a web
+   browser) and capable of receiving incoming requests (via redirection)
+   from the authorization server.
+
+     +----------+
+     | Resource |
+     |   Owner  |
+     |          |
+     +----------+
+          ^
+          |
+         (B)
+     +----|-----+          Client Identifier      +---------------+
+     |         -+----(A)-- & Redirection URI ---->|               |
+     |  User-   |                                 | Authorization |
+     |  Agent  -+----(B)-- User authenticates --->|     Server    |
+     |          |                                 |               |
+     |         -+----(C)-- Authorization Code ---<|               |
+     +-|----|---+                                 +---------------+
+       |    |                                         ^      v
+      (A)  (C)                                        |      |
+       |    |                                         |      |
+       ^    v                                         |      |
+     +---------+                                      |      |
+     |         |>---(D)-- Authorization Code ---------'      |
+     |  Client |          & Redirection URI                  |
+     |         |                                             |
+     |         |<---(E)----- Access Token -------------------'
+     +---------+       (w/ Optional Refresh Token)
+
+   Note: The lines illustrating steps (A), (B), and (C) are broken into
+   two parts as they pass through the user-agent.
+
+                     Figure 3: Authorization Code Flow
+
+   The flow illustrated in Figure 3 includes the following steps:
+
+   (A)  The client initiates the flow by directing the resource owner's
+        user-agent to the authorization endpoint.  The client includes
+        its client identifier, requested scope, local state, and a
+        redirection URI to which the authorization server will send the
+        user-agent back once access is granted (or denied).
+
+   (B)  The authorization server authenticates the resource owner (via
+        the user-agent) and establishes whether the resource owner
+        grants or denies the client's access request.
+
+   (C)  Assuming the resource owner grants access, the authorization
+        server redirects the user-agent back to the client using the
+        redirection URI provided earlier (in the request or during
+        client registration).  The redirection URI includes an
+        authorization code and any local state provided by the client
+        earlier.
+
+   (D)  The client requests an access token from the authorization
+        server's token endpoint by including the authorization code
+        received in the previous step.  When making the request, the
+        client authenticates with the authorization server.  The client
+        includes the redirection URI used to obtain the authorization
+        code for verification.
+
+   (E)  The authorization server authenticates the client, validates the
+        authorization code, and ensures that the redirection URI
+        received matches the URI used to redirect the client in
+        step (C).  If valid, the authorization server responds back with
+        an access token and, optionally, a refresh token.
+	
+	
+	
+	
+	
+	
+====================================================================================
+	FOUNDATION SSO
+====================================================================================
+
+NOT Authenticated:
+	Step 0:  Client: 	Clear cache, open browser
+	Step 1a: Client: 	Send a generic browser request:  	GET http://pumbaa.dsone.3ds.com/curtsso/
+	Step 1b: Server: 	Evaluate whether the request is authorized
+	Step 1c: Server:	NOT AUTHENTICATED: Redirect to authorization (SSO) platform 
+						Send a redirect response with headers, existing or new cookies
+AT THIS POINT, GIVEN A TOKEN, THE USER WOULD BE FULLY AUTHENTICATED AND AUTHORIZED
+	Step 2a: Client: 	FOLLOW REDIRECT: TO AUTH PLATFORM
+						sending GLOBAL_SESSION cookie
+	Step 2b: Server:	SERVE REDIRECT TO SECURITY/LOGIN: 401 AUTHORIZATION REQUIRED  (Must authenticate user)
+						Provide parameters and LOGIN PAGE URL here.
+	Step 3a: Client:	FOLLOW REDIRECT: TO SECURITY/LOGIN
+	Step 3b: Server: 	PROVIDE LOGIN PAGE
+	Step 4a: Client:	????
+	Step 5a: Client:	SEND AUTHENTICATION REQUEST
+	Step 5b: Server: 	REDIRECT TO AUTHORIZATION SERVICE
+	Step 6a: Client:	FOLLOW REDIRECT: SEND AUTHENTICATION TOKEN
+	Step 6b: Server: 	Verify user is authorized for application, PROVIDE REDIRECT TO APPLICATION PAGE
+	Step 7a: Client: 	FOLLOW REDIRECT: REQUEST APPLICATION PAGE
+	Step 7b: Server: 	SERVE Application page
+	
+
+Authenticated + NOT Authorized:
+	Step 0: Client: Clear cache, open browser
+	Step 1a: Client: Send a generic browser request:  	GET http://pumbaa.dsone.3ds.com/capture/
+	Step 1b: Server: 	Evaluate whether the request is authorized
+	Step 1c: 			AUTHENTICATED BUT UNAUTHORIZED: 
+						Send 403 (Forbidden)
+	
+Authenticated + Authorized:
+	Step 0: Client: Clear cache, open browser
+	Step 1a: Client: Send a generic browser request:  	GET http://pumbaa.dsone.3ds.com/curtsso/
+	Step 1b: Server: 	Evaluate whether the request is authorized
+	Step 1c: 			AUTHENTICATED AND AUTHORIZED: 
+						SERVE Application page
+	
+====================================================================================
+	SSO NOTES
+====================================================================================
+	
+Curt's Notes from Compose:
+	Request URL: https://chetco.dsone.3ds.com:9963/compose/
+	Remote Address:10.152.10.131:9963
+		
+From FIDDLER:
+
+	step 1a (15): CLIENT: MAKE GET REQUEST
+		GET https://chetco.dsone.3ds.com:9963/compose/
+		(no headers, just a browser URL-bar request)
+
+	step 1b (15): SERVER: UNAUTHENTICATED: REDIRECT TO AUTH PLATFORM: 302 FOUND
+		HTTP/1.1 302 Found
+		1	Content-Length → 0
+		2	Date → Wed, 09 Dec 2015 20:50:27 GMT
+		3	Location → https://chetco.dsone.3ds.com:9943/platform/authorize?$clientType=Compose&state=urBMRKK9&redirect_uri=http%3A%2F%2Fchetco.dsone.3ds.com%3A9964%2Fcompose%2Faep_auth_redirect&$forceCredential=true
+		4	Server → Apache-Coyote/1.1
+		5	Set-Cookie → GLOBAL_SESSION=eyJhbGciOiJub25lIn0.eyJhenAiOnt9LCJleHAiOjE0NDk2OTQ1MjcwMjIsImlzcyI6IkNvbXBvc2UiLCJzdWIiOiIxNDQ5Njk0MjI3MDIyIn0.; Path=/; HttpOnly
+		6	Set-Cookie → JSESSIONID=C8E1227B852517B62481C9EDC6885198; Path=/compose/; HttpOnly
+	
+	Step 2a (18): CLIENT: FOLLOW REDIRECT TO AUTH PLATFORM
+		GET https://chetco.dsone.3ds.com:9943/platform/authorize?$clientType=Compose&state=GUCm_Zvf&redirect_uri=https%3A%2F%2Fchetco.dsone.3ds.com%3A9963%2Fcompose%2Faep_auth_redirect&$forceCredential=true HTTP/1.1
+		1 	Host: chetco.dsone.3ds.com:9943
+		2 	Connection: keep-alive
+		3 	Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+		4 	Upgrade-Insecure-Requests: 1
+		5 	User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko)  Chrome/47.0.2526.80 Safari/537.36
+		6 	Accept-Encoding: gzip, deflate, sdch
+		7 	Accept-Language: en-US,en;q=0.8,de-DE;q=0.6,de;q=0.4,es;q=0.2,it-IT;q=0.2,it;q=0.2
+		8 	Cookie: GLOBAL_SESSION=eyJhbGciOiJub25lIn0.eyJhenAiOnt9LCJleHAiOjE0NDk2OTQ3ODM2NTQsImlzcyI6IkNvbXBvc2UiLCJzdWIiOiIxNDQ5Njk0NDgzNjU0In0.
+
+	Step 2b (18): SERVER: REDIRECT TO SECURITY/LOGIN: 401 AUTHORIZATION REQUIRED
+		PROVIDE FUNCTION THAT REDIRECTS TO SECURITY/LOGIN
+		HTTP/1.1 401 Authorization Required
+		Date: Wed, 09 Dec 2015 20:54:43 GMT
+		Server: Apache
+		Access-Control-Allow-Methods: OPTIONS, GET, POST, PUT, DELETE, HEAD
+		Access-Control-Allow-Credentials: true
+		Access-Control-Allow-Headers: X-Pilot-Session
+		X-XSS-Protection: 1
+		X-Content-Type-Options: nosniff
+		Vary: User-Agent,Accept-Encoding
+		Keep-Alive: timeout=40, max=100
+		Connection: Keep-Alive
+		Content-Type: text/html; charset=utf-8
+		Content-Length: 2581
+
+		<!DOCTYPE html>
+		<html>
+		<head>
+			<meta http-equiv="X-UA-Compatible" content="IE=11, IE=10, IE=9" />
+			<script language="javascript">
+			function extractParams(search_string) {
+				if (search_string.charAt(0) == '?')
+					search_string = search_string.substring(1);
+
+				var result = {};
+				var search = search_string.split('&');
+
+				for (var i=0; i<search.length; i++) {
+					var tokens = search[i].split('=');
+					if (tokens.length < 1)
+						continue;
+					var key = tokens[0];
+					var value = null;
+
+					if (tokens.length > 1)
+						value = decodeURIComponent(tokens[1].replace(/\+/g, '%20'));
+					result[key] = value;
+				}
+
+				return result;
+			}
+
+			function joinParams(params) {
+				var components = [];
+				for (var key in params) {
+					if (params[key] === undefined)
+						continue;
+
+					if (params[key] != null)
+						components.push(key + "=" + encodeURIComponent(params[key]));
+					else
+						components.push(key);
+				}
+
+				var result = components.join("&");
+				return result;
+			}
+
+			function loginRedirect() {
+				var root = 'https://CHETCO.dsone.3ds.com:9943';
+				var error = '';
+				var returnPath = window.location.href;
+				var usingSaml = false;
+				var username = 'USERNAME';
+				var parser = document.createElement('a');
+				parser.href = returnPath;
+				
+				// Transfer parameters for login page to login url
+				var loginParams = {};
+				var params = extractParams(parser.search);
+				var loginUrl = params['loginUrl'];
+				loginParams['$clientType'] = params['$clientType'];
+				loginParams['authzfailure'] = params['$authzfailure'];
+
+				loginParams['error'] = error ? error : params['$errorMessage'];
+
+				if (loginParams['error'])
+					loginParams['error'] = loginParams['error'].replace(/\+/g, " ")
+
+				delete params['loginUrl'];
+				delete params['$forceCredential'];
+				delete params['$clientType'];
+				delete params['$authzfailure'];
+				delete params['$errorMessage'];
+				
+
+				parser.search = joinParams(params);
+				returnPath = parser.href;
+
+				var login = document.createElement('a');
+
+				if (username != 'USER' + 'NAME')
+					loginParams['$username'] = username;
+
+				if (usingSaml || loginUrl === undefined)
+					login.href = root + '/security/login?';
+				else
+					login.href = loginUrl;
+
+				if (usingSaml)
+					loginParams['targetUrl'] = returnPath;
+				else
+					loginParams['redir'] = returnPath;
+
+				if (Object.keys(loginParams).length > 0 ) {
+					if (login.search.length > 1)
+						login.search += '&';
+
+					login.search += joinParams(loginParams);
+				}
+
+				window.location.href = login.href;
+			}
+			</script>
+			<title>Login Required</title>
+		</head>
+		<body onLoad="loginRedirect()">
+			Login is Required. You should be redirected to the login page.
+		</body>
+		</html>
+
+	Step 3a (19): CLIENT: FOLLOW REDIRECT TO SECURITY/LOGIN
+		GET https://chetco.dsone.3ds.com:9943/security/login?$clientType=Compose&redir=https%3A%2F%2Fchetco.dsone.3ds.com%3A9943%2Fplatform%2Fauthorize%3Fstate%3DhAn-a9Ao%26redirect_uri%3Dhttps%253A%252F%252Fchetco.dsone.3ds.com%253A9963%252Fcompose%252Faep_auth_redirect HTTP/1.1
+		Host: chetco.dsone.3ds.com:9943
+		Connection: keep-alive
+		Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+		Upgrade-Insecure-Requests: 1
+		User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36
+		Referer: https://chetco.dsone.3ds.com:9943/platform/authorize?$clientType=Compose&state=hAn-a9Ao&redirect_uri=https%3A%2F%2Fchetco.dsone.3ds.com%3A9963%2Fcompose%2Faep_auth_redirect&$forceCredential=true
+		Accept-Encoding: gzip, deflate, sdch
+		Accept-Language: en-US,en;q=0.8,de-DE;q=0.6,de;q=0.4,es;q=0.2,it-IT;q=0.2,it;q=0.2
+		Cookie: GLOBAL_SESSION=eyJhbGciOiJub25lIn0.eyJhenAiOnt9LCJleHAiOjE0NDk2OTU3MTcwNTQsImlzcyI6IkNvbXBvc2UiLCJzdWIiOiIxNDQ5Njk1NDE3MDU0In0
+	
+	Step 3b (19): SERVER: PROVIDE LOGIN PAGE?   200 OK
+		HTTP/1.1 200 OK
+		Date: Wed, 09 Dec 2015 21:10:17 GMT
+		Server: Apache
+		Cache-Control: no-cache
+		Access-Control-Allow-Methods: OPTIONS, GET, POST, PUT, DELETE, HEAD
+		Access-Control-Allow-Credentials: true
+		Access-Control-Allow-Headers: X-Pilot-Session
+		X-XSS-Protection: 1
+		X-Content-Type-Options: nosniff
+		Vary: User-Agent,Cookie,X-Pilot-Session,Accept-Encoding
+		Keep-Alive: timeout=40, max=99
+		Connection: Keep-Alive
+		Content-Type: text/html; charset=utf-8
+		Expires: Wed, 09 Dec 2015 21:10:17 GMT
+		Content-Length: 3220
+
+		<!DOCTYPE html>
+		<html>
+			<head>
+				<title>BIOVIA Foundation</title>
+				<meta http-equiv="X-UA-Compatible" content="IE=10, IE=9, IE=8" />
+				<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+				<link rel="StyleSheet" href="/reporting/css/login.css" type="text/css" />
+				<script type="text/javascript" src="/bin/lang/javascript/ppweb.js"></script>
+				<script type="text/javascript" src="/reporting/javascript/loginpage.js"></script>
+				<script type="text/javascript" src="/reporting/javascript/reportCore96.js"></script>
+				<script type="text/javascript" src="/reporting/javascript/applications.js"></script>
+			</head>
+
+			<!--[if IE ]>
+			<body class="ie" onload="com.accelrys.pp.LoginPage.init()">
+			<![endif]-->
+			<!--[if !IE]>-->
+			<body onload="com.accelrys.pp.LoginPage.init()">
+			<!--<![endif]-->
+
+			<div class="layout-content" id="loginPageBgStretch">
+				<div class="layout-table-row">
+					<div class="layout-table-cell">
+						<div action='#' method='GET' id='loginForm' class="layout-box" autocomplete='off'>
+							<img class="logo" src="/brand/img/brand-blue-150x40.png" alt="Logo"/>
+							<div class="panel panel-default">
+								<h3 id="loginFormTitle">BIOVIA Foundation</h3>
+								<div class="login-text">
+									Sign in with your BIOVIA account
+								</div>
+
+								<div class="form-group">
+									<label for='txtUsername'>Username:</label>
+									<input type='text' class='field pmeTextBox' placeholder='Username'
+										   name='txtUsername' id='txtUsername'
+										   autocorrect='off' autocapitalize='none'
+										   onkeydown='com.accelrys.pp.LoginPage.onLoginKeyDown(event)' />
+								</div>
+
+								<div class="form-group">
+									<label for='txtPassword'>Password:</label>
+									<input type='password' class='field pmeTextBox' placeholder='Password'
+										   name='txtPassword' id='txtPassword'
+										   autocorrect='off' autocapitalize='none'
+										   onkeydown='com.accelrys.pp.LoginPage.onLoginKeyDown(event)' />
+								</div>
+								<div class="login-text">
+									<input id='btnLogin' type='button' class='btn btn-lg btn-success pmeButton'
+										   disabled='disabled' id="btnLogin" name="btnLogin" value='SIGN IN'
+										   onclick='com.accelrys.pp.LoginPage.login();' />
+								</div>
+								<div class="login" id="loginmessagediv"></div>
+							</div>
+							<img class="bottom-logo" src="/brand/img/company-blue-300x28.png" alt="Bottom Logo"/>
+						</div>
+					</div>
+				</div>
+
+				<div class="layout-table-row footer">
+					<div class="layout-footer copyright-box-text">
+						Copyright &copy;<script type="text/javascript">document.write(new
+							Date().getYear()+((new Date().getYear()>1900)?0:1900));
+					</script> Dassault Syst&egrave;mes, all rights reserved
+					</div>
+				</div>
+			</div>
+
+			</body>
+		</html>
+
+
+	//	Step 3c (21-24): CLIENT/SERVER: REQUEST/PROVIDE CSS FILES FOR LOGIN PAGE
+	
+	Step 4a (23-31)  SCITEGIC LOCATOR ... ?
+	
+	Step 5a (32): CLIENT: SEND AUTHORIZATION REQUEST
+		GET https://chetco.dsone.3ds.com:9943/platform/authorize?state=XWQ7-eiw&redirect_uri=https%3A%2F%2Fchetco.dsone.3ds.com%3A9963%2Fcompose%2Faep_auth_redirect?$clientType=Compose HTTP/1.1
+		Host: chetco.dsone.3ds.com:9943
+		Connection: keep-alive
+		Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+		Upgrade-Insecure-Requests: 1
+		User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36
+		Referer: https://chetco.dsone.3ds.com:9943/security/login?$clientType=Compose&redir=https%3A%2F%2Fchetco.dsone.3ds.com%3A9943%2Fplatform%2Fauthorize%3Fstate%3DXWQ7-eiw%26redirect_uri%3Dhttps%253A%252F%252Fchetco.dsone.3ds.com%253A9963%252Fcompose%252Faep_auth_redirect
+		Accept-Encoding: gzip, deflate, sdch
+		Accept-Language: en-US,en;q=0.8,de-DE;q=0.6,de;q=0.4,es;q=0.2,it-IT;q=0.2,it;q=0.2
+		Cookie: GLOBAL_SESSION=eyJhbGciOiJub25lIn0.eyJhenAiOnt9LCJleHAiOjE0NDk2OTcxMDQxMzYsImlzcyI6IkNvbXBvc2UiLCJzdWIiOiIxNDQ5Njk2ODA0MTM2In0.; SCICONV9944=65f8a0a2cae8360d2dbe377c77da05be; SCISID9944=AtlQAYqqAAAAAAAAwTZsHu%2FiZxLhjdPHwcxpyDzA59S4xYPjZCYbxAUctQ6ZoS9S3dhH4YbnZBhWQXk9WtYOw6qi88fnopvNmX9SPxENKMplZBnDeTk8QVDvWH%2Bv8%2Bf%2FmVl2KP7udRvVe5%2FU%2BdeZDzlKpkCx%2BMUGgRoRx8sSntLLVyQySH85UPChOGiFwCybqymeHZz3qLFjLE%2F8mVSnYUoLwLSQq5DcBP1Sts0jGB7arWvSw3pZ3hOUvvfHlV0DVqOH586%2BN9PJZXDKP6h7eB1ceJAuVsYceLMujU61LNlbfc%2B6O%2BNv7f6Wb0GIH6kkTAw01GB01fkAwQU%2BiXNh3qo2Yqd42xoaAv53KCR8CaFYmPPPwyDE67nu7boslvMl4nv%2FxqEnaln13FeKVgMjDpm%2BdTUujEeQp7u%2FnrmBg3lxDWBw5iY%2Fy9UkpVsGAyb2lWjlejVAWaC8dxso
+
+	Step 5b (32): SERVER: REDIRECT TO COMPOSE AEP AUTH REDIRECT
+		HTTP/1.1 302 Moved Temporarily
+		Date: Wed, 09 Dec 2015 21:33:35 GMT
+		Server: Apache-Coyote/1.1
+		Location: https://chetco.dsone.3ds.com:9963/compose/aep_auth_redirect?$clientType=Compose&state=XWQ7-eiw&access_token=AtlQAYqqAAAAAAAAwTZsHu%2FiZxLhjdPHwcxpyDzA59S4xYPjZCYbxAUctQ6ZoS9S3dhH4YbnZBhWQXk9WtYOw6qi88fnopvNmX9SPxENKMplZBnDeTk8QVDvWH%2Bv8%2Bf%2FmVl2KP7udRvVe5%2FU%2BdeZDzlKpkCx%2BMUGgRoRx8sSntLLVyQySH85UPChOGiFwCybqymeHZz3qLFjLE%2F8mVSnYUoLwLSQq5DcBP1Sts0jGB7arWvSw3pZ3hOUvvfHlV0DVqOH586%2BN9PJZXDKP6h7eB1ceJAuVsYceLMujU61LNlbfc%2B6O%2BNv7f6Wb0GIH6kkTAw01GB01fkAwQU%2BiXNh3qo2Yqd42xoaAv53KCR8CaFYmPPPwyDE67nu7boslvMl4nv%2FxqEnaln13FeKVgMjDpm%2BdTUujEeQp7u%2FnrmBg3lxDWBw5iY%2Fy9UkpVsGAyb2lWjlejVAWaC8dxso
+		Content-Length: 0
+		Access-Control-Allow-Methods: OPTIONS, GET, POST, PUT, DELETE, HEAD
+		Access-Control-Allow-Credentials: true
+		Access-Control-Allow-Headers: X-Pilot-Session
+		X-XSS-Protection: 1
+		X-Content-Type-Options: nosniff
+		Vary: User-Agent
+		Keep-Alive: timeout=40, max=95
+		Connection: Keep-Alive
+		Content-Type: text/plain; charset=utf-8
+
+	Step 6a (33): CLIENT: FOLLOW REDIRECT: GET APPLICATION URL
+		GET https://chetco.dsone.3ds.com:9963/compose/aep_auth_redirect?$clientType=Compose&state=XWQ7-eiw&access_token=AtlQAYqqAAAAAAAAwTZsHu%2FiZxLhjdPHwcxpyDzA59S4xYPjZCYbxAUctQ6ZoS9S3dhH4YbnZBhWQXk9WtYOw6qi88fnopvNmX9SPxENKMplZBnDeTk8QVDvWH%2Bv8%2Bf%2FmVl2KP7udRvVe5%2FU%2BdeZDzlKpkCx%2BMUGgRoRx8sSntLLVyQySH85UPChOGiFwCybqymeHZz3qLFjLE%2F8mVSnYUoLwLSQq5DcBP1Sts0jGB7arWvSw3pZ3hOUvvfHlV0DVqOH586%2BN9PJZXDKP6h7eB1ceJAuVsYceLMujU61LNlbfc%2B6O%2BNv7f6Wb0GIH6kkTAw01GB01fkAwQU%2BiXNh3qo2Yqd42xoaAv53KCR8CaFYmPPPwyDE67nu7boslvMl4nv%2FxqEnaln13FeKVgMjDpm%2BdTUujEeQp7u%2FnrmBg3lxDWBw5iY%2Fy9UkpVsGAyb2lWjlejVAWaC8dxso HTTP/1.1
+		Host: chetco.dsone.3ds.com:9963
+		Connection: keep-alive
+		Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+		Upgrade-Insecure-Requests: 1
+		User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36
+		Referer: https://chetco.dsone.3ds.com:9943/security/login?$clientType=Compose&redir=https%3A%2F%2Fchetco.dsone.3ds.com%3A9943%2Fplatform%2Fauthorize%3Fstate%3DXWQ7-eiw%26redirect_uri%3Dhttps%253A%252F%252Fchetco.dsone.3ds.com%253A9963%252Fcompose%252Faep_auth_redirect
+		Accept-Encoding: gzip, deflate, sdch
+		Accept-Language: en-US,en;q=0.8,de-DE;q=0.6,de;q=0.4,es;q=0.2,it-IT;q=0.2,it;q=0.2
+		Cookie: JSESSIONID=38AB2AA559ACDF38CE4A37CA1D85918E; GLOBAL_SESSION=eyJhbGciOiJub25lIn0.eyJhenAiOnt9LCJleHAiOjE0NDk2OTcxMDQxMzYsImlzcyI6IkNvbXBvc2UiLCJzdWIiOiIxNDQ5Njk2ODA0MTM2In0.; SCICONV9944=65f8a0a2cae8360d2dbe377c77da05be; SCISID9944=AtlQAYqqAAAAAAAAwTZsHu%2FiZxLhjdPHwcxpyDzA59S4xYPjZCYbxAUctQ6ZoS9S3dhH4YbnZBhWQXk9WtYOw6qi88fnopvNmX9SPxENKMplZBnDeTk8QVDvWH%2Bv8%2Bf%2FmVl2KP7udRvVe5%2FU%2BdeZDzlKpkCx%2BMUGgRoRx8sSntLLVyQySH85UPChOGiFwCybqymeHZz3qLFjLE%2F8mVSnYUoLwLSQq5DcBP1Sts0jGB7arWvSw3pZ3hOUvvfHlV0DVqOH586%2BN9PJZXDKP6h7eB1ceJAuVsYceLMujU61LNlbfc%2B6O%2BNv7f6Wb0GIH6kkTAw01GB01fkAwQU%2BiXNh3qo2Yqd42xoaAv53KCR8CaFYmPPPwyDE67nu7boslvMl4nv%2FxqEnaln13FeKVgMjDpm%2BdTUujEeQp7u%2FnrmBg3lxDWBw5iY%2Fy9UkpVsGAyb2lWjlejVAWaC8dxso
+
+	Step 6b (33) SERVER: PROVIDE REDIRECT TO APPLICATION PAGE
+		HTTP/1.1 302 Found
+		Server: Apache-Coyote/1.1
+		Location: https://chetco.dsone.3ds.com:9963/compose/
+		Content-Length: 0
+		Date: Wed, 09 Dec 2015 21:33:35 GMT
+
+	Step 7a (34) CLIENT: FOLLOW REDIRECT: REQUEST APPLICATION PAGE
+		GET https://chetco.dsone.3ds.com:9963/compose/ HTTP/1.1
+		Host: chetco.dsone.3ds.com:9963
+		Connection: keep-alive
+		Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+		Upgrade-Insecure-Requests: 1
+		User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36
+		Referer: https://chetco.dsone.3ds.com:9943/security/login?$clientType=Compose&redir=https%3A%2F%2Fchetco.dsone.3ds.com%3A9943%2Fplatform%2Fauthorize%3Fstate%3DXWQ7-eiw%26redirect_uri%3Dhttps%253A%252F%252Fchetco.dsone.3ds.com%253A9963%252Fcompose%252Faep_auth_redirect
+		Accept-Encoding: gzip, deflate, sdch
+		Accept-Language: en-US,en;q=0.8,de-DE;q=0.6,de;q=0.4,es;q=0.2,it-IT;q=0.2,it;q=0.2
+		Cookie: JSESSIONID=38AB2AA559ACDF38CE4A37CA1D85918E; GLOBAL_SESSION=eyJhbGciOiJub25lIn0.eyJhenAiOnt9LCJleHAiOjE0NDk2OTcxMDQxMzYsImlzcyI6IkNvbXBvc2UiLCJzdWIiOiIxNDQ5Njk2ODA0MTM2In0.; SCICONV9944=65f8a0a2cae8360d2dbe377c77da05be; SCISID9944=AtlQAYqqAAAAAAAAwTZsHu%2FiZxLhjdPHwcxpyDzA59S4xYPjZCYbxAUctQ6ZoS9S3dhH4YbnZBhWQXk9WtYOw6qi88fnopvNmX9SPxENKMplZBnDeTk8QVDvWH%2Bv8%2Bf%2FmVl2KP7udRvVe5%2FU%2BdeZDzlKpkCx%2BMUGgRoRx8sSntLLVyQySH85UPChOGiFwCybqymeHZz3qLFjLE%2F8mVSnYUoLwLSQq5DcBP1Sts0jGB7arWvSw3pZ3hOUvvfHlV0DVqOH586%2BN9PJZXDKP6h7eB1ceJAuVsYceLMujU61LNlbfc%2B6O%2BNv7f6Wb0GIH6kkTAw01GB01fkAwQU%2BiXNh3qo2Yqd42xoaAv53KCR8CaFYmPPPwyDE67nu7boslvMl4nv%2FxqEnaln13FeKVgMjDpm%2BdTUujEeQp7u%2FnrmBg3lxDWBw5iY%2Fy9UkpVsGAyb2lWjlejVAWaC8dxso
+
+	Step 7b (34) SERVER:  SERVE APPLICATION PAGE
+
+
+
+
+====================================================================================
+	UNAUTHORIZED RESPONSE
+====================================================================================
+
+	HTTP/1.1 403 Forbidden
+Server: Apache-Coyote/1.1
+Set-Cookie: GLOBAL_SESSION=eyJhbGciOiJub25lIn0.eyJhenAiOnsiaHR0cHM6Ly9jaGV0Y28uZHNvbmUuM2RzLmNvbTo5OTYzL2NhcHR1cmUiOiI0ODk4MDRCQjRBMkVBMjdFRjM3OUQwRkMyQzcyQ0FGMSJ9LCJleHAiOjE0NDk2OTkzNTIzMDMsImlzcyI6IkNhcHR1cmUiLCJzdWIiOiIxNDQ5Njk3NTQ0NTgyIn0.; Path=/; HttpOnly
+Content-Type: text/html;charset=utf-8
+Content-Language: en-US
+Date: Wed, 09 Dec 2015 21:45:52 GMT
+Content-Length: 2427
+
+
+<html>
+<head>
+    <title>BIOVIA Foundation</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=10, IE=9, IE=8"/>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="/capture/assets/customizable.css" type="text/css" />
+    <script type="text/javascript">
+        //<![CDATA[
+        var username = 'curtis.kaler';
+        function init() {
+            if (username) {
+                var accountText = 'You are currently signed in as "<span id="accountname">' + username + '</span>".'
+                document.getElementById('accounttext').innerHTML = accountText;
+            }
+        }
+        function forceLogin() {
+            var go = window.location.href;
+            window.location = '/capture/j_spring_security_logout?targetUrl=' + encodeURIComponent(go);
+        }
+        //]]>
+    </script>
+</head>
+
+<body onload="init()">
+
+<div id="error-page" class="layout-content">
+    <div class="layout-table-row">
+        <div class="layout-table-cell">
+            <div class="layout-box grey-box">
+                <img class="logo" src="/capture/assets/brand-blue-150x40.png" alt="Logo"/>
+
+                <div class="panel panel-default">
+                    <h3 id="message-title">BIOVIA Foundation</h3>
+
+                    <div class="message-text">
+                        <div class="error-msg">
+                            Your account does not have permission to access<br/>
+                            <span id="resourcename">the requested resource.</span>
+                        </div>
+
+                        <div id="accounttext"></div>
+
+                        <div>
+                            <a href="javascript:forceLogin()" id="toLoginLink">Sign in with a different account</a>
+                        </div>
+                    </div>
+                </div>
+                <img class="bottom-logo" src="/capture/assets/company-blue-300x28.png" alt="Bottom Logo"/>
+            </div>
+        </div>
+    </div>
+
+    <div class="layout-table-row footer">
+        <div class="layout-footer copyright-box-text">
+            Copyright &copy;<script type="text/javascript">document.write(new
+                Date().getYear() + ((new Date().getYear() > 1900) ? 0 : 1900));
+        </script> Dassault Syst&egrave;mes, all rights reserved
+        </div>
+    </div>
+</div>
+</body>
+</html>
+	
+====================================================================================
+
+
+
+
+		
+	Response headers: 		Status: 401 Authorization Required
+		Access-Control-Allow-Credentials → true
+		Access-Control-Allow-Headers → X-Pilot-Session
+		Access-Control-Allow-Methods → OPTIONS, GET, POST, PUT, DELETE, HEAD
+		Connection → Keep-Alive
+		Content-Encoding → gzip
+		Content-Type → text/html; charset=utf-8
+		Date → Wed, 09 Dec 2015 20:32:44 GMT
+		Keep-Alive → timeout=40, max=100
+		Server → Apache
+		Transfer-Encoding → chunked
+		Vary → User-Agent,Accept-Encoding
+		X-Content-Type-Options → nosniff
+		X-XSS-Protection → 1
+		
+	Response cookies:
+		GLOBAL_SESSION: eyJhbGciOiJub25lIn0.eyJhenAiOnsiaHR0cHM6Ly9jaGV0Y28uZHNvbmUuM2RzLmNvbTo5OTYzL2NvbXBvc2UiOiIzODNEMjE4RUZFQzgxODU4MjE1MDY5Rjk1MzM3RTQ5QyJ9LCJleHAiOjE0NDk2OTY5NjA3NTAsImlzcyI6IkNvbXBvc2UiLCJzdWIiOiIxNDQ5NjkyODc5NjU5In0.	
+		chetco.dsone.3ds.com	/		HTTP	
+	
+		JSESSIONID	383D218EFEC81858215069F95337E49C	
+		chetco.dsone.3ds.com	/compose/		HTTP	Secure (but only if https)
+		
+Second time:
+	Response headers: (Additional)
+		WWW-Authenticate → SESNoBasicAuthHeader
+	
+	Response cookies: (Additional)
+		SCICONV9944	4f2e718bf4ebeaf96bc726e8b5689727	
+		chetco.dsone.3ds.com	/	
+	
+	
+	
+====================================================================================
+	
+	Response Headers:
+	HTTP/1.1 302 Found
+	Server: Apache-Coyote/1.1
+	Set-Cookie: GLOBAL_SESSION=eyJhbGciOiJub25lIn0.eyJhenAiOnsiaHR0cHM6Ly9jaGV0Y28uZHNvbmUuM2RzLmNvbTo5OTYzL2NvbXBvc2UiOiIzODNEMjE4RUZFQzgxODU4MjE1MDY5Rjk1MzM3RTQ5QyJ9LCJleHAiOjE0NDk2OTY1MDI3MjMsImlzcyI6IkNvbXBvc2UiLCJzdWIiOiIxNDQ5NjkyODc5NjU5In0.; Path=/; HttpOnly
+	Location: https://chetco.dsone.3ds.com:9943/platform/authorize?$clientType=Compose&state=3iYS_yQq&redirect_uri=https%3A%2F%2Fchetco.dsone.3ds.com%3A9963%2Fcompose%2Faep_auth_redirect
+	Content-Length: 0
+	Date: Wed, 09 Dec 2015 20:28:22 GMT
+	
+	Request Headers:
+	GET /compose/ HTTP/1.1
+	Host: chetco.dsone.3ds.com:9963
+	Connection: keep-alive
+	Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+	Upgrade-Insecure-Requests: 1
+	User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36
+	Accept-Encoding: gzip, deflate, sdch
+	Accept-Language: en-US,en;q=0.8,de-DE;q=0.6,de;q=0.4,es;q=0.2,it-IT;q=0.2,it;q=0.2
+	Cookie: JSESSIONID=383D218EFEC81858215069F95337E49C; GLOBAL_SESSION=eyJhbGciOiJub25lIn0.eyJhenAiOnt9LCJleHAiOjE0NDk2OTMxNzk2NTksImlzcyI6IkNvbXBvc2UiLCJzdWIiOiIxNDQ5NjkyODc5NjU5In0.; SCICONV9944=4f2e718bf4ebeaf96bc726e8b5689727
+
+
+		
+http://www.codeproject.com/Articles/429166/Basics-of-Single-Sign-on-SSO
+	Step 1: Create an authentication application "Main Application", representing our company site.
+	Step 2: Create a second application which can represent a vendor or client application.
+	Step 3: In order to accommodate forms authentication we need to have a database to maintain credentials. So create a DB supporting infrastructure for your application. In real time scenarios, you will have different databases for both the applications. But for simplicity i created a single database but maintained this isolation in application.
+	Step 4: Implement respective authentication so that no unauthenticated users can enter individual apps.
+	Step 5: Now coming to user switching between cross domain applications. SSO uses an authentication provider typically called STS (Secure Token System).
+	Step 6: While logging in, a vendor system has to determine whether user is authenticated by STS or not. If yes, allow him to Client HomePage. If no Redirect him to Login page of Client Application. 
+	
+	BROKEN:  CAN JUST HACK THE URL
+		In order to implement this, i added a query string with name "IsAuthenticatedBySSO", while redirecting to client application. This action is been taken care by  AuthenticateClientUrl() method of STS. Just follow the below pieces of code from both STS and Client home page.
+		
+	STS 
+		Authenticate user
+		Verify what apps he is authorized to
+		Providing specific Security Toekn or Claims (Pieces of information which client app will agree as Authentication)
+		
+		
+		
