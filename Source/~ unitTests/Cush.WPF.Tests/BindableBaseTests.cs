@@ -1,4 +1,5 @@
-﻿using Cush.Testing;
+﻿using Cush.Common;
+using Cush.Testing;
 using NUnit.Framework;
 
 namespace Cush.WPF.Tests

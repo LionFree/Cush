@@ -1,0 +1,11 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Buttons.ChromeButton.xaml" />
+        <ResourceDictionary Source="Buttons.ChromelessButton.xaml" />
+        <ResourceDictionary Source="Buttons.CircleButton.xaml" />
+        <ResourceDictionary Source="Buttons.ToggleButton.xaml" />
+        <ResourceDictionary Source="Buttons.FlatButton.xaml" />
+        <ResourceDictionary Source="Buttons.AccentButton.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

@@ -86,10 +86,10 @@ namespace Cush.Common.Logging.Internal
         /// <summary>
         ///     The formatting options to apply.
         /// </summary>
-        internal abstract FileNameFormattingOption[] FormattingOptions { get; set; }
+        public abstract FileNameFormattingOption[] FormattingOptions { get; set; }
 
         [DataMember(IsRequired = false)]
-        internal abstract List<string> FormattingOptionStrings { get; set; }
+        public abstract List<string> FormattingOptionStrings { get; set; }
 
         [DataMember(IsRequired = false)]
         internal abstract EnabledLevels Levels { get; set; }
@@ -221,7 +221,7 @@ namespace Cush.Common.Logging.Internal
                 }
             }
 
-            internal override FileNameFormattingOption[] FormattingOptions
+            public override FileNameFormattingOption[] FormattingOptions
             {
                 get { return _args; }
                 set
@@ -250,7 +250,7 @@ namespace Cush.Common.Logging.Internal
                 }
             }
 
-            internal override List<string> FormattingOptionStrings
+            public override List<string> FormattingOptionStrings
             {
                 get { return _formattingStrings; }
                 set
@@ -273,7 +273,7 @@ namespace Cush.Common.Logging.Internal
                     }
                     _args = output.ToArray();
 
-                    OnPropertyChanged("FormattingOptions");
+                    OnPropertyChanged(nameof(FormattingOptions));
                     OnPropertyChanged();
                 }
             }
@@ -289,19 +289,9 @@ namespace Cush.Common.Logging.Internal
                 }
             }
 
-            internal override string FullPath
-            {
-                get
-                {
-                    return Environment.ExpandEnvironmentVariables(
-                        String.Format(
-                            "{0}\\{1}",
-                            LogFolder,
-                            _formatter.Format(_fileNameFormat, _args)
-                            )
-                        );
-                }
-            }
+            internal override string FullPath => Environment.ExpandEnvironmentVariables(
+                $"{LogFolder}\\{_formatter.Format(_fileNameFormat, _args)}"
+                );
 
             #region isenabled
 

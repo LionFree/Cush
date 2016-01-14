@@ -15,7 +15,7 @@ namespace Cush.WPF.Tests
             internal string Thing
             {
                 get { return _thing; }
-                set { SetNotifyingProperty(ref _thing, value, () => Thing); }
+                set { SetProperty(ref _thing, value, () => Thing); }
             }
 
             [Test]

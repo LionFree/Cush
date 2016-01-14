@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace Cush.Common.Logging.Internal
 {
     [DataContract, KnownType(typeof (Implementation))]
-    internal abstract class FileNameFormattingOption
+    public abstract class FileNameFormattingOption
     {
         ///// <summary>
         /////     The name of the assembly.

@@ -41,7 +41,7 @@ namespace Cush.Common.Tests
             _code = code;
         }
 
-        internal bool ResourcesChanged
+        public bool ResourcesChanged
         {
             get { return _resourcesChanged; }
             set
@@ -86,7 +86,7 @@ namespace Cush.Common.Tests
             }
         }
 
-        internal bool RaiseWithMultipleParameters
+        public bool RaiseWithMultipleParameters
         {
             get { return _resourcesChanged; }
             set
@@ -102,7 +102,7 @@ namespace Cush.Common.Tests
             get { return _resourcesChanged; }
             set
             {
-                SetNotifyingProperty(ref _resourcesChanged, value, () => RaiseWithMultipleExpressions,
+                SetProperty(ref _resourcesChanged, value, () => RaiseWithMultipleExpressions,
                     new Expression<Func<object>>[] { () => ResourcesChanged, ()=>UnmanagedResource });
             }
         }
@@ -110,13 +110,13 @@ namespace Cush.Common.Tests
         internal bool SetNotifyingPropertyTester
         {
             get { return _getSetTester; }
-            set { SetNotifyingProperty(ref _getSetTester, value, () => SetNotifyingPropertyTester); }
+            set { SetProperty(ref _getSetTester, value, () => SetNotifyingPropertyTester); }
         }
 
         internal IDisposable ManagedResource
         {
             get { return _managed; }
-            set { SetNotifyingProperty(ref _managed, value, () => ManagedResource); }
+            set { SetProperty(ref _managed, value, () => ManagedResource); }
         }
 
         internal IntPtr UnmanagedResource
@@ -125,7 +125,7 @@ namespace Cush.Common.Tests
             set
             {
                 _resourcesChanged = true;
-                SetNotifyingProperty(ref _unmanaged, value, () => UnmanagedResource,
+                SetProperty(ref _unmanaged, value, () => UnmanagedResource,
                     new Expression<Func<object>>[] {() => ResourcesChanged});
                 //OnPropertyChanged("ResourcesChanged");
             }

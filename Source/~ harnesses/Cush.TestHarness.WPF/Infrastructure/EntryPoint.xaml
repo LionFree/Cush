@@ -1,0 +1,17 @@
+﻿<Application x:Class="Cush.TestHarness.WPF.Infrastructure.EntryPoint"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Startup="EntryPoint_OnStartup"
+             ShutdownMode="OnExplicitShutdown"
+             >
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/ColorSchemes/DefaultColorScheme.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/Themes/Generic.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
+

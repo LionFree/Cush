@@ -1,0 +1,184 @@
+﻿<controls:CushWindow x:Class="Cush.TestHarness.WPF.Views.ShellView"
+                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                     xmlns:controls="clr-namespace:Cush.WPF.Controls;assembly=Cush.WPF.Controls"
+                     xmlns:resources="clr-namespace:Cush.TestHarness.WPF.Views"
+                     xmlns:viewModels="clr-namespace:Cush.TestHarness.WPF.ViewModels"
+                     mc:Ignorable="d"
+
+                     d:DataContext="{d:DesignInstance Type=viewModels:ShellViewModel, IsDesignTimeCreatable=True}"
+                     Title="{x:Static resources:Strings.TEXT_ApplicationName}"
+                     TitleAlignment="Center"
+                     TitlebarHeight="35"
+                     GlowBrush="{DynamicResource AccentColorBrush}"
+                     Height="768" Width="768">
+
+    <controls:CushWindow.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Cush.WPF.Controls;component/Styles.xaml" />
+                <ResourceDictionary Source="/Views/Resources/ShellViewIcons.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </controls:CushWindow.Resources>
+
+    <!--The File menu button-->
+    <controls:CushWindow.LeftWindowCommands>
+        <controls:WindowCommands ShowLastSeparator="False">
+            <Button Foreground="{DynamicResource IdealForegroundColorBrush}"
+                    Command="{Binding PageSwapRequested}">
+                <StackPanel Orientation="Horizontal" Background="{DynamicResource TransparentWhiteBrush}">
+                    <Rectangle Width="16" Height="16" Margin="0,0,3,0">
+                        <Rectangle.Style>
+                            <Style>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsFileMenuVisible}" Value="True">
+                                        <Setter Property="Rectangle.Fill">
+                                            <Setter.Value>
+                                                <VisualBrush Stretch="Fill" Visual="{StaticResource HamburgerMenu}" />
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsForwardButtonVisible}" Value="True">
+                                        <Setter Property="Rectangle.Fill">
+                                            <Setter.Value>
+                                                <VisualBrush Stretch="Fill" Visual="{StaticResource ForwardButton}" />
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Rectangle.Style>
+                    </Rectangle>
+                    <Label Foreground="{DynamicResource IdealForegroundColorBrush}">
+                        <Label.Style>
+                            <Style>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsFileMenuVisible}" Value="True">
+                                        <Setter Property="Label.Content" Value="{x:Static resources:Strings.TEXT_File}" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsForwardButtonVisible}" Value="True">
+                                        <Setter Property="Label.Content" Value="{x:Static resources:Strings.TEXT_Back}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Label.Style>
+                    </Label>
+                    <StackPanel.Style>
+                        <Style>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsFileMenuVisible}" Value="True">
+                                    <Setter Property="StackPanel.ToolTip" Value="{x:Static resources:Strings.TOOLTIP_File}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsForwardButtonVisible}" Value="True">
+                                    <Setter Property="StackPanel.ToolTip" Value="{x:Static resources:Strings.TOOLTIP_ReturnToOpenFile}" />
+                                </DataTrigger>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding IsFileMenuVisible}" Value="False" />
+                                        <Condition Binding="{Binding IsForwardButtonVisible}" Value="False" />
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter Property="StackPanel.Visibility" Value="Collapsed" />
+                                </MultiDataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
+                </StackPanel>
+            </Button>
+        </controls:WindowCommands>
+    </controls:CushWindow.LeftWindowCommands>
+
+    <!-- The command bar (left of the window minimize/maximize/close controls) -->
+    <controls:CushWindow.RightWindowCommands>
+        <controls:WindowCommands ShowLastSeparator="True">
+            <!--Command="{x:Static local:CushShellView.CmdOptions}"-->
+            <Button ToolTip="{x:Static resources:Strings.TOOLTIP_Settings}" Click="Settings_OnClick"
+                    Foreground="{DynamicResource IdealForegroundColorBrush}">
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="16" Height="16" Margin="0,0,3,0">
+                        <Rectangle.Fill>
+                            <VisualBrush Stretch="Fill" Visual="{StaticResource SettingsCommand}" />
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <TextBlock Text="{x:Static resources:Strings.TEXT_Settings}" />
+                </StackPanel>
+            </Button>
+
+            <!--Command="{x:Static local:ShellWindow.CmdAbout}"-->
+            <Button ToolTip="{x:Static resources:Strings.TOOLTIP_About}" Click="About_OnClick">
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="16" Height="16" Margin="0,0,3,0">
+                        <Rectangle.Fill>
+                            <VisualBrush Stretch="Fill" Visual="{StaticResource AboutCommand}" />
+                        </Rectangle.Fill>
+                    </Rectangle>
+                </StackPanel>
+            </Button>
+
+        </controls:WindowCommands>
+    </controls:CushWindow.RightWindowCommands>
+
+    <Grid Name="RootGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <!-- Header Bar -->
+            <RowDefinition Height="*" />
+            <!-- Content Space -->
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <!-- Header Line -->
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <!-- Back Button -->
+                <ColumnDefinition Width="*" />
+                <!-- Header Name / Breadcrumbs -->
+            </Grid.ColumnDefinitions>
+
+            <!-- Header Line -->
+            <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
+                <!--<controls:AppBarButton x:Name="BackButton"
+                                        ImageSize="Small" Margin="10,2,2,0"
+                                       Command="{Binding BackButtonCommand}">
+                    <Rectangle Width="20" Height="20">
+                        <Rectangle.Fill>
+                            <VisualBrush Stretch="Fill"
+                                            Visual="{StaticResource appbar_arrow_left}" />
+                        </Rectangle.Fill>
+                    </Rectangle>
+                </controls:AppBarButton>-->
+
+                <!--<TextBlock x:Name="HeaderAppName"
+                            Text="App Name"
+                            Margin="25,2,2,2"
+                            VerticalAlignment="Center"
+                            FontSize="26"
+                            FontWeight="Bold"
+                            FontFamily="Calibri"
+                            Foreground="{DynamicResource BlackBrush}" />-->
+
+
+                <StackPanel x:Name="Breadcrumbs" Orientation="Horizontal" />
+
+            </StackPanel>
+
+            <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top">
+                <!--<Button Content="Blarg" />-->
+            </StackPanel>
+        </Grid>
+
+
+        <!-- Content Pane -->
+        <ContentPresenter x:Name="ContentPane" Grid.Row="1" Grid.Column="0" Content="{Binding Content}" />
+
+        <!--<Frame x:Name="ContentPane" Grid.Row="1" />-->
+
+    </Grid>
+
+</controls:CushWindow>

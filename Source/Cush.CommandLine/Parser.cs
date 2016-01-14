@@ -28,6 +28,25 @@ namespace Cush.CommandLine
         ///     This is a short description of the tool.
         ///     Guidance is 12 words maximum.
         /// </param>
+        /// <param name="specialNotes">A <see cref="string"/> containing special notes to be added to the end of the usage screen.</param>
+        /// <param name="displayUsageIfNoArgumentsPassed">
+        ///     A value that determines whether the usage page will be displayed when no
+        ///     arguments are passed.
+        /// </param>
+        public Parser(string appName, string commandDescription, string specialNotes,
+            bool displayUsageIfNoArgumentsPassed)
+            : this(appName, commandDescription, specialNotes, displayUsageIfNoArgumentsPassed, new ConsoleProxy())
+        {
+        }
+
+        /// <summary>
+        ///     Creates a new instance of the <see cref="T:Parser"/> class.
+        /// </summary>
+        /// <param name="appName">The friendly and readable text representation of the application name.</param>
+        /// <param name="commandDescription">
+        ///     This is a short description of the tool.
+        ///     Guidance is 12 words maximum.
+        /// </param>
         /// <param name="displayUsageIfNoArgumentsPassed">
         ///     A value that determines whether the usage page will be displayed when no
         ///     arguments are passed.
@@ -40,6 +59,30 @@ namespace Cush.CommandLine
                 displayUsageIfNoArgumentsPassed, string.Empty, CLITokenizer.GetInstance(),
                 CommandLineUsageBuilder.GetInstance(commandDescription), CommandLineOptionStore.GetInstance(),
                 VersionFinder.GetInstance(appName, buildInfo), CommandLineExceptionHandler.GetInstance(console), console
+                )
+        {
+        }
+
+        /// <summary>
+        ///     Creates a new instance of the <see cref="T:Parser"/> class.
+        /// </summary>
+        /// <param name="appName">The friendly and readable text representation of the application name.</param>
+        /// <param name="commandDescription">
+        ///     This is a short description of the tool.
+        ///     Guidance is 12 words maximum.
+        /// </param>
+        /// <param name="displayUsageIfNoArgumentsPassed">
+        ///     A value that determines whether the usage page will be displayed when no
+        ///     arguments are passed.
+        /// </param>
+        /// <param name="console">The <see cref="T:IConsole" /> on which to display output.</param>
+        /// <param name="specialNotes">A <see cref="string"/> containing special notes to be added to the end of the usage screen.</param>
+        public Parser(string appName, string commandDescription, string specialNotes, bool displayUsageIfNoArgumentsPassed,
+            IConsole console)
+            : this(
+                displayUsageIfNoArgumentsPassed, specialNotes, CLITokenizer.GetInstance(),
+                CommandLineUsageBuilder.GetInstance(commandDescription), CommandLineOptionStore.GetInstance(),
+                VersionFinder.GetInstance(appName, null), CommandLineExceptionHandler.GetInstance(console), console
                 )
         {
         }

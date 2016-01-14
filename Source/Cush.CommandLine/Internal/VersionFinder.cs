@@ -21,7 +21,6 @@ namespace Cush.CommandLine.Internal
             internal VersionFinderImpl(string appName, IBuildInfo info)
             {
                 ThrowHelper.IfNullOrEmptyThenThrow(() => appName);
-                ThrowHelper.IfNullThenThrow(() => info);
                 _appName = appName;
                 _info = info;
             }
@@ -29,7 +28,9 @@ namespace Cush.CommandLine.Internal
             public override string GetVersion()
             {
                 var ver = _info.GetVersion();
-                return string.Format(Environment.NewLine + "{0} [Version {1}]", _appName, ver);
+                return _info==null 
+                    ? string.Format(Environment.NewLine + "{0}", _appName) 
+                    : string.Format(Environment.NewLine + "{0} [Version {1}]", _appName, ver);
             }
         }
     }

@@ -124,7 +124,7 @@ namespace Cush.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0:yyyy&apos;-&apos;MM&apos;-&apos;dd HH&apos;:&apos;mm&apos;:&apos;ss} [{1}]\t{2}.
+        ///   Looks up a localized string similar to {0:yyyy&apos;-&apos;MM&apos;-&apos;dd HH&apos;:&apos;mm&apos;:&apos;ss} [{1}]	{2}.
         /// </summary>
         public static string FileLogEntryFormat {
             get {
@@ -178,7 +178,7 @@ namespace Cush.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ======================================================================.
+        ///   Looks up a localized string similar to =============================================================================================================.
         /// </summary>
         public static string logDivider {
             get {
@@ -214,7 +214,7 @@ namespace Cush.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0:yyyy&apos;-&apos;MM&apos;-&apos;dd HH&apos;:&apos;mm&apos;:&apos;ss&apos;.&apos;fffffff} [{1}]\t{2}.
+        ///   Looks up a localized string similar to {0:yyyy&apos;-&apos;MM&apos;-&apos;dd HH&apos;:&apos;mm&apos;:&apos;ss&apos;.&apos;fffffff} [{1}]	{2}.
         /// </summary>
         public static string TraceLogEntryFormat {
             get {
