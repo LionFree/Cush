@@ -13,6 +13,11 @@ namespace Cush.Common.Logging
         /// </summary>
         string Name { get; }
 
+        /// <summary>
+        ///     The <see cref="T:Log" /> to use.
+        /// </summary>
+        ILog Log { get; }
+
         #region Is__Enabled methods
 
         /// <summary>
@@ -157,7 +162,7 @@ namespace Cush.Common.Logging
         ///     parameters.
         /// </summary>
         /// <param name="message">A message <see langword="string" /> containing format items.</param>
-        /// <param name="logEvent">Determines whether or not to add an entry to the <see cref="System.Diagnostics.EventLog"/>.</param>
+        /// <param name="logEvent">Determines whether or not to add an entry to the <see cref="System.Diagnostics.EventLog" />.</param>
         /// <param name="exception">An <see cref="T:Exception" /> to be logged.</param>
         /// <param name="args">Arguments to format.</param>
         /// <remarks>
@@ -260,7 +265,7 @@ namespace Cush.Common.Logging
         ///     parameters.
         /// </summary>
         /// <param name="message">A <see langword="string" /> containing format items.</param>
-        /// <param name="logEvent">Determines whether or not to add an entry to the <see cref="System.Diagnostics.EventLog"/>.</param>
+        /// <param name="logEvent">Determines whether or not to add an entry to the <see cref="System.Diagnostics.EventLog" />.</param>
         /// <param name="exception">An exception to be logged.</param>
         /// <param name="args">Arguments to format.</param>
         /// <remarks>
@@ -363,7 +368,7 @@ namespace Cush.Common.Logging
         ///     Writes a diagnostic message and <see cref="T:Exception" /> at the <c>INFO</c> level.
         /// </summary>
         /// <param name="message">A message <see langword="string" /> containing format items.</param>
-        /// <param name="logEvent">Determines whether or not to add an entry to the <see cref="System.Diagnostics.EventLog"/>.</param>
+        /// <param name="logEvent">Determines whether or not to add an entry to the <see cref="System.Diagnostics.EventLog" />.</param>
         /// <param name="exception">An <see cref="T:Exception" /> to be logged.</param>
         /// <param name="args">Arguments to format.</param>
         /// <remarks>
@@ -406,7 +411,7 @@ namespace Cush.Common.Logging
         /// </summary>
         /// <param name="exception">An <see cref="T:Exception" /> to be logged.</param>
         void Warn([Localizable(false)] Exception exception);
-        
+
         /// <summary>
         ///     Writes a diagnostic message and <see cref="T:Exception" /> at the <c>WARN</c> level.
         /// </summary>
@@ -464,7 +469,7 @@ namespace Cush.Common.Logging
         ///     Writes a diagnostic message and <see cref="T:Exception" /> at the <c>WARN</c> level.
         /// </summary>
         /// <param name="message">A <see langword="string" /> containing format items.</param>
-        /// <param name="logEvent">Determines whether or not to add an entry to the <see cref="System.Diagnostics.EventLog"/>.</param>
+        /// <param name="logEvent">Determines whether or not to add an entry to the <see cref="System.Diagnostics.EventLog" />.</param>
         /// <param name="exception">An <see cref="T:Exception" /> to be logged.</param>
         /// <param name="args">Arguments to format.</param>
         /// <remarks>
@@ -565,7 +570,7 @@ namespace Cush.Common.Logging
         ///     Writes a diagnostic message and <see cref="T:Exception" /> at the <c>ERROR</c> level.
         /// </summary>
         /// <param name="message">A <see langword="string" /> containing format items.</param>
-        /// <param name="logEvent">Determines whether or not to add an entry to the <see cref="System.Diagnostics.EventLog"/>.</param>
+        /// <param name="logEvent">Determines whether or not to add an entry to the <see cref="System.Diagnostics.EventLog" />.</param>
         /// <param name="exception">An <see cref="T:Exception" /> to be logged.</param>
         /// <param name="args">Arguments to format.</param>
         /// <remarks>
@@ -668,7 +673,7 @@ namespace Cush.Common.Logging
         ///     parameters.
         /// </summary>
         /// <param name="message">A <see langword="string" /> containing format items.</param>
-        /// <param name="logEvent">Determines whether or not to add an entry to the <see cref="System.Diagnostics.EventLog"/>.</param>
+        /// <param name="logEvent">Determines whether or not to add an entry to the <see cref="System.Diagnostics.EventLog" />.</param>
         /// <param name="exception">An <see cref="T:Exception" /> to log.</param>
         /// <param name="args">Arguments to format.</param>
         /// <remarks>

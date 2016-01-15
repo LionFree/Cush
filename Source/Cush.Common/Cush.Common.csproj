@@ -78,22 +78,26 @@
     <Compile Include="Interaction\IDialogs.cs" />
     <Compile Include="Interfaces\IBuildInfo.cs" />
     <Compile Include="Interfaces\IKeyedItem.cs" />
-    <Compile Include="Logging\Internal\EventLogProxy.cs" />
-    <Compile Include="Logging\Internal\ExceptionWriter.cs" />
+    <Compile Include="Logging\EnabledLevels.cs" />
+    <Compile Include="Logging\EventLogProxy.cs" />
+    <Compile Include="Logging\FileNameFormatter.cs" />
+    <Compile Include="Logging\FileNameFormattingOptions.cs" />
+    <Compile Include="Logging\ExceptionWriter.cs" />
     <Compile Include="Logging\Implementations\ConsoleLogImplementation.cs" />
+    <Compile Include="Logging\Implementations\FileLogger.cs" />
     <Compile Include="Logging\Implementations\TraceLogImplementation.cs" />
     <Compile Include="Logging\Implementations\NullLogImplementation.cs" />
     <Compile Include="Logging\Implementations\FileLogImplementation.cs" />
-    <Compile Include="Logging\Internal\FileNameFormatter.cs" />
-    <Compile Include="Logging\Internal\FileNameFormattingOptions.cs" />
     <Compile Include="Logging\Implementations\BaseLogger.cs" />
+    <Compile Include="Logging\IEventLog.cs" />
+    <Compile Include="Logging\ILog.cs" />
+    <Compile Include="Logging\Internal\AssemblyInspector.cs" />
     <Compile Include="Logging\Loggers.cs" />
     <Compile Include="Logging\Implementations\ConsoleLogger.cs" />
-    <Compile Include="Logging\Internal\EnabledLevels.cs" />
-    <Compile Include="Logging\Internal\Log.cs" />
-    <Compile Include="Logging\Internal\LogConfiguration.cs" />
-    <Compile Include="Logging\Internal\LogEntry.cs" />
-    <Compile Include="Logging\Internal\LogLevel.cs" />
+    <Compile Include="Logging\Log.cs" />
+    <Compile Include="Logging\LogConfiguration.cs" />
+    <Compile Include="Logging\LogEntry.cs" />
+    <Compile Include="Logging\LogLevel.cs" />
     <Compile Include="Logging\Implementations\TraceLogger.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="BaseClasses\IComposable`1.cs" />
@@ -121,6 +125,7 @@
     <EmbeddedResource Include="Strings.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

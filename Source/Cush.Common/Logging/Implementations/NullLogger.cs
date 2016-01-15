@@ -1,10 +1,8 @@
-﻿using Cush.Common.Logging.Internal;
-
-namespace Cush.Common.Logging
+﻿namespace Cush.Common.Logging
 {
     public sealed class NullLogger : BaseLogger
     {
-        public NullLogger() : base(Log.Null, string.Empty, string.Empty, null)
+        public NullLogger() : base(Logging.Log.Null, string.Empty, string.Empty, null)
         {
         }
 

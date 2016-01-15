@@ -1,10 +1,8 @@
-﻿using Cush.Common.Logging.Internal;
-
-namespace Cush.Common.Logging
+﻿namespace Cush.Common.Logging
 {
     public sealed class ConsoleLogger : BaseLogger
     {
-        public ConsoleLogger() : base(Log.Console, string.Empty, string.Empty, null)
+        public ConsoleLogger() : base(Logging.Log.Console, string.Empty, string.Empty, null)
         {
         }
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using Cush.Common.Logging.Internal;
 
 namespace Cush.Common.Logging
 {
@@ -10,19 +9,19 @@ namespace Cush.Common.Logging
     /// </summary>
     public abstract class BaseLogger : ILogger
     {
-        private readonly EventLogProxy _eventLog;
         private readonly string _eventSourceName;
-        private readonly Log _log;
+        public IEventLog EventLog { get; }
+        public ILog Log { get; }
 
-        protected BaseLogger(Log log, string eventSourceName, string eventLogName, EventLogProxy proxy)
+        protected BaseLogger(ILog log, string eventSourceName, string eventLogName, IEventLog proxy)
         {
-            _log = log;
+            Log = log;
             _eventSourceName = eventSourceName;
-            _eventLog = proxy;
+            EventLog = proxy;
 
             if (string.IsNullOrEmpty(eventSourceName)) return;
-            if (!_eventLog.SourceExists(eventSourceName))
-                _eventLog.CreateEventSource(eventSourceName, eventLogName);
+            if (!EventLog.SourceExists(eventSourceName))
+                EventLog.CreateEventSource(eventSourceName, eventLogName);
         }
 
 
@@ -754,10 +753,10 @@ namespace Cush.Common.Logging
         private void WriteEntry(bool logEvent, LogLevel level, EventLogEntryType entryType, Exception exception, string message,
            params object[] args)
         {
-            _log.AddEntry(level, exception, message, args);
+            Log.AddEntry(level, exception, message, args);
 
             if (logEvent)
-                _eventLog.WriteEntry(_eventSourceName, string.Format(message, args), entryType);
+                EventLog.WriteEntry(_eventSourceName, string.Format(message, args), entryType);
         }
         #endregion
 

@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 
-namespace Cush.Common.Logging.Internal
+namespace Cush.Common.Logging
 {
     public abstract class ExceptionWriter
     {

@@ -2,50 +2,47 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.Serialization;
+using Cush.Common.Logging.Internal;
 
-namespace Cush.Common.Logging.Internal
+namespace Cush.Common.Logging
 {
     [DataContract, KnownType(typeof (Implementation))]
     public abstract class FileNameFormattingOption
     {
-        ///// <summary>
-        /////     The name of the assembly.
-        ///// </summary>
-        //internal static readonly FileNameFormattingOption AssemblyName
-        //    = new Implementation("AssemblyName", string.Empty, () => AssemblyInspector.Default.HasEntryAssembly
-        //        ? AssemblyWrapper.Default.GetEntryAssembly().GetName().Name
-        //        : string.Empty);
+        /// <summary>
+        ///     The name of the assembly.
+        /// </summary>
+        public static readonly FileNameFormattingOption AssemblyName
+            = new Implementation("AssemblyName", string.Empty, () =>
+                AssemblyInspector.HasEntryAssembly
+                    ? AssemblyProxy.EntryAssemblyName
+                    : string.Empty);
 
         /// <summary>
         ///     The date, formatted in the sortable date pattern:
         ///     6/15/2009 1:45:30 PM => 2009-06-15
         /// </summary>
-        internal static readonly FileNameFormattingOption SortableDate
+        public static readonly FileNameFormattingOption SortableDate
             = new Implementation(Strings.SortableDate, string.Format(Strings.SortableDateFormat, DateTime.Today), null);
 
         /// <summary>
         ///     The hours and minutes offset from UTC:
         ///     6/15/2009 1:45:30 PM -07:00 => -07.00
         /// </summary>
-        internal static readonly FileNameFormattingOption UTCOffset
+        public static readonly FileNameFormattingOption UTCOffset
             = new Implementation(Strings.UTCOffset,
                 string.Format(Strings.UTCOffsetFormat, DateTime.Today).Replace('/', '.').Replace(':', '.'),
                 null);
 
-        internal static ObservableCollection<FileNameFormattingOption> AllOptions
-        {
-            get
+        public static ObservableCollection<FileNameFormattingOption> AllOptions
+            => new ObservableCollection<FileNameFormattingOption>
             {
-                return new ObservableCollection<FileNameFormattingOption>
-                {
-                    //AssemblyName,
-                    SortableDate,
-                    UTCOffset
-                };
-            }
-        }
+                //AssemblyName,
+                SortableDate,
+                UTCOffset
+            };
 
-        internal static ObservableCollection<string> AllOptionNames
+        public static ObservableCollection<string> AllOptionNames
         {
             get
             {
@@ -58,7 +55,7 @@ namespace Cush.Common.Logging.Internal
             }
         }
 
-        internal static FileNameFormattingOption CustomName(string name)
+        public static FileNameFormattingOption CustomName(string name)
         {
             return new Implementation(Strings.CustomName, name, null);
         }

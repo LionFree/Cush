@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using Cush.Common.Logging.Internal;
 
 namespace Cush.Common.Logging
 {

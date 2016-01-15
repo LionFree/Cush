@@ -1,4 +1,4 @@
-﻿namespace Cush.Common.Logging.Internal
+﻿namespace Cush.Common.Logging
 {
     public enum LogLevel
     {

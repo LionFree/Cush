@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
-using Cush.Common.Logging.Internal;
 
 namespace Cush.Common.Logging
 {
     public sealed class TraceLogger : BaseLogger
     {
-        public TraceLogger() : base(Log.Trace, string.Empty, string.Empty, null)
+        public TraceLogger() : base(Logging.Log.Trace, string.Empty, string.Empty, null)
         {
         }
         

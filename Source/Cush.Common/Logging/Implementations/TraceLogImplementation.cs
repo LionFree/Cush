@@ -1,5 +1,4 @@
 using System;
-using Cush.Common.Logging.Internal;
 
 namespace Cush.Common.Logging
 {

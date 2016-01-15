@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Cush.Common.Logging.Internal
+namespace Cush.Common.Logging
 {
     [DataContract, KnownType(typeof(LogConfigImplementation))]
     public abstract class LogConfiguration : PropertyChangedBase
@@ -13,32 +13,19 @@ namespace Cush.Common.Logging.Internal
         ///     Creates an instance of the <see cref="LogConfiguration" />
         ///     class, populated with the default values.
         /// </summary>
-        internal static LogConfiguration Default
-        {
-            get
-            {
-                return Create(EnabledLevels.All,
-                    FileNameFormatter.Default,
-                    AppDomain.CurrentDomain.BaseDirectory,
-                    //"{0}.{1}.log",
-                    //FileNameFormattingOption.AssemblyName,
-                    "{0}.log",
-                    FileNameFormattingOption.SortableDate);
-            }
-        }
+        public static LogConfiguration Default => Create(EnabledLevels.All,
+            FileNameFormatter.Default,
+            AppDomain.CurrentDomain.BaseDirectory,
+            "{0}.{1}.log",
+            FileNameFormattingOption.AssemblyName,
+            FileNameFormattingOption.SortableDate);
 
         /// <summary>
         ///     Creates an instance of the <see cref="LogConfiguration" />
         ///     class, populated with the null values.
         /// </summary>
-        internal static LogConfiguration Null
-        {
-            get
-            {
-                return Create(EnabledLevels.None, FileNameFormatter.Default,
-                    string.Empty, string.Empty);
-            }
-        }
+        public static LogConfiguration Null => Create(EnabledLevels.None, FileNameFormatter.Default,
+            string.Empty, string.Empty);
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="LogConfiguration" /> class,
@@ -58,7 +45,7 @@ namespace Cush.Common.Logging.Internal
         /// <returns>
         ///     The <see cref="T:ServiceSentry.Extensibility.Logging.LogConfiguration" />.
         /// </returns>
-        internal static LogConfiguration Create(EnabledLevels levels,
+        public static LogConfiguration Create(EnabledLevels levels,
                                                 FileNameFormatter formatter,
                                                 string logFilePath,
                                                 string fileNameFormat,
@@ -97,7 +84,7 @@ namespace Cush.Common.Logging.Internal
         /// <summary>
         ///     The full, formatted path of the log file.
         /// </summary>
-        internal abstract string FullPath { get; }
+        public abstract string FullPath { get; }
 
         /// <summary>
         ///     Gets a value indicating whether logging is enabled for the <c>Trace</c> level.
@@ -289,7 +276,7 @@ namespace Cush.Common.Logging.Internal
                 }
             }
 
-            internal override string FullPath => Environment.ExpandEnvironmentVariables(
+            public override string FullPath => Environment.ExpandEnvironmentVariables(
                 $"{LogFolder}\\{_formatter.Format(_fileNameFormat, _args)}"
                 );
 

@@ -1,5 +1,3 @@
-using Cush.Common.Logging.Internal;
-
 namespace Cush.Common.Logging
 {
     internal sealed class NullLogImplementation : Log

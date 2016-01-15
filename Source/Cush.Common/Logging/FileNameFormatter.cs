@@ -1,11 +1,8 @@
-﻿namespace Cush.Common.Logging.Internal
+﻿namespace Cush.Common.Logging
 {
-    internal abstract class FileNameFormatter
+    public abstract class FileNameFormatter
     {
-        public static FileNameFormatter Default
-        {
-            get { return new Implementation(); }
-        }
+        public static FileNameFormatter Default => new Implementation();
 
         /// <summary>
         ///     Replaces the format items in a specified string with the string representations
