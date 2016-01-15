@@ -54,6 +54,7 @@
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
     <Compile Include="Exceptions\ThrowHelper.cs" />
+    <Compile Include="Extensions\PathExtensions.cs" />
     <Compile Include="FileHandling\Enums\FileAction.cs" />
     <Compile Include="Events\FileEventArgs.cs" />
     <Compile Include="FileHandling\FileHandlerT.cs" />

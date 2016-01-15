@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace Cush.Common.Logging
@@ -35,10 +36,13 @@ namespace Cush.Common.Logging
                 get { return _logFileFolder; }
                 set
                 {
+                    if (!PathExtensions.ValidFolder(value)) throw new ArgumentException("Folder name is not valid.");
                     SetProperty(ref _logFileFolder, value); 
                     OnPropertyChanged(nameof(FullPath));
                 }
             }
+
+            
 
             internal override string FileNameFormat
             {
@@ -64,13 +68,7 @@ namespace Cush.Common.Logging
                     }
                     else
                     {
-                        var output = new List<string>();
-                        foreach (var item in value)
-                        {
-                            var converted = item.Name;
-                            if (string.IsNullOrEmpty(converted)) continue;
-                            output.Add(converted);
-                        }
+                        var output = value.Select(item => item.Name).Where(converted => !string.IsNullOrEmpty(converted)).ToList();
                         _formattingStrings = output;
                     }
 
