@@ -4,12 +4,26 @@ CUSH IDEAS - Implement Top Items First
 ==========================================================================================
 
 Note: xxxWeasel is an example of a BAD class name.  
-	Try NOT use Weasel words like "Handler" or "Manager".  Be specific about what it does.
+	Try NOT use Weasel words like "Handler", "Manager", or "Helper".  Be specific about what it does.
 	Pay attention to the Single Responsibility Principle:
 		If you're not creative enough to come up with a better description of what your class does than "manage" or "handle" or "help", then maybe your class has too many responsibilities.	
 
+		
+PERFORMANCE Ideas
+==========================================================================================
+
+- Make sure scrollbars and grids handle tens of thousands of entries
+	-- These are allegedly weak links in WPF performance
+
+- Move Cush.WPF.Controls out of the main Cush framework
+
+
+
+		
 MVVM Ideas
 ==========================================================================================
+
+CLS Compliance
 
 Cush.MVVM	(MVVM - AVOID using WPF-specific methods here, so that WinForms folks can use it too)
 	View only knows about the shape of the ViewModel; binds to properties on VM
