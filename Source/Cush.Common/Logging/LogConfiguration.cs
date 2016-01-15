@@ -4,9 +4,157 @@ using System.Runtime.Serialization;
 
 namespace Cush.Common.Logging
 {
-    [DataContract, KnownType(typeof(LogConfigImplementation))]
+    [DataContract, KnownType(typeof (LogConfigImplementation))]
     public abstract class LogConfiguration : PropertyChangedBase
     {
+        [DataContract]
+        private sealed class LogConfigImplementation : LogConfiguration
+        {
+            private FileNameFormattingOption[] _args;
+            private string _fileNameFormat;
+            private FileNameFormatter _formatter;
+            private List<string> _formattingStrings;
+            private EnabledLevels _levels;
+            private string _logFileFolder;
+
+            internal LogConfigImplementation(EnabledLevels levels,
+                FileNameFormatter formatter,
+                string logPath,
+                string fileNameFormat,
+                params FileNameFormattingOption[] args)
+            {
+                _levels = levels;
+                _formatter = formatter;
+                _logFileFolder = logPath;
+                _fileNameFormat = fileNameFormat;
+                FormattingOptions = args;
+            }
+
+            public override string LogFolder
+            {
+                get { return _logFileFolder; }
+                set
+                {
+                    SetProperty(ref _logFileFolder, value); 
+                    OnPropertyChanged(nameof(FullPath));
+                }
+            }
+
+            internal override string FileNameFormat
+            {
+                get { return _fileNameFormat; }
+                set
+                {
+                    SetProperty(ref _fileNameFormat, value);
+                    OnPropertyChanged(nameof(FullPath));
+                }
+            }
+
+            public override FileNameFormattingOption[] FormattingOptions
+            {
+                get { return _args; }
+                set
+                {
+                    if (_args == value) return;
+                    _args = value;
+
+                    if (value == null || value.Length == 0)
+                    {
+                        _formattingStrings = new List<string>();
+                    }
+                    else
+                    {
+                        var output = new List<string>();
+                        foreach (var item in value)
+                        {
+                            var converted = item.Name;
+                            if (string.IsNullOrEmpty(converted)) continue;
+                            output.Add(converted);
+                        }
+                        _formattingStrings = output;
+                    }
+
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(FormattingOptionStrings));
+                }
+            }
+
+            public override List<string> FormattingOptionStrings
+            {
+                get { return _formattingStrings; }
+                set
+                {
+                    if (_formattingStrings == value) return;
+                    _formattingStrings = value;
+
+                    if (value == null || value.Count == 0)
+                    {
+                        _args = new FileNameFormattingOption[] {};
+                        return;
+                    }
+
+                    var output = new List<FileNameFormattingOption>();
+                    foreach (var item in value)
+                    {
+                        var converted = FileNameFormattingOption.ByName(item);
+                        if (converted == null) continue;
+                        output.Add(converted);
+                    }
+                    _args = output.ToArray();
+
+                    OnPropertyChanged(nameof(FormattingOptions));
+                    OnPropertyChanged(nameof(FullPath));
+                    OnPropertyChanged();
+                }
+            }
+
+            internal override EnabledLevels Levels
+            {
+                get { return _levels; }
+                set
+                {
+                    SetProperty(ref _levels, value);
+                    OnPropertyChanged(nameof(IsDebugEnabled));
+                    OnPropertyChanged(nameof(IsTraceEnabled));
+                    OnPropertyChanged(nameof(IsInfoEnabled));
+                    OnPropertyChanged(nameof(IsWarnEnabled));
+                    OnPropertyChanged(nameof(IsErrorEnabled));
+                    OnPropertyChanged(nameof(IsFatalEnabled));
+                }
+            }
+
+            public override string FullPath => Environment.ExpandEnvironmentVariables(
+                $"{LogFolder}\\{_formatter.Format(_fileNameFormat, _args)}"
+                );
+
+            [OnDeserializing]
+            private void BeforeDeserialization(StreamingContext context)
+            {
+                _formatter = FileNameFormatter.Default;
+            }
+
+            #region isenabled
+
+            internal override bool IsTraceEnabled => IsEnabled(LogLevel.Trace);
+
+            internal override bool IsDebugEnabled => IsEnabled(LogLevel.Debug);
+
+            internal override bool IsInfoEnabled => IsEnabled(LogLevel.Info);
+
+            internal override bool IsWarnEnabled => IsEnabled(LogLevel.Warn);
+
+            internal override bool IsErrorEnabled => IsEnabled(LogLevel.Error);
+
+            internal override bool IsFatalEnabled => IsEnabled(LogLevel.Fatal);
+
+            internal override bool IsEnabled(LogLevel level)
+            {
+                return _levels.IsEnabled(level);
+            }
+
+            #endregion
+        }
+
         #region Constructors
 
         /// <summary>
@@ -46,10 +194,10 @@ namespace Cush.Common.Logging
         ///     The <see cref="T:ServiceSentry.Extensibility.Logging.LogConfiguration" />.
         /// </returns>
         public static LogConfiguration Create(EnabledLevels levels,
-                                                FileNameFormatter formatter,
-                                                string logFilePath,
-                                                string fileNameFormat,
-                                                params FileNameFormattingOption[] args)
+            FileNameFormatter formatter,
+            string logFilePath,
+            string fileNameFormat,
+            params FileNameFormattingOption[] args)
         {
             return new LogConfigImplementation(levels, formatter, logFilePath, fileNameFormat, args);
         }
@@ -62,7 +210,7 @@ namespace Cush.Common.Logging
         ///     The folder in which the log file will reside.
         /// </summary>
         [DataMember(IsRequired = true)]
-        internal abstract string LogFolder { get; set; }
+        public abstract string LogFolder { get; set; }
 
         /// <summary>
         ///     The formatting string of the log file name.
@@ -162,168 +310,5 @@ namespace Cush.Common.Logging
         internal abstract bool IsEnabled(LogLevel level);
 
         #endregion
-
-        [DataContract]
-        private sealed class LogConfigImplementation : LogConfiguration
-        {
-            private FileNameFormattingOption[] _args;
-            private string _fileNameFormat;
-            private FileNameFormatter _formatter;
-            private List<string> _formattingStrings;
-            private EnabledLevels _levels;
-            private string _logFileFolder;
-
-            internal LogConfigImplementation(EnabledLevels levels,
-                                             FileNameFormatter formatter,
-                                             string logPath,
-                                             string fileNameFormat,
-                                             params FileNameFormattingOption[] args)
-            {
-
-                _levels = levels;
-                _formatter = formatter;
-                _logFileFolder = logPath;
-                _fileNameFormat = fileNameFormat;
-                FormattingOptions = args;
-            }
-            internal override string LogFolder
-            {
-                get { return _logFileFolder; }
-                set
-                {
-                    if (_logFileFolder == value) return;
-                    _logFileFolder = value;
-                    OnPropertyChanged();
-                }
-            }
-
-            internal override string FileNameFormat
-            {
-                get { return _fileNameFormat; }
-                set
-                {
-                    if (_fileNameFormat == value) return;
-                    _fileNameFormat = value;
-                    OnPropertyChanged();
-                }
-            }
-
-            public override FileNameFormattingOption[] FormattingOptions
-            {
-                get { return _args; }
-                set
-                {
-                    if (_args == value) return;
-                    _args = value;
-
-                    if (value == null || value.Length == 0)
-                    {
-                        _formattingStrings = new List<string>();
-                    }
-                    else
-                    {
-                        var output = new List<string>();
-                        foreach (var item in value)
-                        {
-                            var converted = item.Name;
-                            if (string.IsNullOrEmpty(converted)) continue;
-                            output.Add(converted);
-                        }
-                        _formattingStrings = output;
-                    }
-
-                    OnPropertyChanged();
-                    OnPropertyChanged("FormattingOptionStrings");
-                }
-            }
-
-            public override List<string> FormattingOptionStrings
-            {
-                get { return _formattingStrings; }
-                set
-                {
-                    if (_formattingStrings == value) return;
-                    _formattingStrings = value;
-
-                    if (value == null || value.Count == 0)
-                    {
-                        _args = new FileNameFormattingOption[] { };
-                        return;
-                    }
-
-                    var output = new List<FileNameFormattingOption>();
-                    foreach (var item in value)
-                    {
-                        var converted = FileNameFormattingOption.ByName(item);
-                        if (converted == null) continue;
-                        output.Add(converted);
-                    }
-                    _args = output.ToArray();
-
-                    OnPropertyChanged(nameof(FormattingOptions));
-                    OnPropertyChanged();
-                }
-            }
-
-            internal override EnabledLevels Levels
-            {
-                get { return _levels; }
-                set
-                {
-                    if (_levels == value) return;
-                    _levels = value;
-                    OnPropertyChanged();
-                }
-            }
-
-            public override string FullPath => Environment.ExpandEnvironmentVariables(
-                $"{LogFolder}\\{_formatter.Format(_fileNameFormat, _args)}"
-                );
-
-            #region isenabled
-
-            internal override bool IsTraceEnabled
-            {
-                get { return IsEnabled(LogLevel.Trace); }
-            }
-
-            internal override bool IsDebugEnabled
-            {
-                get { return IsEnabled(LogLevel.Debug); }
-            }
-
-            internal override bool IsInfoEnabled
-            {
-                get { return IsEnabled(LogLevel.Info); }
-            }
-
-            internal override bool IsWarnEnabled
-            {
-                get { return IsEnabled(LogLevel.Warn); }
-            }
-
-            internal override bool IsErrorEnabled
-            {
-                get { return IsEnabled(LogLevel.Error); }
-            }
-
-            internal override bool IsFatalEnabled
-            {
-                get { return IsEnabled(LogLevel.Fatal); }
-            }
-
-            internal override bool IsEnabled(LogLevel level)
-            {
-                return _levels.IsEnabled(level);
-            }
-
-            #endregion
-
-            [OnDeserializing]
-            private void BeforeDeserialization(StreamingContext context)
-            {
-                _formatter = FileNameFormatter.Default;
-            }
-        }
     }
 }
