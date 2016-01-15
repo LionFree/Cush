@@ -18,151 +18,154 @@
 
     <SolidColorBrush x:Key="HotPinColor" Color="White" />
 
-    <Style TargetType="ListBoxItem" x:Key="ContainerStyle">
-        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-        <Setter Property="Background" Value="Transparent" />
-    </Style>
+    
+    <ControlTemplate x:Key="MRUFileMenuTemplateKey" TargetType="{x:Type controls:MRUFileMenu}">
+        <ControlTemplate.Resources>
+            <Style TargetType="ListBoxItem" x:Key="ContainerStyle">
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                <Setter Property="Background" Value="Transparent" />
+            </Style>
 
-    <Style TargetType="ListBoxItem" x:Key="PinnedItemContainerStyle">
-        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Visibility" Value="{Binding Pinned, Converter={StaticResource BooleanToVisibilityConverter}}" />
-    </Style>
-    <Style TargetType="ListBoxItem" x:Key="UnpinnedItemContainerStyle">
-        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Visibility"
+            <Style TargetType="ListBoxItem" x:Key="PinnedItemContainerStyle">
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="Visibility" Value="{Binding Pinned, Converter={StaticResource BooleanToVisibilityConverter}}" />
+            </Style>
+            <Style TargetType="ListBoxItem" x:Key="UnpinnedItemContainerStyle">
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="Visibility"
                 Value="{Binding Pinned, Converter={StaticResource UnpinnedToVisibilityConverter}}" />
-    </Style>
+            </Style>
 
 
-    <Style TargetType="{x:Type Button}" x:Key="OpenOtherButtonStyle">
-        <Setter Property="HorizontalContentAlignment" Value="Left" />
-        <Setter Property="Padding" Value="10" />
-        <Setter Property="FontSize" Value="11" />
-        <Setter Property="Background" Value="#D5D5D5" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type Button}">
-                    <Grid Margin="3">
-                        <Border x:Name="PART_Border"
+            <Style TargetType="{x:Type Button}" x:Key="OpenOtherButtonStyle">
+                <Setter Property="HorizontalContentAlignment" Value="Left" />
+                <Setter Property="Padding" Value="10" />
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="Background" Value="#D5D5D5" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Grid Margin="3">
+                                <Border x:Name="PART_Border"
                                 Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 Padding="{TemplateBinding Padding}" />
 
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                            <Rectangle Width="18" Height="15" Margin="5 5">
-                                <Rectangle.Fill>
-                                    <VisualBrush Stretch="Fill">
-                                        <VisualBrush.Visual>
-                                            <Canvas Width="48" Height="48" Clip="F1 M 0,0L 48,0L 48,48L 0,48L 0,0"
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                    <Rectangle Width="18" Height="15" Margin="5 5">
+                                        <Rectangle.Fill>
+                                            <VisualBrush Stretch="Fill">
+                                                <VisualBrush.Visual>
+                                                    <Canvas Width="48" Height="48" Clip="F1 M 0,0L 48,0L 48,48L 0,48L 0,0"
                                                     UseLayoutRounding="False">
-                                                <Path x:Name="PART_FolderPath" Width="26.5833" Height="19"
+                                                        <Path x:Name="PART_FolderPath" Width="26.5833" Height="19"
                                                       Canvas.Left="13" Canvas.Top="13" Stretch="Fill"
                                                       Fill="{Binding RelativeSource={RelativeSource AncestorType=controls:MRUFileMenu}, Path=ColdForegroundColor}"
                                                       Data="F1 M 16.6668,20L 13,28.5336L 13,16L 23,16L 23,15C 23,13.8954 23.8954,13 25,13L 32,13C 33.1046,13 35,14.8954 35,16L 35,20L 16.6668,20 Z M 35,32L 28,32L 13,32L 17.5833,21L 39.5833,21L 35,32 Z " />
-                                            </Canvas>
-                                        </VisualBrush.Visual>
-                                    </VisualBrush>
-                                </Rectangle.Fill>
-                            </Rectangle>
-                            <TextBlock x:Name="PART_Text" Margin="5,0,0,0"
+                                                    </Canvas>
+                                                </VisualBrush.Visual>
+                                            </VisualBrush>
+                                        </Rectangle.Fill>
+                                    </Rectangle>
+                                    <TextBlock x:Name="PART_Text" Margin="5,0,0,0"
                                        Text="{Binding RelativeSource={RelativeSource AncestorType={x:Type controls:MRUFileMenu}}, Path=OpenOtherText}"
                                        Foreground="{Binding RelativeSource={RelativeSource AncestorType=controls:MRUFileMenu}, Path=ColdForegroundColor}"
                                        VerticalAlignment="Center" />
-                        </StackPanel>
-                    </Grid>
+                                </StackPanel>
+                            </Grid>
 
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Foreground"
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground"
                                     Value="{Binding RelativeSource={RelativeSource AncestorType=controls:MRUFileMenu}, Path=HotForegroundColor}"
                                     TargetName="PART_Text" />
-                        </Trigger>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsMouseOver" Value="True" />
-                                <Condition Property="IsPressed" Value="True" />
-                            </MultiTrigger.Conditions>
-                            <Setter Property="Background"
+                                </Trigger>
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="IsMouseOver" Value="True" />
+                                        <Condition Property="IsPressed" Value="True" />
+                                    </MultiTrigger.Conditions>
+                                    <Setter Property="Background"
                                     Value="{Binding RelativeSource={RelativeSource AncestorType=controls:MRUFileMenu}, Path=HighlightDarkColor}"
                                     TargetName="PART_Border" />
-                            <Setter Property="Fill"
+                                    <Setter Property="Fill"
                                     Value="{Binding RelativeSource={RelativeSource AncestorType=controls:MRUFileMenu}, Path=HotForegroundColor}"
                                     TargetName="PART_FolderPath" />
-                        </MultiTrigger>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsMouseOver" Value="True" />
-                                <Condition Property="IsPressed" Value="False" />
-                            </MultiTrigger.Conditions>
-                            <Setter Property="Background"
+                                </MultiTrigger>
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="IsMouseOver" Value="True" />
+                                        <Condition Property="IsPressed" Value="False" />
+                                    </MultiTrigger.Conditions>
+                                    <Setter Property="Background"
                                     Value="{Binding RelativeSource={RelativeSource AncestorType=controls:MRUFileMenu}, Path=HotBackgroundColor}"
                                     TargetName="PART_Border" />
-                            <Setter Property="Fill"
+                                    <Setter Property="Fill"
                                     Value="{Binding RelativeSource={RelativeSource AncestorType=controls:MRUFileMenu}, Path=HotForegroundColor}"
                                     TargetName="PART_FolderPath" />
-                        </MultiTrigger>
+                                </MultiTrigger>
 
-                        <Trigger Property="IsEnabled" Value="false">
-                            <Setter Property="Foreground" Value="#7f222222" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-    <Style TargetType="{x:Type DockPanel}" x:Key="MRUEntryDockStyle">
-        <Setter Property="HorizontalAlignment" Value="Stretch" />
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="LastChildFill" Value="True" />
-        <Setter Property="IsHitTestVisible" Value="True" />
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background"
-                        Value="{Binding RelativeSource={RelativeSource AncestorType=controls:MRUFileMenu}, Path=HighlightBackgroundColorBrush}" />
-            </Trigger>
-        </Style.Triggers>
-    </Style>
-    <Style TargetType="TextBlock" x:Key="MRUEntryTextBlockStyle">
-        <Setter Property="Background" Value="Transparent" />
-        <Style.Triggers>
-            <DataTrigger
-                Binding="{Binding RelativeSource={RelativeSource AncestorType=DockPanel}, Path=IsMouseOver}"
-                Value="True">
-                <Setter Property="Foreground"
-                        Value="{Binding RelativeSource={RelativeSource AncestorType=controls:MRUFileMenu}, Path=HighlightForegroundColor}" />
-            </DataTrigger>
-        </Style.Triggers>
-    </Style>
-
-    <Style TargetType="{x:Type Path}" x:Key="BasePinStyle">
-        <Setter Property="Stretch" Value="Fill" />
-        <Setter Property="Width" Value="20.028" />
-        <Setter Property="Height" Value="27.2535" />
-        <Setter Property="Canvas.Left" Value="14.002" />
-        <Setter Property="Canvas.Top" Value="12.0017" />
-    </Style>
-
-    <DataTemplate x:Key="PinnedItemsDataTemplate" DataType="{x:Type fileHandling:MRUEntry}">
-        <DataTemplate.Resources>
-            <Style x:Key="PinnedPathStyle" TargetType="{x:Type Path}" BasedOn="{StaticResource BasePinStyle}">
-                <Setter Property="Data"
-                        Value="F1 M 22.7532,33.0046L 22.7532,29.004L 14.002,29.004C 14.3353,27.6705 14.6687,26.337 15.5022,25.6703C 16.2407,25.0794 17.3719,25.0121 18.5479,25.0045L 19.7528,17.0024C 18.7526,17.0024 18.0025,17.0024 17.3358,16.1689C 16.669,15.3355 16.3356,13.6686 16.0022,12.0017L 32.0045,12.0017C 31.6711,13.6686 31.3377,15.3355 30.6709,16.1689C 30.0042,17.0024 29.254,17.0024 28.2539,17.0024L 29.4588,25.0045C 30.6348,25.0121 31.766,25.0794 32.5045,25.6703C 33.338,26.337 33.6714,27.6705 34.0047,29.004L 25.2536,29.004L 25.2536,33.0046L 24.0033,39.2552L 22.7532,33.0046 Z " />
+                                <Trigger Property="IsEnabled" Value="false">
+                                    <Setter Property="Foreground" Value="#7f222222" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style TargetType="{x:Type DockPanel}" x:Key="MRUEntryDockStyle">
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="LastChildFill" Value="True" />
+                <Setter Property="IsHitTestVisible" Value="True" />
                 <Style.Triggers>
-                    <Trigger Property="DockPanel.IsMouseOver" Value="False">
-                        <Setter Property="Fill"
-                                Value="{Binding Path=HighlightBackgroundColorBrush, RelativeSource={RelativeSource AncestorType=controls:MRUFileMenu}}" />
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background"
+                        Value="{Binding RelativeSource={RelativeSource AncestorType=controls:MRUFileMenu}, Path=HighlightBackgroundColorBrush}" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
-        </DataTemplate.Resources>
+            <Style TargetType="TextBlock" x:Key="MRUEntryTextBlockStyle">
+                <Setter Property="Background" Value="Transparent" />
+                <Style.Triggers>
+                    <DataTrigger
+                Binding="{Binding RelativeSource={RelativeSource AncestorType=DockPanel}, Path=IsMouseOver}"
+                Value="True">
+                        <Setter Property="Foreground"
+                        Value="{Binding RelativeSource={RelativeSource AncestorType=controls:MRUFileMenu}, Path=HighlightForegroundColor}" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
 
-        <DockPanel x:Name="PART_Dock" Style="{StaticResource MRUEntryDockStyle}"
+            <Style TargetType="{x:Type Path}" x:Key="BasePinStyle">
+                <Setter Property="Stretch" Value="Fill" />
+                <Setter Property="Width" Value="20.028" />
+                <Setter Property="Height" Value="27.2535" />
+                <Setter Property="Canvas.Left" Value="14.002" />
+                <Setter Property="Canvas.Top" Value="12.0017" />
+            </Style>
+
+            <DataTemplate x:Key="PinnedItemsDataTemplate" DataType="{x:Type fileHandling:MRUEntry}">
+                <DataTemplate.Resources>
+                    <Style x:Key="PinnedPathStyle" TargetType="{x:Type Path}" BasedOn="{StaticResource BasePinStyle}">
+                        <Setter Property="Data"
+                        Value="F1 M 22.7532,33.0046L 22.7532,29.004L 14.002,29.004C 14.3353,27.6705 14.6687,26.337 15.5022,25.6703C 16.2407,25.0794 17.3719,25.0121 18.5479,25.0045L 19.7528,17.0024C 18.7526,17.0024 18.0025,17.0024 17.3358,16.1689C 16.669,15.3355 16.3356,13.6686 16.0022,12.0017L 32.0045,12.0017C 31.6711,13.6686 31.3377,15.3355 30.6709,16.1689C 30.0042,17.0024 29.254,17.0024 28.2539,17.0024L 29.4588,25.0045C 30.6348,25.0121 31.766,25.0794 32.5045,25.6703C 33.338,26.337 33.6714,27.6705 34.0047,29.004L 25.2536,29.004L 25.2536,33.0046L 24.0033,39.2552L 22.7532,33.0046 Z " />
+                        <Style.Triggers>
+                            <Trigger Property="DockPanel.IsMouseOver" Value="False">
+                                <Setter Property="Fill"
+                                Value="{Binding Path=HighlightBackgroundColorBrush, RelativeSource={RelativeSource AncestorType=controls:MRUFileMenu}}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataTemplate.Resources>
+
+                <DockPanel x:Name="PART_Dock" Style="{StaticResource MRUEntryDockStyle}"
                    Visibility="{Binding Pinned, Converter={StaticResource BooleanToVisibilityConverter}}">
 
-            <!-- The Pin's Border 
+                    <!-- The Pin's Border 
                                 The pin's border is named because the rectangles within don't reliably fire the
                                 click or mousedown events (probably because we're changing the visual on click).  
                                 Forget 'em.  We'll catch the click as it bubbles through the border.
@@ -170,7 +173,7 @@
                                 The width and height are set to prevent rotating the pin icon
                                 from changing the dimensions of the dockpanel.                    
                                 -->
-            <Border x:Name="PART_PinBorder"
+                    <Border x:Name="PART_PinBorder"
                     BorderBrush="Transparent" BorderThickness="1"
                     IsHitTestVisible="True"
                     Background="Transparent"
@@ -180,57 +183,57 @@
                     DockPanel.Dock="Right"
                     Width="20" Height="20">
 
-                <Rectangle x:Name="PART_Pin" IsHitTestVisible="True" Width="9" Height="15">
-                    <Rectangle.Fill>
-                        <VisualBrush Stretch="Fill">
-                            <VisualBrush.Visual>
-                                <Canvas UseLayoutRounding="false">
-                                    <Path
+                        <Rectangle x:Name="PART_Pin" IsHitTestVisible="True" Width="9" Height="15">
+                            <Rectangle.Fill>
+                                <VisualBrush Stretch="Fill">
+                                    <VisualBrush.Visual>
+                                        <Canvas UseLayoutRounding="false">
+                                            <Path
                                         Data="F1 M 22.7532,33.0046L 22.7532,29.004L 14.002,29.004C 14.3353,27.6705 14.6687,26.337 15.5022,25.6703C 16.2407,25.0794 17.3719,25.0121 18.5479,25.0045L 19.7528,17.0024C 18.7526,17.0024 18.0025,17.0024 17.3358,16.1689C 16.669,15.3355 16.3356,13.6686 16.0022,12.0017L 32.0045,12.0017C 31.6711,13.6686 31.3377,15.3355 30.6709,16.1689C 30.0042,17.0024 29.254,17.0024 28.2539,17.0024L 29.4588,25.0045C 30.6348,25.0121 31.766,25.0794 32.5045,25.6703C 33.338,26.337 33.6714,27.6705 34.0047,29.004L 25.2536,29.004L 25.2536,33.0046L 24.0033,39.2552L 22.7532,33.0046 Z ">
-                                        <Path.Style>
-                                            <Style BasedOn="{StaticResource BasePinStyle}" TargetType="{x:Type Path}">
-                                                <Style.Triggers>
-                                                    <DataTrigger
+                                                <Path.Style>
+                                                    <Style BasedOn="{StaticResource BasePinStyle}" TargetType="{x:Type Path}">
+                                                        <Style.Triggers>
+                                                            <DataTrigger
                                                         Binding="{Binding ElementName=PART_Dock, Path=IsMouseOver}"
                                                         Value="True">
-                                                        <Setter Property="Fill"
+                                                                <Setter Property="Fill"
                                                                 Value="{Binding Path=HotForegroundColor, RelativeSource={RelativeSource AncestorType=controls:MRUFileMenu}}" />
-                                                    </DataTrigger>
-                                                    <DataTrigger
+                                                            </DataTrigger>
+                                                            <DataTrigger
                                                         Binding="{Binding ElementName=PART_Dock, Path=IsMouseOver}"
                                                         Value="False">
-                                                        <Setter Property="Fill" Value="{Binding Path=HighlightBackgroundColorBrush, RelativeSource={RelativeSource AncestorType=controls:MRUFileMenu}}" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Path.Style>
-                                    </Path>
-                                </Canvas>
-                            </VisualBrush.Visual>
-                        </VisualBrush>
-                    </Rectangle.Fill>
-                </Rectangle>
+                                                                <Setter Property="Fill" Value="{Binding Path=HighlightBackgroundColorBrush, RelativeSource={RelativeSource AncestorType=controls:MRUFileMenu}}" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Path.Style>
+                                            </Path>
+                                        </Canvas>
+                                    </VisualBrush.Visual>
+                                </VisualBrush>
+                            </Rectangle.Fill>
+                        </Rectangle>
 
-            </Border>
+                    </Border>
 
-            <StackPanel x:Name="PART_StackPanel" DockPanel.Dock="Left" Orientation="Vertical"
+                    <StackPanel x:Name="PART_StackPanel" DockPanel.Dock="Left" Orientation="Vertical"
                         HorizontalAlignment="Stretch"
                         Margin="3,1,5,1">
-                <TextBlock Margin="10,0,5,0" FontSize="14" Text="{Binding Path=FullFileName}"
+                        <TextBlock Margin="10,0,5,0" FontSize="14" Text="{Binding Path=FullFileName}"
                            Style="{StaticResource MRUEntryTextBlockStyle}" />
-                <TextBlock x:Name="PART_Path" Style="{StaticResource MRUEntryTextBlockStyle}"
+                        <TextBlock x:Name="PART_Path" Style="{StaticResource MRUEntryTextBlockStyle}"
                            Margin="10,0,5,5" FontSize="9"
                            Text="{Binding Path=ShortPath}"
                            Visibility="{Binding RelativeSource={RelativeSource AncestorType=controls:MRUFileMenu}, Path=BreadcrumbsVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
-            </StackPanel>
-        </DockPanel>
-    </DataTemplate>
+                    </StackPanel>
+                </DockPanel>
+            </DataTemplate>
 
-    <DataTemplate x:Key="UnpinnedItemsDataTemplate" DataType="{x:Type fileHandling:MRUEntry}">
-        <DockPanel x:Name="PART_Dock" Style="{StaticResource MRUEntryDockStyle}"
+            <DataTemplate x:Key="UnpinnedItemsDataTemplate" DataType="{x:Type fileHandling:MRUEntry}">
+                <DockPanel x:Name="PART_Dock" Style="{StaticResource MRUEntryDockStyle}"
                    Visibility="{Binding Pinned, Converter={StaticResource UnpinnedToVisibilityConverter}}">
 
-            <!-- The Pin's Border 
+                    <!-- The Pin's Border 
                                 The pin's border is named because the rectangles within don't reliably fire the
                                 click or mousedown events (probably because we're changing the visual on click).  
                                 Forget 'em.  We'll catch the click as it bubbles through the border.
@@ -238,7 +241,7 @@
                                 The width and height are set to prevent rotating the pin icon
                                 from changing the dimensions of the dockpanel.                    
                                 -->
-            <Border x:Name="PART_PinBorder"
+                    <Border x:Name="PART_PinBorder"
                     BorderBrush="Transparent" BorderThickness="1"
                     IsHitTestVisible="True"
                     Background="Transparent"
@@ -248,53 +251,53 @@
                     DockPanel.Dock="Right"
                     Width="20" Height="20">
 
-                <Rectangle x:Name="PART_Pin" IsHitTestVisible="True" Width="15" Height="9">
-                    <Rectangle.Fill>
-                        <VisualBrush Stretch="Fill">
-                            <VisualBrush.Visual>
-                                <Canvas UseLayoutRounding="false">
-                                    <Path
+                        <Rectangle x:Name="PART_Pin" IsHitTestVisible="True" Width="15" Height="9">
+                            <Rectangle.Fill>
+                                <VisualBrush Stretch="Fill">
+                                    <VisualBrush.Visual>
+                                        <Canvas UseLayoutRounding="false">
+                                            <Path
                                         Data="F1 M 15.9971,22.7513L 19.9976,22.7512L 19.9976,14C 21.3311,14.3334 22.6647,14.6668 23.3314,15.5002C 23.9223,16.2388 23.9895,17.37 23.9972,18.5459L 31.9993,19.7508C 31.9993,18.7507 31.9993,18.0006 32.8327,17.3338C 33.6662,16.667 35.3331,16.3337 37,16.0003L 37,32.0025C 35.3331,31.6691 33.6662,31.3357 32.8327,30.669C 31.9993,30.0022 31.9993,29.2521 31.9993,28.2519L 23.9972,29.4569C 23.9895,30.6328 23.9223,31.764 23.3314,32.5026C 22.6647,33.336 21.3311,33.6694 19.9976,34.0028L 19.9976,25.2517L 15.9971,25.2517L 9.74651,24.0014L 15.9971,22.7513 Z ">
-                                        <Path.Style>
-                                            <Style BasedOn="{StaticResource BasePinStyle}" TargetType="{x:Type Path}">
-                                                <Style.Triggers>
-                                                    <DataTrigger
+                                                <Path.Style>
+                                                    <Style BasedOn="{StaticResource BasePinStyle}" TargetType="{x:Type Path}">
+                                                        <Style.Triggers>
+                                                            <DataTrigger
                                                         Binding="{Binding ElementName=PART_Dock, Path=IsMouseOver}"
                                                         Value="True">
-                                                        <Setter Property="Fill"
+                                                                <Setter Property="Fill"
                                                                 Value="{Binding Path=HotForegroundColor, RelativeSource={RelativeSource AncestorType=controls:MRUFileMenu}}" />
-                                                    </DataTrigger>
-                                                    <DataTrigger
+                                                            </DataTrigger>
+                                                            <DataTrigger
                                                         Binding="{Binding ElementName=PART_Dock, Path=IsMouseOver}"
                                                         Value="False">
-                                                        <Setter Property="Fill" Value="Transparent" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Path.Style>
-                                    </Path> <!--Style="{StaticResource UnpinnedPathStyle}" />-->
-                                </Canvas>
-                            </VisualBrush.Visual>
-                        </VisualBrush>
-                    </Rectangle.Fill>
-                </Rectangle>
-            </Border>
+                                                                <Setter Property="Fill" Value="Transparent" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Path.Style>
+                                            </Path>
+                                            <!--Style="{StaticResource UnpinnedPathStyle}" />-->
+                                        </Canvas>
+                                    </VisualBrush.Visual>
+                                </VisualBrush>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                    </Border>
 
-            <StackPanel x:Name="PART_StackPanel" DockPanel.Dock="Left" Orientation="Vertical"
+                    <StackPanel x:Name="PART_StackPanel" DockPanel.Dock="Left" Orientation="Vertical"
                         HorizontalAlignment="Stretch"
                         Margin="3,1,5,1">
-                <TextBlock Margin="10,0,5,0" FontSize="14" Text="{Binding Path=FullFileName}"
+                        <TextBlock Margin="10,0,5,0" FontSize="14" Text="{Binding Path=FullFileName}"
                            Style="{StaticResource MRUEntryTextBlockStyle}" />
-                <TextBlock x:Name="PART_Path" Style="{StaticResource MRUEntryTextBlockStyle}"
+                        <TextBlock x:Name="PART_Path" Style="{StaticResource MRUEntryTextBlockStyle}"
                            Margin="10,0,5,5" FontSize="9"
                            Text="{Binding Path=ShortPath}"
                            Visibility="{Binding RelativeSource={RelativeSource AncestorType=controls:MRUFileMenu}, Path=BreadcrumbsVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
-            </StackPanel>
-        </DockPanel>
-    </DataTemplate>
+                    </StackPanel>
+                </DockPanel>
+            </DataTemplate>
 
-    <ControlTemplate x:Key="MRUFileMenuTemplateKey" TargetType="{x:Type controls:MRUFileMenu}">
-        <ControlTemplate.Resources>
+
             <Style TargetType="ContextMenu" BasedOn="{StaticResource CushContextMenuStyle}" />
             <Style TargetType="MenuItem" BasedOn="{StaticResource CushMenuItemStyle}" />
             <Style TargetType="Separator" BasedOn="{StaticResource CushSeparatorStyle}" />
