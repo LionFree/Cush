@@ -11,9 +11,7 @@
     <AssemblyName>Cush.Windows.Services</AssemblyName>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
-  
   <Import Project="$(SolutionDir)Build.props" Condition="Exists('$(SolutionDir)Build.props')" />
-  
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Configuration.Install" />
@@ -45,6 +43,7 @@
     <Compile Include="ServiceHarness.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="WindowsServiceDescription.cs" />
     <Compile Include="WindowsServiceInstaller.cs" />
     <Compile Include="Internal\WindowsServiceManager.cs" />
   </ItemGroup>
