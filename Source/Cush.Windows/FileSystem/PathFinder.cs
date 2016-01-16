@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Cush.ResourceSystem;
 using Cush.Common.Exceptions;
+using Cush.Common.ResourceSystem;
 
 namespace Cush.Windows.FileSystem
 {
@@ -20,7 +20,7 @@ namespace Cush.Windows.FileSystem
             return _helper.UriExists(path, isLocation);
         }
         
-        public List<string> GetExistingPathsFromList(IList<string> possiblePaths, bool isFolder,
+        public List<string> GetExistingPathsFromList(string basePath, IList<string> possiblePaths, bool isFolder,
             bool mostRecent)
         {
             ThrowHelper.IfNullThenThrow(() => possiblePaths);
@@ -29,7 +29,7 @@ namespace Cush.Windows.FileSystem
 
             var output = new List<string>();
 
-            var getter = _helper.GetExistingPaths(isFolder, mostRecent);
+            var getter = _helper.GetExistingPaths(basePath, isFolder, mostRecent);
 
             foreach (var pathToFind in possiblePaths)
             {
@@ -40,7 +40,7 @@ namespace Cush.Windows.FileSystem
             return output;
         }
 
-        public string GetPathFromURI(string uriString)
+        public string GetPathFromUri(string uriString)
         {
             Uri result;
             var success = Uri.TryCreate(uriString, UriKind.Absolute, out result);
@@ -54,7 +54,7 @@ namespace Cush.Windows.FileSystem
                 return new PfhImplementation(resourceSystem);
             }
 
-            internal abstract Func<string, IEnumerable<string>> GetExistingPaths(bool isFolder, bool mostRecent);
+            internal abstract Func<string, IEnumerable<string>> GetExistingPaths(string location, bool isFolder, bool mostRecent);
 
             internal abstract bool UriExists(string path, bool isLocation = false);
             
@@ -67,17 +67,17 @@ namespace Cush.Windows.FileSystem
                     _resourceSystem = resourceSystem;
                 }
 
-                internal override Func<string, IEnumerable<string>> GetExistingPaths(bool isFolder, bool mostRecent)
+                internal override Func<string, IEnumerable<string>> GetExistingPaths(string location, bool isFolder, bool mostRecent)
                 {
                     if (isFolder)
                         return
                             searchPattern =>
-                                _resourceSystem.GetLocations(searchPattern)
+                                _resourceSystem.GetLocations(location, searchPattern)
                                     .Select(i => i.FullName);
 
                     return
                         searchPattern =>
-                            _resourceSystem.GetResources(searchPattern, mostRecent).Select(i => i.FullName);
+                            _resourceSystem.GetResources(location, searchPattern, mostRecent).Select(i => i.FullName);
                 }
 
                 internal override bool UriExists(string path, bool isLocation = false)

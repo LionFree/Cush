@@ -68,10 +68,6 @@
       <Project>{59bfb945-62f7-4675-a9e4-a5577efd7ec8}</Project>
       <Name>Cush.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Cush.ResourceSystem\Cush.ResourceSystem.csproj">
-      <Project>{3eb32dc2-cb47-4c4c-b1cc-91e9104de4a5}</Project>
-      <Name>Cush.ResourceSystem</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Strings.resx">

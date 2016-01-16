@@ -17,9 +17,7 @@
     <IsCodedUITest>False</IsCodedUITest>
     <TestProjectType>UnitTest</TestProjectType>
   </PropertyGroup>
-  
   <Import Project="$(SolutionDir)Build.props" Condition="Exists('$(SolutionDir)Build.props')" />
-  
   <ItemGroup>
     <Reference Include="nunit.framework, Version=3.0.5797.27534, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NUnit.3.0.0\lib\net45\nunit.framework.dll</HintPath>
@@ -42,9 +40,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Cush.ResourceSystem\Cush.ResourceSystem.csproj">
-      <Project>{3eb32dc2-cb47-4c4c-b1cc-91e9104de4a5}</Project>
-      <Name>Cush.ResourceSystem</Name>
+    <ProjectReference Include="..\..\Cush.Common\Cush.Common.csproj">
+      <Project>{59bfb945-62f7-4675-a9e4-a5577efd7ec8}</Project>
+      <Name>Cush.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Cush.Testing\Cush.Testing.csproj">
       <Project>{02f5f73a-82f2-4930-bdd0-2007c1a0dcbd}</Project>
@@ -77,5 +75,4 @@
     </When>
   </Choose>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
-  
 </Project>

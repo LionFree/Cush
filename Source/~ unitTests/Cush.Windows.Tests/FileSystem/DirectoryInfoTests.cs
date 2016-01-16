@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using Cush.ResourceSystem;
+using Cush.Common.ResourceSystem;
 using Cush.Windows.FileSystem;
 using NUnit.Framework;
 

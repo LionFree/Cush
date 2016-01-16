@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using Cush.ResourceSystem;
+using Cush.Common.ResourceSystem;
 
 namespace Cush.Windows.FileSystem
 {

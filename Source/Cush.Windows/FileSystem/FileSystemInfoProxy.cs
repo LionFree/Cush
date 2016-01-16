@@ -2,7 +2,7 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Security;
-using Cush.ResourceSystem;
+using Cush.Common.ResourceSystem;
 
 namespace Cush.Windows.FileSystem
 {
