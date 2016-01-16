@@ -81,7 +81,7 @@ namespace Cush.Common
         ///     that support <see cref="CallerMemberNameAttribute" />.
         /// </param>
         [NotifyPropertyChangedInvocator]
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        public void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             OnPropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
