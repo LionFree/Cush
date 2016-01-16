@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Security;
 
-namespace Cush.ResourceSystem
+namespace Cush.Common.ResourceSystem
 {
+    [SecuritySafeCritical]
     public interface ILocationInfo : IResourceSystemInfo, IEquatable<ILocationInfo>
     {
         /// <summary>
@@ -12,7 +13,7 @@ namespace Cush.ResourceSystem
         ///     The parent directory, or null if the path is null or if the file path denotes a root (such as "\", "C:", or *
         ///     "\\server\share").
         /// </returns>
-        ILocationInfo Parent { [SecuritySafeCritical] get; }
+        ILocationInfo Parent { get; }
 
         /// <summary>
         ///     Gets the root portion of a path.
@@ -41,7 +42,6 @@ namespace Cush.ResourceSystem
         /// <param name="recursive">
         ///     true to delete this location and all child entities; otherwise, false.
         /// </param>
-        [SecuritySafeCritical]
         void Delete(bool recursive);
 
         /// <summary>

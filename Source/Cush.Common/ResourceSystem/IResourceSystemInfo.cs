@@ -3,7 +3,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Security;
 
-namespace Cush.ResourceSystem
+namespace Cush.Common.ResourceSystem
 {
     [CLSCompliant(true)]
     public interface IResourceSystemInfo

@@ -1,4 +1,4 @@
-﻿namespace Cush.ResourceSystem
+﻿namespace Cush.Common.ResourceSystem
 {
     public interface IResourceSystemFactory
     {

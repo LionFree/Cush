@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 
-namespace Cush.ResourceSystem
+namespace Cush.Common.ResourceSystem
 {
     public interface IPathFinder
     {
-        List<string> GetExistingPathsFromList(IList<string> possiblePaths,
+        List<string> GetExistingPathsFromList(string basePath, IList<string> possiblePaths,
             bool isLocation,
             bool mostRecent);
 
-        string GetPathFromURI(string uriString);
+        string GetPathFromUri(string uriString);
         bool UriExists(string uriPath, bool isLocation);
     }
 }

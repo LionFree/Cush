@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Security;
 
-namespace Cush.ResourceSystem
+namespace Cush.Common.ResourceSystem
 {
     /// <summary>
     ///     Exposes instance methods for creating, moving, and enumerating through locations and resources.
@@ -81,71 +81,49 @@ namespace Cush.ResourceSystem
         /// <summary>
         ///     Searches through a list of possible resource URIs, and returns a list of URIs to existing resources.
         /// </summary>
-        IList<string> GetExistingResourcesFromList(IList<string> possiblePaths);
+        IList<string> GetExistingResourcesFromList(string baseLocation, IList<string> possiblePaths);
 
         /// <summary>
         ///     Searches through a list of possible location URIs, and returns a list of URIs to existing locations.
         /// </summary>
-        IList<string> GetExistingLocationsFromList(IList<string> possibleLocations);
+        IList<string> GetExistingLocationsFromList(string baseLocation, IList<string> possibleLocations);
 
         /// <summary>
         ///     Searches through a list of possible resource URIs, and returns the URI of the first existing resource found.
         /// </summary>
-        string GetExistingResourceFromList(IList<string> possibleResources);
+        string GetExistingResourceFromList(string baseLocation, IList<string> possibleResources);
 
         /// <summary>
         ///     Searches through a list of possible location URIs, and returns the URI of the first existing location found.
         /// </summary>
-        string GetExistingLocationFromList(IList<string> possibleLocations);
+        string GetExistingLocationFromList(string baseLocation, IList<string> possibleLocations);
 
         /// <summary>
         ///     Searches through a list of possible resource URIs, and returns a list of URIs to the most recently modified
         ///     resources.
         /// </summary>
-        IList<string> GetMostRecentlyModifiedResourcesFromList(IList<string> possibleResources);
+        IList<string> GetMostRecentlyModifiedResourcesFromList(string baseLocation, IList<string> possibleResources);
 
         /// <summary>
         ///     Searches through a list of possible resource URIs, and returns the URI to the most recently modified resource.
         /// </summary>
-        string GetMostRecentlyModifiedResourceFromList(IList<string> possiblePaths);
+        string GetMostRecentlyModifiedResourceFromList(string baseLocation, IList<string> possiblePaths);
 
         /// <summary>
         ///     Searches for all resources with the given search pattern.
         /// </summary>
         /// <returns>An array of <see cref="T:IResourceInfo" />s representing any found resources.</returns>
-        IResourceInfo[] GetResources(string searchPattern);
-
-        /// <summary>
-        ///     Searches for all resources with the given search pattern.
-        /// </summary>
-        /// <returns>An array of <see cref="T:IResourceInfo" />s representing any found resources.</returns>
-        IResourceInfo[] GetResources(string searchPattern, bool mostRecent);
+        IResourceInfo[] GetResources(string location, string searchPattern, bool mostRecent = false);
 
         /// <summary>
         ///     Searches for all locations with the given search pattern.
         /// </summary>
         /// <returns>An array of <see cref="T:ILocationInfo" />s representing any found locations.</returns>
-        ILocationInfo[] GetLocations(string searchPattern);
+        ILocationInfo[] GetLocations(string baseLocation, string searchPattern);
+
+        /// <summary>
+        ///     Returns the <see cref="IResourceInfo"/> for the specified resource.
+        /// </summary>
+        IResourceInfo GetResourceInfo(string resource);
     }
-
-    ///// <summary>
-    /////     Exposes instance methods for creating, moving, and enumerating through locations and resources.
-    ///// </summary>
-    //[ComVisible(true)]
-    //[SecuritySafeCritical]
-    //public interface IResourceSystem<out T>
-    //{
-    //    /// <summary>
-    //    ///     Searches for all resources with the given search pattern.
-    //    /// </summary>
-    //    /// <returns>An array of <see cref="T:IResourceInfo" />s representing any found resources.</returns>
-    //    IResourceInfo<T>[] GetResources(string searchPattern);
-
-    //    /// <summary>
-    //    ///     Searches for all resources with the given search pattern.
-    //    /// </summary>
-    //    /// <returns>An array of <see cref="T:IResourceInfo" />s representing any found resources.</returns>
-    //    IResourceInfo<T>[] GetResources(string searchPattern, bool mostRecent);
-
-    //}
 }

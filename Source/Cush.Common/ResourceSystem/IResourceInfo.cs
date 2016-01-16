@@ -1,12 +1,14 @@
 ﻿using System.IO;
+using System.Security;
 using JetBrains.Annotations;
 
-namespace Cush.ResourceSystem
+namespace Cush.Common.ResourceSystem
 {
     /// <summary>
     ///     Provides instance methods for the creation, copying, deletion,
     ///     moving, and opening of files, and aids in the creation of objects.
     /// </summary>
+    [SecuritySafeCritical]
     public interface IResourceInfo : IResourceSystemInfo
     {
         /// <summary>
