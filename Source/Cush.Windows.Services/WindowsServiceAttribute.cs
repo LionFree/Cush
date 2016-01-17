@@ -46,13 +46,7 @@ namespace Cush.Windows.Services
         ///     A text description of the service name (defaults to Name).
         /// </summary>
         public string Description { get; set; }
-
-        /// <summary>
-        ///     The endpoint suffix, from the following format
-        ///     http://(server name):(port)/(ENDPOINT SUFFIX)
-        /// </summary>
-        public string EndpointSuffix { get; set; }
-
+        
         /// <summary>
         ///     The user to run the service under (defaults to null).  A null or empty
         ///     UserName field causes the service to run as ServiceAccount.LocalService.

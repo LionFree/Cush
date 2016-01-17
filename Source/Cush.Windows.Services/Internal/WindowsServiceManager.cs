@@ -17,24 +17,19 @@ namespace Cush.Windows.Services.Internal
         {
             private readonly IAssembly _assembly;
             private readonly IConsoleHarness _console;
-            private readonly ServiceControllerProxy _controller;
+            private ServiceControllerProxy _controller;
             private readonly ManagedInstallerProxy _installerProxy;
             private bool _quiet;
             private string _serviceName;
             private bool _silent;
             private bool _logToConsole;
 
-            public Implementation(ServiceMetadata metadata,
-                IConsoleHarness console,
-                IAssembly assembly,
-                ManagedInstallerProxy installerProxy,
-                ServiceControllerProxy controller)
+
+            public Implementation(IConsoleHarness console, IAssembly assembly, ManagedInstallerProxy installer)
             {
                 _assembly = assembly;
-                _controller = controller;
                 _console = console;
-                _installerProxy = installerProxy;
-                SetMetadata(metadata);
+                _installerProxy = installer;
             }
 
             public override ServiceControllerStatus? Status
@@ -59,11 +54,17 @@ namespace Cush.Windows.Services.Internal
                 set { _logToConsole = value; }
             }
 
+            internal override void SetController(ServiceControllerProxy controller)
+            {
+                _controller = controller;
+            }
+
             public override void SetMetadata(ServiceMetadata metadata)
             {
                 _quiet = metadata.Quiet;
                 _silent = metadata.Silent;
                 _serviceName = metadata.ServiceName;
+                SetController(ServiceControllerProxy.GetInstance(metadata.ServiceName));
             }
 
             public override bool Install()
@@ -303,11 +304,7 @@ namespace Cush.Windows.Services.Internal
             private static bool IsAlreadyInstalled(Exception ex)
             {
                 var inEx = ex.InnerException as Win32Exception;
-                if (inEx != null)
-                {
-                    return inEx.ErrorCode == -2147467259;
-                }
-                return false;
+                return inEx?.ErrorCode == -2147467259;
             }
 
             [DebuggerStepThrough]
@@ -412,24 +409,19 @@ namespace Cush.Windows.Services.Internal
 
         #region Factory Methods
 
-        internal static WindowsServiceManager GetInstance(ServiceMetadata metadata,
-            IConsoleHarness harness)
+        internal static WindowsServiceManager GetInstance(IConsoleHarness harness)
         {
-            return GetInstance(metadata,
-                harness,
+            return GetInstance(harness,
                 AssemblyProxy.Default,
-                ManagedInstallerProxy.Default,
-                ServiceControllerProxy.GetInstance(metadata.ServiceName));
+                ManagedInstallerProxy.Default);
         }
 
         internal static WindowsServiceManager GetInstance(
-            ServiceMetadata metadata,
             IConsoleHarness harness,
             IAssembly assembly,
-            ManagedInstallerProxy installerProxy,
-            ServiceControllerProxy controller)
+            ManagedInstallerProxy installerProxy)
         {
-            return new Implementation(metadata, harness, assembly, installerProxy, controller);
+            return new Implementation(harness, assembly, installerProxy);
         }
 
         #endregion
@@ -485,7 +477,10 @@ namespace Cush.Windows.Services.Internal
         public abstract bool LogToConsole { get; set; }
 
         public abstract void SetMetadata(ServiceMetadata metadata);
-        
+        internal abstract void SetController(ServiceControllerProxy controller);
+
         #endregion
+
+
     }
 }

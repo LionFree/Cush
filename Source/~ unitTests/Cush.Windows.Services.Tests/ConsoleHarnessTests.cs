@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using Cush.Common.Logging;
+using Moq;
 using NUnit.Framework;
 
 namespace Cush.Windows.Services.Tests
@@ -10,7 +11,7 @@ namespace Cush.Windows.Services.Tests
         public void Run()
         {
             var runned = false;
-            var service = new TestService();
+            var service = new TestService(Loggers.Trace);
             var thing = new Mock<IConsoleHarness>();
             thing.Setup(m => m.Run(It.IsAny<string[]>(), It.IsAny<WindowsService>())).Callback(() => { runned = true; });
 

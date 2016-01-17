@@ -10,7 +10,9 @@ namespace Cush.TestHarness.WinService.Infrastructure
         [STAThread]
         private static void Main(string[] args)
         {
-            ServiceProgram.ComposeObjectGraph().Startup(args);
+            var inst = new ServiceInstaller();
+
+            Engine.ComposeObjectGraph().Start(args);
         }
     }
 }

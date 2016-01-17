@@ -1,7 +1,11 @@
 ﻿using Cush.Common.Exceptions;
 using System;
+using System.Diagnostics;
 using System.Globalization;
+using System.Reflection;
+using System.Runtime.ExceptionServices;
 using System.ServiceProcess;
+using System.Threading;
 
 
 namespace Cush.Windows.Services
@@ -12,6 +16,13 @@ namespace Cush.Windows.Services
     /// </summary>
     public abstract class WindowsServiceInstaller
     {
+        private static readonly ConsoleHarness Harness;
+
+        static WindowsServiceInstaller()
+        {
+            Harness = new ConsoleHarness();
+        }
+
         /// <summary>
         ///     Installs a class that extends <see cref="T:System.ServiceProcess.ServiceBase" /> to implement a service.
         ///     This class is called by installation utilities, such as InstallUtil.exe, when installing a service application.
@@ -37,26 +48,61 @@ namespace Cush.Windows.Services
             return new ServiceInstallerImplementation<T>(service);
         }
 
+        public static WindowsServiceInstaller WrapService<T>(Delegate constructor, params object[] args) where T : WindowsService
+        {
+            ThrowHelper.IfNullThenThrow(()=>constructor);
+            T result;
+
+            try
+            {
+                result = (T)constructor.DynamicInvoke(args);
+                if (result == null)
+                {
+                    throw new InvalidOperationException(string.Format("EXCEPTION_CouldNotGetInstance",
+                        typeof (T).Name));
+                }
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex);
+                throw;
+            }
+            return WrapService(result);
+        }
+
+
+
+        private static void HandleException(Exception ex)
+        {
+            Harness.WriteLine();
+            Harness.WriteToConsole(ConsoleColor.Yellow, ex.InnerException.GetType().FullName);
+            Harness.WriteToConsole(ConsoleColor.Yellow, ex.InnerException.Message);
+            Harness.WriteToConsole(ConsoleColor.Yellow,
+                ex.InnerException.GetHashCode().ToString(CultureInfo.InvariantCulture));
+            Harness.WriteToConsole(ConsoleColor.Yellow, ex.StackTrace);
+        }
+
+        private static WindowsServiceAttribute GetAttribute(WindowsService service)
+        {
+            var attribute = service.GetType().GetAttribute<WindowsServiceAttribute>();
+            ThrowHelper.IfNullThenThrowArgumentException(() => attribute,
+                Strings.EXCEPTION_ServiceMustBeMarkedWithAttribute);
+            return attribute;
+        }
+
         private class ServiceInstallerImplementation<T> : WindowsServiceInstaller where T : WindowsService
         {
             private readonly WindowsServiceAttribute _configuration;
-            private readonly ConsoleHarness _harness;
-            private readonly ServiceInstaller _serviceInstaller;
-            private readonly ServiceProcessInstaller _serviceProcessInstaller;
+            
             // Creates a windows service installer using the type specified.
             public ServiceInstallerImplementation(T service)
             {
-                var attribute = service.GetType().GetAttribute<WindowsServiceAttribute>();
-                ThrowHelper.IfNullThenThrowArgumentException(() => attribute,
-                    Strings.EXCEPTION_ServiceMustBeMarkedWithAttribute);
-                _configuration = attribute;
-
-                _harness = new ConsoleHarness();
-
+                _configuration = GetAttribute(service);
+                
                 try
                 {
-                    _serviceInstaller = ConfigureServiceInstaller();
-                    _serviceProcessInstaller = ConfigureProcessInstaller();
+                    ServiceInstaller = ConfigureServiceInstaller();
+                    ProcessInstaller = ConfigureProcessInstaller();
                 }
                 catch (Exception ex)
                 {
@@ -64,25 +110,11 @@ namespace Cush.Windows.Services
                 }
             }
 
-            public override ServiceInstaller ServiceInstaller
-            {
-                get { return _serviceInstaller; }
-            }
+            public override ServiceInstaller ServiceInstaller { get; }
 
-            public override ServiceProcessInstaller ProcessInstaller
-            {
-                get { return _serviceProcessInstaller; }
-            }
+            public override ServiceProcessInstaller ProcessInstaller { get; }
 
-            private void HandleException(Exception ex)
-            {
-                _harness.WriteLine();
-                _harness.WriteToConsole(ConsoleColor.Yellow, ex.InnerException.GetType().FullName);
-                _harness.WriteToConsole(ConsoleColor.Yellow, ex.InnerException.Message);
-                _harness.WriteToConsole(ConsoleColor.Yellow,
-                    ex.InnerException.GetHashCode().ToString(CultureInfo.InvariantCulture));
-            }
-
+            
             // Helper method to configure a process installer for this windows service
             private ServiceProcessInstaller ConfigureProcessInstaller()
             {

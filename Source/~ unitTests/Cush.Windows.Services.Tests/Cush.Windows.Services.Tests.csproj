@@ -16,11 +16,8 @@
     <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
     <IsCodedUITest>False</IsCodedUITest>
     <TestProjectType>UnitTest</TestProjectType>
-	
   </PropertyGroup>
-
   <Import Project="$(SolutionDir)Build.props" Condition="Exists('$(SolutionDir)Build.props')" />
-  
   <ItemGroup>
     <Reference Include="Moq">
       <HintPath>..\..\packages\Moq.4.2.1502.0911\lib\net40\Moq.dll</HintPath>
@@ -49,6 +46,10 @@
       <Project>{5939c465-1d8e-4fc4-89ae-b0626fa938ca}</Project>
       <Name>Cush.CommandLine</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Cush.Common\Cush.Common.csproj">
+      <Project>{59bfb945-62f7-4675-a9e4-a5577efd7ec8}</Project>
+      <Name>Cush.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Cush.Windows.Services\Cush.Windows.Services.csproj">
       <Project>{a2bfe50d-7c6d-4d64-8e9d-5f0490020748}</Project>
       <Name>Cush.Windows.Services</Name>
@@ -76,5 +77,4 @@
     </When>
   </Choose>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
-
 </Project>

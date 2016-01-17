@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 
 namespace Cush.Common
@@ -28,10 +29,15 @@ namespace Cush.Common
                 var path = Path.GetFullPath(folderName);
                 return true;
             }
+            catch (ArgumentException)
+            {
+                // The path is not of a legal form.
+            }
             catch (Exception)
             {
-                return false;
+                // Other unknown error.
             }
+            return false;
         }
     }
 }

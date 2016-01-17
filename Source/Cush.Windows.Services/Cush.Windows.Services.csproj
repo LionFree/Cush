@@ -21,11 +21,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleHarness.cs" />
+    <Compile Include="HostBuilder.cs" />
+    <Compile Include="HostFactory.cs" />
+    <Compile Include="Interfaces\IHostEventResponder.cs" />
     <Compile Include="Interfaces\IServiceWrapper.cs" />
+    <Compile Include="Internal\ServiceAttributeReader.cs" />
+    <Compile Include="ServiceCustomCommands.cs" />
     <Compile Include="Internal\ManagedInstallerProxy.cs" />
     <Compile Include="Internal\ServiceControllerProxy.cs" />
     <Compile Include="WindowsServiceAttribute.cs" />
-    <Compile Include="REST\HostBuilder.cs" />
+    <Compile Include="REST\RestHostBuilder.cs" />
     <Compile Include="REST\HostBuilderExtensions.cs" />
     <Compile Include="Interfaces\IConsoleHarness.cs" />
     <Compile Include="ServiceMetadata.cs" />

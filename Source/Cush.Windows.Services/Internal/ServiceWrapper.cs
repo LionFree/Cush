@@ -1,6 +1,6 @@
 ﻿namespace Cush.Windows.Services.Internal
 {
-    internal abstract class ServiceWrapper : IServiceWrapper
+    public abstract class ServiceWrapper : IServiceWrapper
     {
         public static ServiceWrapper Default
         {

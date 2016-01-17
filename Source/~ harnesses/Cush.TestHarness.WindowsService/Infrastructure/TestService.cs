@@ -1,26 +1,37 @@
 ﻿using System;
 using System.ServiceModel;
+using Cush.Common.Logging;
 using Cush.Windows.Services;
 
 namespace Cush.TestHarness.WinService.Infrastructure
 {
     [Serializable]
     [WindowsService("Cush Service Program")]
-    internal abstract class ServiceProgram : WindowsService
+    internal abstract class TestService : WindowsService
     {
-        internal static ServiceProgram ComposeObjectGraph()
+        protected TestService(ILogger logger) : base(logger)
         {
-            return new ProgramImpl(new ServiceHost(typeof (ServiceProgram), new Uri("localhost")));
         }
 
-        private class ProgramImpl : ServiceProgram
+        /// <summary>
+        ///     Creates a new instance of the <see cref="TestService" />.
+        ///     Used by the service Installer.
+        /// </summary>
+        internal static TestService GetInstance(ILogger logger, ServiceHost host)
         {
-            public ProgramImpl(ServiceHost host)
+            return new Implementation(logger, host);
+        }
+
+        private class Implementation : TestService
+        {
+            public Implementation(ILogger logger, ServiceHost host):base(logger)
             {
+                _logger = logger;
                 _serviceHost = host;
             }
 
             private readonly ServiceHost _serviceHost;
+            private readonly ILogger _logger;
 
             public override void OnStart(string[] args)
             {
@@ -40,7 +51,8 @@ namespace Cush.TestHarness.WinService.Infrastructure
 
             public override void OnStop()
             {
-                throw new NotImplementedException();
+                // Do nothing.
+                // Shutdown.
             }
 
             public override void OnCustomCommand(int command)

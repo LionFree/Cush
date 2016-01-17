@@ -192,4 +192,7 @@
   <data name="Noun_YesKey" xml:space="preserve">
     <value>Y</value>
   </data>
+  <data name="EXCEPTION_ServiceDescriptionNeedsTypeOrObject" xml:space="preserve">
+    <value>Service description needs type or object.</value>
+  </data>
 </root>

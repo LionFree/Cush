@@ -5,7 +5,7 @@ namespace Cush.Windows.Services.Internal
 {
     internal abstract class ServiceControllerProxy
     {
-        public abstract ServiceControllerStatus Status { get; }
+        public abstract ServiceControllerStatus? Status { get; }
         public abstract bool CanStop { get; }
 
         public static ServiceControllerProxy GetInstance(string serviceName)
@@ -28,13 +28,13 @@ namespace Cush.Windows.Services.Internal
                 _serviceName = serviceName;
             }
 
-            public override ServiceControllerStatus Status
+            public override ServiceControllerStatus? Status
             {
                 get
                 {
                     using (var sc = new ServiceController(_serviceName))
                     {
-                        return sc.Status;
+                        return sc?.Status;
                     }
                 }
             }

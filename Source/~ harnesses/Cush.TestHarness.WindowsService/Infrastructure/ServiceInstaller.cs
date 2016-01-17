@@ -12,7 +12,8 @@ namespace Cush.TestHarness.WinService.Infrastructure
         // creates a blank windows service installer with configuration in MonitorWindowsService
         public ServiceInstaller()
         {
-            var installers = WindowsServiceInstaller.WrapService(ServiceProgram.ComposeObjectGraph());
+            var service = Engine.ComposeService();
+            var installers = WindowsServiceInstaller.WrapService(service);
             Installers.Add(installers.ServiceInstaller);
             Installers.Add(installers.ProcessInstaller);
         }

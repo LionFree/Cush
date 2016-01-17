@@ -2,7 +2,7 @@
 
 namespace Cush.Windows.Services
 {
-    public static class HostBuilder
+    public static class RestHostBuilder
     {
         private static readonly WebServiceBuilder Builder = WebServiceBuilder.GetInstance();
 

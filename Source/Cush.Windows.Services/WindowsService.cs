@@ -12,55 +12,45 @@ namespace Cush.Windows.Services
     public abstract class WindowsService : IDisposable
     {
         private readonly IAssembly _assembly;
-        private readonly IConsoleHarness _console;
         private readonly bool _interactive;
         private readonly WindowsServiceManager _manager;
         private readonly ServiceMetadata _metadata;
         protected readonly ICommandLineParser CommandLineParser;
-        protected readonly WindowsServiceAttribute Configuration;
         protected readonly ServiceHarness Harness;
         protected readonly ILogger Logger;
 
-        protected WindowsService()
-            : this(Environment.UserInteractive,
-                ServiceWrapper.Default,
-                new NullLogger(),
-                new ConsoleHarness(),
-                AssemblyProxy.Default,
-                new ServiceMetadata())
+        public event EventHandler Started;
+        public event EventHandler Stopped;
+
+        protected WindowsService(ILogger logger)
+            : this(Environment.UserInteractive, ServiceWrapper.Default, logger, new ConsoleHarness(), AssemblyProxy.Default,
+                new ServiceAttributeReader(logger))
         {
         }
 
-        protected WindowsService(bool interactive, IServiceWrapper wrapper, ILogger logger,
-            IConsoleHarness console, IAssembly assembly,
-            ServiceMetadata metadata)
-            : this(
-                interactive, wrapper, logger, new Parser("Test", "Test", true, console, assembly), console, assembly,
-                metadata,
-                WindowsServiceManager.GetInstance(metadata, console))
+        private WindowsService(bool interactive, IServiceWrapper wrapper, ILogger logger,
+            IConsoleHarness console, IAssembly assembly, ServiceAttributeReader reader)
+            : this(interactive, wrapper, logger, new Parser("Test", "Test", true, console, assembly), console, assembly, 
+                  reader, WindowsServiceManager.GetInstance(console))
         {
         }
 
-        protected WindowsService(bool interactive, IServiceWrapper wrapper, ILogger logger,
-            ICommandLineParser parser, IConsoleHarness console, IAssembly assembly,
-            ServiceMetadata metadata, WindowsServiceManager manager)
+        private WindowsService(bool interactive, IServiceWrapper wrapper, ILogger logger,
+            ICommandLineParser parser, IConsoleHarness console, IAssembly assembly, 
+            ServiceAttributeReader reader, WindowsServiceManager manager)
         {
-            var attribute = GetType().GetAttribute<WindowsServiceAttribute>();
-            if (attribute == null)
-            {
-                logger.Error(Strings.EXCEPTION_ServiceMustBeMarkedWithAttribute);
-                throw new ArgumentException(Strings.EXCEPTION_ServiceMustBeMarkedWithAttribute);
-            }
-
             Logger = logger;
+            _metadata = reader.GetMetadata(this);
+
             _interactive = interactive;
-            Configuration = attribute;
             _assembly = assembly;
-            _console = console;
-            _metadata = metadata;
+            Console = console;
             _manager = manager;
+            _manager.SetMetadata(_metadata);
 
             CommandLineParser = parser
+                .SetApplicationName(reader.GetAttribute(this).DisplayName)
+                .SetDescription(reader.GetAttribute(this).Description)
                 .AddOption("quiet", "q", "Enable quiet mode. Will display only errors on the console.",
                     noArgs => _metadata.Quiet = true)
                 .AddOption("silent", "si", "Enable silent mode. Will display nothing (not even errors) on the console.",
@@ -78,7 +68,7 @@ namespace Cush.Windows.Services
 
             Harness = wrapper.WrapService(this);
         }
-
+        
         /// <summary>
         ///     Gets the date and time of the last time the assembly was compiled.
         /// </summary>
@@ -95,18 +85,12 @@ namespace Cush.Windows.Services
         /// <summary>
         ///     The name of the service.
         /// </summary>
-        public string ServiceName
-        {
-            get { return Configuration.ServiceName; }
-        }
+        public string ServiceName => _metadata.ServiceName;
 
         /// <summary>
         ///     A harness to which console output is directed.
         /// </summary>
-        public IConsoleHarness Console
-        {
-            get { return _console; }
-        }
+        public IConsoleHarness Console { get; }
 
         /// <summary>
         ///     Performs application-defined tasks associated with
@@ -132,12 +116,12 @@ namespace Cush.Windows.Services
         ///     This method is called when the service gets a request to start.
         /// </summary>
         public abstract void OnStart(string[] args);
-
+        
         /// <summary>
         ///     This method is called when the service gets a request to stop.
         /// </summary>
         public abstract void OnStop();
-
+        
         /// <summary>
         ///     This method is called when the service gets a request to execute a custom command.
         /// </summary>
@@ -189,10 +173,7 @@ namespace Cush.Windows.Services
             _manager.SetMetadata(new ServiceMetadata
             {
                 Service = this,
-                ServiceName = Configuration.ServiceName,
-                EventLogName = Configuration.EventLogName,
-                EventLogSource = Configuration.EventLogSource,
-                LongDescription = Configuration.Description,
+                ServiceName = _metadata.ServiceName,
                 Quiet = _metadata.Quiet,
                 Silent = _metadata.Silent
             });
