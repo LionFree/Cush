@@ -53,5 +53,9 @@ namespace Cush.CommandLine
         ///     If no arguments are sent, displays the Usage information.
         /// </summary>
         Parser Parse(string args);
+
+        Parser SetApplicationName(string applicationName);
+
+        Parser SetDescription(string description);
     }
 }

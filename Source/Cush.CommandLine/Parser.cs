@@ -140,6 +140,20 @@ namespace Cush.CommandLine
             return this;
         }
 
+
+        public Parser SetApplicationName(string applicationName)
+        {
+            _versionFinder.UpdateApplicationName(applicationName);
+            return this;
+        }
+
+        public Parser SetDescription(string description)
+        {
+            _usageBuilder.UpdateDescription(description);
+            return this;
+        }
+
+
         /// <summary>
         ///     Adds (or replaces) a method to handle passed switches and parameters.
         /// </summary>

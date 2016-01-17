@@ -15,7 +15,7 @@ namespace Cush.CommandLine.Internal
 
         private class VersionFinderImpl : VersionFinder
         {
-            private readonly string _appName;
+            private string _appName;
             private readonly IBuildInfo _info;
 
             internal VersionFinderImpl(string appName, IBuildInfo info)
@@ -32,6 +32,13 @@ namespace Cush.CommandLine.Internal
                     ? string.Format(Environment.NewLine + "{0}", _appName) 
                     : string.Format(Environment.NewLine + "{0} [Version {1}]", _appName, ver);
             }
+
+            public override void UpdateApplicationName(string applicationName)
+            {
+                _appName = applicationName;
+            }
         }
+
+        public abstract void UpdateApplicationName(string applicationName);
     }
 }

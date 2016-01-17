@@ -10,17 +10,17 @@ namespace Cush.CommandLine.Internal
     {
         public static CommandLineUsageBuilder GetInstance(string applicationDescription)
         {
-            return new CLIUsageImplementation(applicationDescription, new[] { "-", "--", "/" });
+            return new CliUsageImplementation(applicationDescription, new[] { "-", "--", "/" });
         }
 
         public abstract string GetUsage(IEnumerable<CommandLineOption> options);
 
-        private sealed class CLIUsageImplementation : CommandLineUsageBuilder
+        private sealed class CliUsageImplementation : CommandLineUsageBuilder
         {
-            private readonly string _applicationDescription;
+            private string _applicationDescription;
             private readonly IList<string> _switchCharacters;
 
-            public CLIUsageImplementation(string applicationDescription, IList<string> switchCharacters)
+            public CliUsageImplementation(string applicationDescription, IList<string> switchCharacters)
             {
                 _applicationDescription = applicationDescription;
                 _switchCharacters = switchCharacters;
@@ -187,6 +187,13 @@ namespace Cush.CommandLine.Internal
                 
                 return text.ToString();
             }
+
+            public override void UpdateDescription(string description)
+            {
+                _applicationDescription = description;
+            }
         }
+
+        public abstract void UpdateDescription(string description);
     }
 }
