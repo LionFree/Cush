@@ -178,6 +178,15 @@ namespace Cush.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Logger configured..
+        /// </summary>
+        public static string INFO_LoggerConfigured {
+            get {
+                return ResourceManager.GetString("INFO_LoggerConfigured", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to =============================================================================================================.
         /// </summary>
         public static string logDivider {

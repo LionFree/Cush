@@ -686,5 +686,13 @@ namespace Cush.Common.Logging
         void Fatal(bool logEvent, Exception exception, [Localizable(false)] string message, params object[] args);
 
         #endregion
+
+        /// <summary>
+        ///     Sets the logger configuration.
+        /// </summary>
+        /// <param name="configuration">
+        ///     The <see cref="LogConfiguration" /> to use.
+        /// </param>
+        ILogger Configure(LogConfiguration configuration);
     }
 }

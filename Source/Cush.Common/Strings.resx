@@ -190,4 +190,7 @@
     <value>{0:zzz}</value>
     <comment>FileNameFormattingOption.UTCOffset</comment>
   </data>
+  <data name="INFO_LoggerConfigured" xml:space="preserve">
+    <value>Logger configured.</value>
+  </data>
 </root>

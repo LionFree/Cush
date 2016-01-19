@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
@@ -9,6 +8,10 @@ using System.Runtime.Serialization;
 using Cush.Common.Annotations;
 using Cush.Common.Exceptions;
 using Cush.Common.Helpers;
+// ReSharper disable MemberCanBeProtected.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMethodReturnValue.Global
+// ReSharper disable UnusedMember.Global
 
 //#pragma warning disable 1685
 
@@ -17,11 +20,6 @@ namespace Cush.Common
     /// <summary>
     ///     Implementation of <see cref="INotifyPropertyChanged" /> to simplify models.
     /// </summary>
-    [SuppressMessage("ReSharper", "UnusedMember.Global")]
-    [SuppressMessage("ReSharper", "ExplicitCallerInfoArgument")]
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-    [SuppressMessage("ReSharper", "DelegateSubtraction")]
-    [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")]
     [DataContract, Serializable, DebuggerStepThrough]
     public abstract class PropertyChangedBase : INotifyPropertyChanged
     {

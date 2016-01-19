@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using Cush.Common.Exceptions;
 
 namespace Cush.Common.Logging
 {
@@ -24,6 +25,19 @@ namespace Cush.Common.Logging
                 EventLog.CreateEventSource(eventSourceName, eventLogName);
         }
 
+
+        /// <summary>
+        ///     Sets the logger configuration.
+        /// </summary>
+        /// <param name="configuration">
+        ///     The <see cref="LogConfiguration" /> to use.
+        /// </param>
+        public ILogger Configure(LogConfiguration configuration)
+        {
+            ThrowHelper.IfNullThenThrow(() => configuration);
+            Log.Configuration = configuration;
+            return this;
+        }
 
 
         #region Passthrough Overrides
@@ -686,6 +700,7 @@ namespace Cush.Common.Logging
             WriteEntry(logEvent, LogLevel.Fatal, EventLogEntryType.Error, exception, message, args);
         }
 
+        
 
         #endregion
 
