@@ -22,6 +22,17 @@ namespace Cush.Windows.Services
         public event EventHandler Started;
         public event EventHandler Stopped;
 
+        protected virtual void OnStarted(EventArgs e=null)
+        {
+            Started?.Invoke(this, e ?? new EventArgs());
+        }
+
+        protected virtual void OnStopped(EventArgs e = null)
+        {
+            Stopped?.Invoke(this, e ?? new EventArgs());
+        }
+
+
         protected WindowsService(ILogger logger)
             : this(Environment.UserInteractive, ServiceWrapper.Default, logger, new ConsoleHarness(), AssemblyProxy.Default,
                 new ServiceAttributeReader(logger))
