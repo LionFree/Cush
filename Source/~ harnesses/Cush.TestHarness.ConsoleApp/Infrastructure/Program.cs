@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using Cush.CommandLine;
 using Cush.Common;
 using Cush.Windows;
+using Cush.Windows.FileSystem;
 using Cush.Windows.SingleInstance;
 
 namespace Cush.TestHarness.ConsoleApp.Infrastructure
@@ -50,10 +52,23 @@ namespace Cush.TestHarness.ConsoleApp.Infrastructure
             {
                 try
                 {
-                    const string special = "Special Notes!";
-                    const string appName = "The Pimpy App";
-                    var parser = new Parser(appName, "Test the command line.", true, _console, _buildInfo, special);
-                    parser.Parse(args);
+                    var env = new EnvironmentProxy();
+                    var fs = new FileSystem();
+                    var result = @"C:\Development\ServiceSentry\Design\Archive\20141221\ServiceSentry\Source\ServiceSentry.Model\Communication\IAgentService.cs";
+
+                    var pathGetFileName = Path.GetFileName(result);
+                    var getfilename = fs.GetResourceInfo(result).Name;
+
+                    var location1 = Path.GetDirectoryName(result);
+                    var location2 = fs.GetLocationInfo(result).Parent.FullName;
+
+                    Trace.WriteLine($"{location1} ?= {location2}");
+
+
+                    //const string special = "Special Notes!";
+                    //const string appName = "The Pimpy App";
+                    //var parser = new Parser(appName, "Test the command line.", true, _console, _buildInfo, special);
+                    //parser.Parse(args);
 
 
                     //var bList = new BoundedList<string>(5);
@@ -85,7 +100,7 @@ namespace Cush.TestHarness.ConsoleApp.Infrastructure
 
         public void InitializeAndRun(params string[] args)
         {
-            throw new NotImplementedException();
+            Start(args);
         }
 
         public abstract void Start(params string[] args);
