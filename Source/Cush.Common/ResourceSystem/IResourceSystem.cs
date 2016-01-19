@@ -125,5 +125,10 @@ namespace Cush.Common.ResourceSystem
         ///     Returns the <see cref="IResourceInfo"/> for the specified resource.
         /// </summary>
         IResourceInfo GetResourceInfo(string resource);
+
+        /// <summary>
+        ///     Returns the <see cref="ILocationInfo"/> for the specified resource.
+        /// </summary>
+        ILocationInfo GetLocationInfo(string resource);
     }
 }
