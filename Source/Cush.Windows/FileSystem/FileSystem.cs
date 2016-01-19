@@ -18,51 +18,28 @@ namespace Cush.Windows.FileSystem
     public sealed class FileSystem : IResourceSystem
     {
         private readonly FileSystemFactory _factory;
+        private readonly ILogger _logger;
         private readonly IPathFinder _pathFinder;
         private readonly IProcessStarter _starter;
-        private readonly ILogger _logger;
-        
+
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:FileSystem" /> class on the specified path.
+        ///     Initializes a new instance of the <see cref="T:FileSystem" />.
         /// </summary>
-        /// <param name="path">A string specifying the path on which to create the DirectoryInfo. </param>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="path" /> is null. </exception>
-        /// <exception cref="T:System.ArgumentException"><paramref name="path" /> is an empty string. </exception>
         /// <exception cref="T:System.Security.SecurityException">The caller does not have the required permission. </exception>
-        /// <exception cref="T:System.ArgumentException">
-        ///     <paramref name="path" /> contains invalid characters such as ", &lt;, &gt;
-        ///     , or |.
-        /// </exception>
-        /// <exception cref="T:System.IO.PathTooLongException">
-        ///     The specified path, file name, or both exceed the system-defined
-        ///     maximum length. For example, on Windows-based platforms, paths must be less than 248 characters, and file names
-        ///     must be less than 260 characters. The specified path, file name, or both are too long.
-        /// </exception>
         [DebuggerStepThrough]
         public FileSystem() : this(Loggers.Null)
         {
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:FileSystem" /> class on the specified path, 
-        /// using the specified logger.
+        ///     Initializes a new instance of the <see cref="T:FileSystem" /> class on the specified path,
+        ///     using the specified logger.
         /// </summary>
-        /// <param name="path">A string specifying the path on which to create the DirectoryInfo. </param>
-        /// <param name="logger">The <see cref="ILogger"/> to use.</param>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="path" /> is null. </exception>
-        /// <exception cref="T:System.ArgumentException"><paramref name="path" /> is an empty string. </exception>
+        /// <param name="logger">The <see cref="ILogger" /> to use.</param>
         /// <exception cref="T:System.Security.SecurityException">The caller does not have the required permission. </exception>
-        /// <exception cref="T:System.ArgumentException">
-        ///     <paramref name="path" /> contains invalid characters such as ", &lt;, &gt;
-        ///     , or |.
-        /// </exception>
-        /// <exception cref="T:System.IO.PathTooLongException">
-        ///     The specified path, file name, or both exceed the system-defined
-        ///     maximum length. For example, on Windows-based platforms, paths must be less than 248 characters, and file names
-        ///     must be less than 260 characters. The specified path, file name, or both are too long.
-        /// </exception>
         [DebuggerStepThrough]
-        public FileSystem(ILogger logger) : this(logger, new FileSystemFactory(), new ProcessStarter())
+        public FileSystem(ILogger logger)
+            : this(logger, new FileSystemFactory(), new ProcessStarter())
         {
         }
 
@@ -71,21 +48,9 @@ namespace Cush.Windows.FileSystem
         ///     logger and factory.
         /// </summary>
         /// <param name="starter">The <see cref="T:IProcessStarter" /> to use to open a resource or location.</param>
-        /// <param name="path">A string specifying the path on which to create the DirectoryInfo. </param>
-        /// <param name="logger">The <see cref="ILogger"/> to use.</param>
+        /// <param name="logger">The <see cref="ILogger" /> to use.</param>
         /// <param name="factory">The <see cref="T:IResourceSystemFactory" /> to use.</param>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="path" /> is null. </exception>
-        /// <exception cref="T:System.ArgumentException"><paramref name="path" /> is an empty string. </exception>
         /// <exception cref="T:System.Security.SecurityException">The caller does not have the required permission. </exception>
-        /// <exception cref="T:System.ArgumentException">
-        ///     <paramref name="path" /> contains invalid characters such as ", &lt;, &gt;
-        ///     , or |.
-        /// </exception>
-        /// <exception cref="T:System.IO.PathTooLongException">
-        ///     The specified path, file name, or both exceed the system-defined
-        ///     maximum length. For example, on Windows-based platforms, paths must be less than 248 characters, and file names
-        ///     must be less than 260 characters. The specified path, file name, or both are too long.
-        /// </exception>
         [DebuggerStepThrough]
         internal FileSystem(ILogger logger, FileSystemFactory factory, IProcessStarter starter)
         {
@@ -245,7 +210,7 @@ namespace Cush.Windows.FileSystem
             return (output.Count == 0) ? string.Empty : output[0];
         }
 
-       
+
         /// <summary>
         ///     Searches for all files with the given search pattern.
         /// </summary>
@@ -267,6 +232,18 @@ namespace Cush.Windows.FileSystem
             return output;
         }
 
+        /// <summary>
+        ///     Returns the <see cref="ILocationInfo" /> for the specified resource.
+        /// </summary>
+        public ILocationInfo GetLocationInfo(string resource)
+        {
+            return _factory.LocationInfo(resource);
+        }
+
+
+        /// <summary>
+        ///     Returns the <see cref="IResourceInfo" /> for the specified resource.
+        /// </summary>
         public IResourceInfo GetResourceInfo(string resource)
         {
             return _factory.ResourceInfo(resource);
@@ -281,12 +258,5 @@ namespace Cush.Windows.FileSystem
             if (string.IsNullOrEmpty(searchPattern)) searchPattern = "*";
             return _factory.LocationInfo(baseLocation).GetLocations(searchPattern);
         }
-
-        //public void SetLocation(string newPath)
-        //{
-        //    if (newPath == null) return;
-        //    _path = newPath;
-        //}
-
     }
 }

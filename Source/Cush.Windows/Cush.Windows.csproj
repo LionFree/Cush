@@ -29,6 +29,7 @@
     <Compile Include="Assemblies\AssemblyProxy.cs" />
     <Compile Include="Assemblies\IAssembly.cs" />
     <Compile Include="FileSystem\DirectoryInfoProxy.cs" />
+    <Compile Include="FileSystem\EnvironmentProxy.cs" />
     <Compile Include="FileSystem\FileInfoProxy.cs" />
     <Compile Include="FileSystem\FileSystem.cs" />
     <Compile Include="FileSystem\FileSystemFactory.cs" />
