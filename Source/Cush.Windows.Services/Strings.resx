@@ -121,11 +121,9 @@
     <value>EXCEPTION: {0}</value>
     <comment>0 = exception.Message</comment>
   </data>
-  <data name="EXCEPTION_IWindowsServiceCannotBeNull" xml:space="preserve">
-    <value>IWindowsService cannot be null in call to WindowsServiceHarness.GetInstance().</value>
-  </data>
   <data name="EXCEPTION_ServiceMustBeMarkedWithAttribute" xml:space="preserve">
-    <value>Types deriving from the WindowsService class must be decorated with a WindowsServiceAttribute.</value>
+    <value>Types deriving from the WindowsService class (such as {0}) must be decorated with a WindowsServiceAttribute.</value>
+    <comment>{0} = WindowsService implementer</comment>
   </data>
   <data name="INFO_Done" xml:space="preserve">
     <value>Done.</value>
@@ -194,5 +192,92 @@
   </data>
   <data name="EXCEPTION_ServiceDescriptionNeedsTypeOrObject" xml:space="preserve">
     <value>Service description needs type or object.</value>
+  </data>
+  <data name="Error_CannotOpenHost" xml:space="preserve">
+    <value>Cannot open the service host for {0}.</value>
+    <comment>0 = endpoint</comment>
+  </data>
+  <data name="Error_CannotOpenHost_AccessDenied" xml:space="preserve">
+    <value>Cannot open the service host for {0}.  The address reports access denied.</value>
+    <comment>0 = endpoint</comment>
+  </data>
+  <data name="Error_CannotOpenHost_AddressInUse" xml:space="preserve">
+    <value>Cannot open the service host for {0}.  The address is already in use.</value>
+    <comment>0 = endpoint</comment>
+  </data>
+  <data name="INFO_ServiceStopped" xml:space="preserve">
+    <value>Service stopped.</value>
+  </data>
+  <data name="INFO_ServicePaused" xml:space="preserve">
+    <value>{0} paused.</value>
+    <comment>{0} = service name</comment>
+  </data>
+  <data name="INFO_ServiceResumed" xml:space="preserve">
+    <value>{0} resumed.</value>
+    <comment>{0} = service name</comment>
+  </data>
+  <data name="DEBUG_BadKey" xml:space="preserve">
+    <value>Sorry, I did not understand that input! Try again.</value>
+  </data>
+  <data name="DEBUG_Cush" xml:space="preserve">
+    <value>Cush</value>
+  </data>
+  <data name="DEBUG_EndpointHeader" xml:space="preserve">
+    <value>  {0}</value>
+    <comment>{0} = endpoint address</comment>
+  </data>
+  <data name="DEBUG_EndpointHeaderPlural" xml:space="preserve">
+    <value>Endpoints:</value>
+  </data>
+  <data name="DEBUG_EndpointHeaderSingular" xml:space="preserve">
+    <value>Endpoint:</value>
+  </data>
+  <data name="DEBUG_EnterPauseResumeOrQuit" xml:space="preserve">
+    <value>Enter [P]ause, [R]esume, or [Q]uit :</value>
+  </data>
+  <data name="DEBUG_PausingService" xml:space="preserve">
+    <value>Pausing {0}.</value>
+    <comment>{0} = serviceName</comment>
+  </data>
+  <data name="DEBUG_ResumingService" xml:space="preserve">
+    <value>{0} resuming.</value>
+    <comment>{0} = serviceName</comment>
+  </data>
+  <data name="DEBUG_ServiceNameAndBuildDate" xml:space="preserve">
+    <value>{0} :built {1}</value>
+    <comment>{0} = serviceName, {1} = buildDate</comment>
+  </data>
+  <data name="DEBUG_ServiceStarted" xml:space="preserve">
+    <value>Service started.</value>
+  </data>
+  <data name="DEBUG_ServiceStopped" xml:space="preserve">
+    <value>{0} stopped.  Shutting down.</value>
+    <comment>{0} = serviceName</comment>
+  </data>
+  <data name="DEBUG_ServiceStopping" xml:space="preserve">
+    <value>{0} stopping...</value>
+    <comment>{0} = serviceName</comment>
+  </data>
+  <data name="DEBUG_StartingService" xml:space="preserve">
+    <value>{0} starting.</value>
+    <comment>{0} = serviceName</comment>
+  </data>
+  <data name="INFO_PausedForDebugger" xml:space="preserve">
+    <value>Paused. Attach debugger to process, then press Enter to continue.</value>
+  </data>
+  <data name="KEY_Pause" xml:space="preserve">
+    <value>P</value>
+    <comment>The Key to pause the service on.
+(see DEBUG_EnterPauseResumeOrQuit)</comment>
+  </data>
+  <data name="KEY_Quit" xml:space="preserve">
+    <value>Q</value>
+    <comment>The key to Quit the service on. 
+(see DEBUG_EnterPauseResumeOrQuit)</comment>
+  </data>
+  <data name="KEY_Resume" xml:space="preserve">
+    <value>R</value>
+    <comment>The key to Resume the service on. 
+(see DEBUG_EnterPauseResumeOrQuit)</comment>
   </data>
 </root>

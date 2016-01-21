@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Cush.Common.Logging;
 
 namespace Cush.Windows.Services.Internal
@@ -21,8 +17,9 @@ namespace Cush.Windows.Services.Internal
             var attribute = service.GetType().GetAttribute<WindowsServiceAttribute>();
             if (attribute != null) return attribute;
 
-            _logger.Error(Strings.EXCEPTION_ServiceMustBeMarkedWithAttribute);
-            throw new ArgumentException(Strings.EXCEPTION_ServiceMustBeMarkedWithAttribute);
+            _logger.Error(Strings.EXCEPTION_ServiceMustBeMarkedWithAttribute, service.GetType().FullName);
+            throw new ArgumentException(string.Format(Strings.EXCEPTION_ServiceMustBeMarkedWithAttribute,
+                service.GetType().FullName));
         }
 
         internal ServiceMetadata GetMetadata(WindowsService service)
@@ -31,12 +28,8 @@ namespace Cush.Windows.Services.Internal
             return new ServiceMetadata
             {
                 Service = service,
-                //EventLogName = attribute.EventLogName,
-                //EventLogSource = attribute.EventLogSource,
-                //LongDescription = attribute.Description,
                 Quiet = false,
                 ServiceName = attribute.ServiceName,
-                //DisplayName = attribute.DisplayName,
                 Silent = false
             };
         }

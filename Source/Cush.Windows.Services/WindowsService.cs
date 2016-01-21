@@ -1,14 +1,21 @@
 ﻿using System;
 using System.Linq;
+using System.ServiceModel;
 using Cush.CommandLine;
 using Cush.Common.Logging;
 using Cush.Windows.Services.Internal;
+// ReSharper disable MemberCanBeProtected.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable VirtualMemberNeverOverriden.Global
+// ReSharper disable UnusedMember.Global
+// ReSharper disable EventNeverSubscribedTo.Global
 
 namespace Cush.Windows.Services
 {
     /// <summary>
     ///     An interface for defining Windows services.
     /// </summary>
+    [Serializable]
     public abstract class WindowsService : IDisposable
     {
         private readonly IAssembly _assembly;
@@ -18,11 +25,13 @@ namespace Cush.Windows.Services
         protected readonly ICommandLineParser CommandLineParser;
         protected readonly ServiceHarness Harness;
         protected readonly ILogger Logger;
+        protected ServiceHost Host;
+        private readonly HostFactory _hostFactory;
 
         public event EventHandler Started;
         public event EventHandler Stopped;
 
-        protected virtual void OnStarted(EventArgs e=null)
+        protected virtual void OnStarted(EventArgs e = null)
         {
             Started?.Invoke(this, e ?? new EventArgs());
         }
@@ -32,23 +41,33 @@ namespace Cush.Windows.Services
             Stopped?.Invoke(this, e ?? new EventArgs());
         }
 
+        protected void BuildHost(WindowsServiceDescription description)
+        {
+            Host?.Close();
+            Host = _hostFactory.GetNewServiceHost(description);
+        }
 
         protected WindowsService(ILogger logger)
-            : this(Environment.UserInteractive, ServiceWrapper.Default, logger, new ConsoleHarness(), AssemblyProxy.Default,
-                new ServiceAttributeReader(logger))
+            : this(logger, new WideOpenAuthorizationManager())
+        {
+        }
+
+        protected WindowsService(ILogger logger, ServiceAuthorizationManager authManager)
+            : this(Environment.UserInteractive, ServiceWrapper.Default, logger, ConsoleHarness.Default, AssemblyProxy.Default,
+                new ServiceAttributeReader(logger), HostFactory.GetInstance(logger, HostBuilder.GetInstance(logger, authManager)))
         {
         }
 
         private WindowsService(bool interactive, IServiceWrapper wrapper, ILogger logger,
-            IConsoleHarness console, IAssembly assembly, ServiceAttributeReader reader)
-            : this(interactive, wrapper, logger, new Parser("Test", "Test", true, console, assembly), console, assembly, 
-                  reader, WindowsServiceManager.GetInstance(console))
+            IConsoleHarness console, IAssembly assembly, ServiceAttributeReader reader, HostFactory factory)
+            : this(interactive, wrapper, logger, new Parser(Strings.DEBUG_Cush, string.Empty, true, console, assembly), console, assembly, 
+                  reader, WindowsServiceManager.GetInstance(console), factory)
         {
         }
 
         private WindowsService(bool interactive, IServiceWrapper wrapper, ILogger logger,
             ICommandLineParser parser, IConsoleHarness console, IAssembly assembly, 
-            ServiceAttributeReader reader, WindowsServiceManager manager)
+            ServiceAttributeReader reader, WindowsServiceManager manager, HostFactory hostFactory)
         {
             Logger = logger;
             _metadata = reader.GetMetadata(this);
@@ -58,6 +77,7 @@ namespace Cush.Windows.Services
             Console = console;
             _manager = manager;
             _manager.SetMetadata(_metadata);
+            _hostFactory = hostFactory;
 
             CommandLineParser = parser
                 .SetApplicationName(reader.GetAttribute(this).DisplayName)
@@ -83,15 +103,12 @@ namespace Cush.Windows.Services
         /// <summary>
         ///     Gets the date and time of the last time the assembly was compiled.
         /// </summary>
-        public virtual string BuildDate
-        {
-            get { return _assembly.BuildDate; }
-        }
+        public virtual string BuildDate => _assembly.BuildDate;
 
         /// <summary>
-        ///     The endpoint address of the service.
+        ///     The endpoint addresses of the service.
         /// </summary>
-        public string Endpoint { get; set; }
+        public string[] Endpoints => Host?.Description?.Endpoints?.Select(item => item.Address.ToString()).ToArray();
 
         /// <summary>
         ///     The name of the service.
@@ -115,24 +132,91 @@ namespace Cush.Windows.Services
         {
             var args = Environment.GetCommandLineArgs().Skip(1).ToArray();
 
-            Console.WriteLine();
-            Console.WriteLine("Paused.  Attach to process, then press Enter to continue.");
-            Console.WriteLine();
+            Console.WriteLine(Environment.NewLine);
+            Console.WriteLine(Strings.INFO_PausedForDebugger);
+            Console.WriteLine(Environment.NewLine);
             Console.ReadLine();
 
-            if (args.Length > 0) Console.Run(args, _metadata.Service);
+            if (args.Length > 0) Console.Run(_metadata.Service, args);
         }
 
         /// <summary>
         ///     This method is called when the service gets a request to start.
         /// </summary>
-        public abstract void OnStart(string[] args);
-        
+        public virtual void OnStart(string[] args)
+        {
+            // Open the ServiceHostBase to create listeners and start 
+            // listening for messages.
+            try
+            {
+                Logger.Info(Strings.DEBUG_StartingService, ServiceName);
+                Host.Open();
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex);
+            }
+            OnStarted(EventArgs.Empty);
+        }
+
         /// <summary>
         ///     This method is called when the service gets a request to stop.
         /// </summary>
-        public abstract void OnStop();
-        
+        public virtual void OnStop()
+        {
+            Logger.Info(Strings.INFO_StoppingService, ServiceName);
+            Console.WriteLine(Strings.INFO_StoppingService, ServiceName);
+            if (Host == null) return;
+
+            try
+            {
+                Host.Close();
+                Host = null;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+                Console.WriteLine(ConsoleColor.Red, Strings.EXCEPTION_HeaderWithMessage, ex.Message);
+            }
+            OnStopped(EventArgs.Empty);
+            Console.WriteLine(Strings.INFO_ServiceStopped);
+        }
+
+        private void HandleException(Exception ex)
+        {
+            if (ex is AddressAlreadyInUseException)
+            {
+                Logger.Error(ex, Strings.Error_CannotOpenHost_AddressInUse,
+                    ServiceName);
+
+                Console.WriteToConsole(ConsoleColor.White,
+                    Strings.Error_CannotOpenHost_AddressInUse,
+                    ServiceName);
+            }
+            else if (ex is AddressAccessDeniedException)
+            {
+                Logger.Error(ex, Strings.Error_CannotOpenHost_AccessDenied,
+                    ServiceName);
+
+                Console.WriteToConsole(ConsoleColor.White,
+                    Strings.Error_CannotOpenHost_AccessDenied,
+                    ServiceName);
+            }
+            else
+            {
+                Logger.Error(ex, Strings.Error_CannotOpenHost,
+                    ServiceName);
+
+                Console.WriteToConsole(ConsoleColor.White,
+                    Strings.Error_CannotOpenHost,
+                    ServiceName);
+                Console.WriteToConsole(ConsoleColor.White, Strings.EXCEPTION_HeaderWithMessage, ex.Message);
+            }
+
+            if (ex.InnerException == null) return;
+            Console.WriteLine(ex.InnerException.Message);
+        }
+
         /// <summary>
         ///     This method is called when the service gets a request to execute a custom command.
         /// </summary>
@@ -144,13 +228,15 @@ namespace Cush.Windows.Services
         /// </summary>
         public virtual void OnPause()
         {
+            Logger.Info(Strings.INFO_ServicePaused, ServiceName);
         }
-
+        
         /// <summary>
         ///     This method is called when a service gets a request to resume
         /// </summary>
         public virtual void OnContinue()
         {
+            Logger.Info(Strings.INFO_ServiceResumed, ServiceName);
         }
 
         /// <summary>

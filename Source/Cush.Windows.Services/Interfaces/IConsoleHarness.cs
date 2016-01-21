@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using Cush.CommandLine;
+using JetBrains.Annotations;
 
 namespace Cush.Windows.Services
 {
@@ -12,11 +13,11 @@ namespace Cush.Windows.Services
         /// <summary>
         ///     Runs a service from the console given a service implementation.
         /// </summary>
-        /// <param name="args">The command line arguments to pass to the service.</param>
         /// <param name="service">
         ///     The <see cref="WindowsService" /> implementation to start.
         /// </param>
-        void Run(string[] args, WindowsService service);
+        /// <param name="args">The command line arguments to pass to the service.</param>
+        void Run([NotNull] WindowsService service, string[] args);
 
         /// <summary>
         ///     Helper method to write a message to the console at the given foreground color.

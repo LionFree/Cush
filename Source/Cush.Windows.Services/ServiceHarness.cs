@@ -1,6 +1,6 @@
-﻿using Cush.Common.Exceptions;
-using System;
+﻿using System;
 using System.ServiceProcess;
+using JetBrains.Annotations;
 
 
 namespace Cush.Windows.Services
@@ -24,13 +24,10 @@ namespace Cush.Windows.Services
         {
             private readonly WindowsService _service;
 
-            internal ServiceHarnessImplementation(WindowsService service)
+            internal ServiceHarnessImplementation([NotNull] WindowsService service)
             {
-                ThrowHelper.IfNullThenThrowArgumentException(() => service,
-                    Strings.EXCEPTION_IWindowsServiceCannotBeNull);
                 _service = service;
-
-                ConfigureServiceFromAttributes(service);
+                ConfigureServiceFromAttributes(_service);
             }
 
             private void ConfigureServiceFromAttributes(WindowsService service)
@@ -58,8 +55,8 @@ namespace Cush.Windows.Services
                 }
                 else
                 {
-                    throw new InvalidOperationException(
-                        string.Format("WindowsService implementer {0} must have a WindowsServiceAttribute.",
+                    throw new ArgumentException(
+                        string.Format(Strings.EXCEPTION_ServiceMustBeMarkedWithAttribute,
                             service.GetType().FullName));
                 }
             }

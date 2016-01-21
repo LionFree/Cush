@@ -223,8 +223,8 @@ namespace Cush.CommandLine
         ///     The <see cref="P:System.Console.In" /> property is redirected from
         ///     some stream other than the console.
         /// </exception>
+        /// <param name="intercept">Determines whether to display the pressed key in the console window.  <see langword="true"/> to not display the pressed key, otherwise, <see langword="false"/>.</param>
         /// <filterpriority>1</filterpriority>
-        [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
         [HostProtection(SecurityAction.LinkDemand, UI = true)]
         [DebuggerStepThrough]
         public ConsoleKeyInfo ReadKey(bool intercept)

@@ -38,7 +38,7 @@ namespace Cush.Windows.Services
             {
                 foreach (var item in description.Endpoints)
                 {
-                    var address = GetEndpointUri(item.Binding, item.Port, item.Path);
+                    var address = GetEndpointUri(item.Binding, item.Port, item.Address);
                     var endpoint = host.AddServiceEndpoint(item.Contract, item.Binding, address);
 
                     if (item.Binding is WebHttpBinding)

@@ -13,9 +13,9 @@ namespace Cush.Windows.Services.Tests
             var runned = false;
             var service = new TestService(Loggers.Trace);
             var thing = new Mock<IConsoleHarness>();
-            thing.Setup(m => m.Run(It.IsAny<string[]>(), It.IsAny<WindowsService>())).Callback(() => { runned = true; });
+            thing.Setup(m => m.Run(It.IsAny<WindowsService>(), It.IsAny<string[]>())).Callback(() => { runned = true; });
 
-            thing.Object.Run(new[] {"asdf"}, service);
+            thing.Object.Run(service, new[] { "asdf" });
 
             Assert.IsTrue(runned);
 

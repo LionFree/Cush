@@ -1,12 +1,7 @@
-﻿using Cush.Common.Exceptions;
-using System;
-using System.Diagnostics;
+﻿using System;
 using System.Globalization;
-using System.Reflection;
-using System.Runtime.ExceptionServices;
 using System.ServiceProcess;
-using System.Threading;
-
+using Cush.Common.Exceptions;
 
 namespace Cush.Windows.Services
 {
@@ -20,7 +15,7 @@ namespace Cush.Windows.Services
 
         static WindowsServiceInstaller()
         {
-            Harness = new ConsoleHarness();
+            Harness = ConsoleHarness.Default;
         }
 
         /// <summary>
@@ -47,31 +42,7 @@ namespace Cush.Windows.Services
         {
             return new ServiceInstallerImplementation<T>(service);
         }
-
-        public static WindowsServiceInstaller WrapService<T>(Delegate constructor, params object[] args) where T : WindowsService
-        {
-            ThrowHelper.IfNullThenThrow(()=>constructor);
-            T result;
-
-            try
-            {
-                result = (T)constructor.DynamicInvoke(args);
-                if (result == null)
-                {
-                    throw new InvalidOperationException(string.Format("EXCEPTION_CouldNotGetInstance",
-                        typeof (T).Name));
-                }
-            }
-            catch (Exception ex)
-            {
-                HandleException(ex);
-                throw;
-            }
-            return WrapService(result);
-        }
-
-
-
+        
         private static void HandleException(Exception ex)
         {
             Harness.WriteLine();
@@ -93,12 +64,12 @@ namespace Cush.Windows.Services
         private class ServiceInstallerImplementation<T> : WindowsServiceInstaller where T : WindowsService
         {
             private readonly WindowsServiceAttribute _configuration;
-            
+
             // Creates a windows service installer using the type specified.
             public ServiceInstallerImplementation(T service)
             {
                 _configuration = GetAttribute(service);
-                
+
                 try
                 {
                     ServiceInstaller = ConfigureServiceInstaller();
@@ -114,7 +85,7 @@ namespace Cush.Windows.Services
 
             public override ServiceProcessInstaller ProcessInstaller { get; }
 
-            
+
             // Helper method to configure a process installer for this windows service
             private ServiceProcessInstaller ConfigureProcessInstaller()
             {

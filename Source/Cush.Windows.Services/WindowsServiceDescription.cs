@@ -14,7 +14,7 @@ namespace Cush.Windows.Services
     public class Endpoint
     {
         public Binding Binding;
-        public string Path;
+        public string Address;
         public Type Contract;
         public int Port = -1;
     }

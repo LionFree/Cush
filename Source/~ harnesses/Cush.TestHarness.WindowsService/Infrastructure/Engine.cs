@@ -8,9 +8,6 @@ namespace Cush.TestHarness.WinService.Infrastructure
     {
         internal static Engine ComposeObjectGraph()
         {
-            var logger = Loggers.Trace;
-            
-
             return new Implementation(ComposeService());
         }
 

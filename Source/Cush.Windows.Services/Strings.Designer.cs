@@ -61,6 +61,150 @@ namespace Cush.Windows.Services {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sorry, I did not understand that input! Try again..
+        /// </summary>
+        internal static string DEBUG_BadKey {
+            get {
+                return ResourceManager.GetString("DEBUG_BadKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cush.
+        /// </summary>
+        internal static string DEBUG_Cush {
+            get {
+                return ResourceManager.GetString("DEBUG_Cush", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to   {0}.
+        /// </summary>
+        internal static string DEBUG_EndpointHeader {
+            get {
+                return ResourceManager.GetString("DEBUG_EndpointHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Endpoints:.
+        /// </summary>
+        internal static string DEBUG_EndpointHeaderPlural {
+            get {
+                return ResourceManager.GetString("DEBUG_EndpointHeaderPlural", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Endpoint:.
+        /// </summary>
+        internal static string DEBUG_EndpointHeaderSingular {
+            get {
+                return ResourceManager.GetString("DEBUG_EndpointHeaderSingular", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter [P]ause, [R]esume, or [Q]uit :.
+        /// </summary>
+        internal static string DEBUG_EnterPauseResumeOrQuit {
+            get {
+                return ResourceManager.GetString("DEBUG_EnterPauseResumeOrQuit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pausing {0}..
+        /// </summary>
+        internal static string DEBUG_PausingService {
+            get {
+                return ResourceManager.GetString("DEBUG_PausingService", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} resuming..
+        /// </summary>
+        internal static string DEBUG_ResumingService {
+            get {
+                return ResourceManager.GetString("DEBUG_ResumingService", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} :built {1}.
+        /// </summary>
+        internal static string DEBUG_ServiceNameAndBuildDate {
+            get {
+                return ResourceManager.GetString("DEBUG_ServiceNameAndBuildDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Service started..
+        /// </summary>
+        internal static string DEBUG_ServiceStarted {
+            get {
+                return ResourceManager.GetString("DEBUG_ServiceStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} stopped.  Shutting down..
+        /// </summary>
+        internal static string DEBUG_ServiceStopped {
+            get {
+                return ResourceManager.GetString("DEBUG_ServiceStopped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} stopping....
+        /// </summary>
+        internal static string DEBUG_ServiceStopping {
+            get {
+                return ResourceManager.GetString("DEBUG_ServiceStopping", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} starting..
+        /// </summary>
+        internal static string DEBUG_StartingService {
+            get {
+                return ResourceManager.GetString("DEBUG_StartingService", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot open the service host for {0}..
+        /// </summary>
+        internal static string Error_CannotOpenHost {
+            get {
+                return ResourceManager.GetString("Error_CannotOpenHost", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot open the service host for {0}.  The address reports access denied..
+        /// </summary>
+        internal static string Error_CannotOpenHost_AccessDenied {
+            get {
+                return ResourceManager.GetString("Error_CannotOpenHost_AccessDenied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot open the service host for {0}.  The address is already in use..
+        /// </summary>
+        internal static string Error_CannotOpenHost_AddressInUse {
+            get {
+                return ResourceManager.GetString("Error_CannotOpenHost_AddressInUse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cannot find existing service in registry..
         /// </summary>
         internal static string EXCEPTION_CannotFindServiceInRegistry {
@@ -79,15 +223,6 @@ namespace Cush.Windows.Services {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to IWindowsService cannot be null in call to WindowsServiceHarness.GetInstance()..
-        /// </summary>
-        internal static string EXCEPTION_IWindowsServiceCannotBeNull {
-            get {
-                return ResourceManager.GetString("EXCEPTION_IWindowsServiceCannotBeNull", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Service description needs type or object..
         /// </summary>
         internal static string EXCEPTION_ServiceDescriptionNeedsTypeOrObject {
@@ -97,7 +232,7 @@ namespace Cush.Windows.Services {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Types deriving from the WindowsService class must be decorated with a WindowsServiceAttribute..
+        ///   Looks up a localized string similar to Types deriving from the WindowsService class (such as {0}) must be decorated with a WindowsServiceAttribute..
         /// </summary>
         internal static string EXCEPTION_ServiceMustBeMarkedWithAttribute {
             get {
@@ -133,6 +268,15 @@ namespace Cush.Windows.Services {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Paused. Attach debugger to process, then press Enter to continue..
+        /// </summary>
+        internal static string INFO_PausedForDebugger {
+            get {
+                return ResourceManager.GetString("INFO_PausedForDebugger", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The {0} service is already running..
         /// </summary>
         internal static string INFO_ServiceAlreadyRunning {
@@ -151,11 +295,38 @@ namespace Cush.Windows.Services {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} paused..
+        /// </summary>
+        internal static string INFO_ServicePaused {
+            get {
+                return ResourceManager.GetString("INFO_ServicePaused", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} resumed..
+        /// </summary>
+        internal static string INFO_ServiceResumed {
+            get {
+                return ResourceManager.GetString("INFO_ServiceResumed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} service is {1}..
         /// </summary>
         internal static string INFO_ServiceStatus {
             get {
                 return ResourceManager.GetString("INFO_ServiceStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Service stopped..
+        /// </summary>
+        internal static string INFO_ServiceStopped {
+            get {
+                return ResourceManager.GetString("INFO_ServiceStopped", resourceCulture);
             }
         }
         
@@ -192,6 +363,33 @@ namespace Cush.Windows.Services {
         internal static string INFO_UninstallingWindowsService {
             get {
                 return ResourceManager.GetString("INFO_UninstallingWindowsService", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to P.
+        /// </summary>
+        internal static string KEY_Pause {
+            get {
+                return ResourceManager.GetString("KEY_Pause", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Q.
+        /// </summary>
+        internal static string KEY_Quit {
+            get {
+                return ResourceManager.GetString("KEY_Quit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to R.
+        /// </summary>
+        internal static string KEY_Resume {
+            get {
+                return ResourceManager.GetString("KEY_Resume", resourceCulture);
             }
         }
         

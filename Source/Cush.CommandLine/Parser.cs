@@ -4,6 +4,7 @@ using System.Linq;
 using Cush.CommandLine.Exceptions;
 using Cush.CommandLine.Internal;
 using Cush.Common;
+using JetBrains.Annotations;
 
 namespace Cush.CommandLine
 {
@@ -53,7 +54,7 @@ namespace Cush.CommandLine
         /// </param>
         /// <param name="console">The <see cref="T:IConsole" /> on which to display output.</param>
         /// <param name="buildInfo">The <see cref="T:IBuildInfo" /> from which to get version and build date information.</param>
-        public Parser(string appName, string commandDescription, bool displayUsageIfNoArgumentsPassed,
+        public Parser([NotNull] string appName, string commandDescription, bool displayUsageIfNoArgumentsPassed,
             IConsole console, IBuildInfo buildInfo)
             : this(
                 displayUsageIfNoArgumentsPassed, string.Empty, CLITokenizer.GetInstance(),
