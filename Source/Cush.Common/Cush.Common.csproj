@@ -64,13 +64,14 @@
     <Compile Include="FileHandling\IFileState.cs" />
     <Compile Include="Events\IOEventArgs.cs" />
     <Compile Include="FileHandling\MRUEntry.cs" />
-    <Compile Include="FileHandling\Progress\ContainerStream.cs" />
-    <Compile Include="FileHandling\Progress\WriteProgressStream.cs" />
+    <Compile Include="FileHandling\OutputStream.cs" />
+    <Compile Include="FileHandling\Progress\ProgressStream.cs" />
+    <Compile Include="FileHandling\Progress\ProgressStreamReportEventArgs.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Extensions\EventExtensions.cs" />
+    <Compile Include="FileHandling\XmlSerializerT.cs" />
     <Compile Include="Helpers\FileNameHelper.cs" />
     <Compile Include="FileHandling\Enums\SaveType.cs" />
-    <Compile Include="FileHandling\Progress\ReadProgressStream.cs" />
     <Compile Include="Helpers\Expressions.cs" />
     <Compile Include="Helpers\GuidHelper.cs" />
     <Compile Include="FileHandling\MRUExtensions.cs" />

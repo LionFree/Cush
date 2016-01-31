@@ -8,6 +8,7 @@ namespace Cush.Common.Logging
     /// <summary>
     ///     Provides logging interface and utility functions for Cush libraries.
     /// </summary>
+    [DebuggerStepThrough]
     public abstract class BaseLogger : ILogger
     {
         private readonly string _eventSourceName;

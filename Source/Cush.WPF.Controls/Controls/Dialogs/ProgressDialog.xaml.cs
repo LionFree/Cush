@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -132,8 +133,7 @@ namespace Cush.WPF.Controls
         {
             Determinate.Value = (double)e.NewValue;
             var updateBarDelegate = new UpdateProgressDelegate(Determinate.SetValue);
-            Dispatcher.Invoke(updateBarDelegate,
-                DispatcherPriority.Background, RangeBase.ValueProperty, (double)e.NewValue);
+            Dispatcher.Invoke(updateBarDelegate, DispatcherPriority.Background, RangeBase.ValueProperty, (double)e.NewValue);
         }
 
         private void OnCancelButtonClick(object sender, RoutedEventArgs e)

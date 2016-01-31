@@ -11,8 +11,7 @@ namespace Cush.Common.FileHandling
 {
     public abstract class FileReader
     {
-        protected bool Cancelled = false;
-        public bool IsCancelled => Cancelled;
+        public bool IsCancelled { get; protected set; }
         protected readonly ILogger Logger;
 
         protected FileReader(ILogger logger)
@@ -30,11 +29,11 @@ namespace Cush.Common.FileHandling
         /// <returns>A data object of type T containing the data from the file.</returns>
         public abstract T Read<T>(string filePath, ProgressChangedEventHandler callback = null);
 
-        internal event EventHandler CancelFileOperation;
+        public event EventHandler Cancelled;
 
         internal void CancelFileOperations(object sender, EventArgs e)
         {
-            CancelFileOperation?.Invoke(sender, e);
+            Cancelled?.Invoke(sender, e);
         }
     }
 
@@ -48,8 +47,8 @@ namespace Cush.Common.FileHandling
         public override T Read<T>(string fileName, ProgressChangedEventHandler callback = null)
         {
             ThrowHelper.IfNullOrEmptyThenThrow(() => fileName);
-            Cancelled = false;
-            CancelFileOperation += (s, e) => { throw new OperationCanceledException(); };
+            IsCancelled = false;
+            Cancelled += (s, e) => { throw new OperationCanceledException(); };
             try
             { 
                 Logger.Trace($"Reading file: {fileName}");
@@ -85,10 +84,10 @@ namespace Cush.Common.FileHandling
             // This exception tends to show up when saving/reading frequently.
             using (Stream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                using (var callbackStream = new ReadProgressStream(stream))
+                using (var callbackStream = new ProgressStream(stream))
                 {
-                    callbackStream.ProgressChanged += callback;
-
+                    callbackStream.BytesRead += callback;
+                    
                     const int defaultBufferSize = 4096;
                     var onePercentSize = (int) Math.Ceiling(stream.Length/100.0);
 
@@ -112,6 +111,8 @@ namespace Cush.Common.FileHandling
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public sealed class XmlFileReader : FileReader
     {
+        private const int DefaultBufferSize = 4096;
+
         public XmlFileReader(ILogger logger) : base(logger)
         {
         }
@@ -119,15 +120,15 @@ namespace Cush.Common.FileHandling
         public override T Read<T>(string filePath, ProgressChangedEventHandler callback = null)
         {
             ThrowHelper.IfNullOrEmptyThenThrow(() => filePath);
-            Cancelled = false;
+            IsCancelled = false;
             try
             {
                 Logger.Trace($"Reading file: {filePath}");
 
                 T input;
-                using (var reader = new StreamReader(filePath))
+                using (var fileStream = new CushFileStream(filePath))
                 {
-                    input = DeserializeXml<T>(reader.BaseStream, callback);
+                    input = DeserializeXml<T>(fileStream, callback);
                 }
 
                 Logger.Trace("  Done reading.");
@@ -152,34 +153,32 @@ namespace Cush.Common.FileHandling
         private T DeserializeXml<T>(Stream stream, ProgressChangedEventHandler callback)
         {
             ThrowHelper.IfNullThenThrow(() => stream);
-            using (var callbackStream = new ReadProgressStream(stream))
+            using (var callbackStream = new ProgressStream(stream))
             {
-                callbackStream.ProgressChanged += callback;
+                callbackStream.BytesRead += callback;
 
-                const int defaultBufferSize = 4096;
                 var onePercentSize = (int) Math.Ceiling(stream.Length/100.0);
-
-                var serializer = new XmlSerializer(typeof (T));
-
+                
                 using (var bufferedStream = new BufferedStream(callbackStream,
-                    onePercentSize > defaultBufferSize
-                        ? defaultBufferSize
+                    onePercentSize > DefaultBufferSize
+                        ? DefaultBufferSize
                         : onePercentSize))
                 {
                     try
                     {
-                        CancelFileOperation += (s, e) =>
+                        Cancelled += (s, e) =>
                         {
-                            Cancelled = true;
+                            IsCancelled = true;
                             bufferedStream?.Close();
                         };
 
+                        var serializer = new XmlSerializer(typeof(T));
                         var input = serializer.Deserialize(bufferedStream);
                         return (T) input;
                     }
                     catch (InvalidOperationException ex)
                     {
-                        if (Cancelled) return default(T);
+                        if (IsCancelled) return default(T);
                         Logger.Error(ex);
                         throw;
                     }
