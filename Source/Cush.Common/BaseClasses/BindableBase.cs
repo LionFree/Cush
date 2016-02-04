@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
@@ -9,7 +8,7 @@ using System.Runtime.Serialization;
 namespace Cush.Common
 {
     /// <summary>
-    ///     Implementation of <see cref="INotifyPropertyChanged" /> to simplify models.
+    ///     Implementation of <see cref="System.ComponentModel.INotifyPropertyChanged" /> to simplify models.
     /// </summary>
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
     [SuppressMessage("ReSharper", "ExplicitCallerInfoArgument")]

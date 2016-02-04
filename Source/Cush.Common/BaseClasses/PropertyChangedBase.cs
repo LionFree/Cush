@@ -18,25 +18,18 @@ using Cush.Common.Helpers;
 namespace Cush.Common
 {
     /// <summary>
-    ///     Implementation of <see cref="INotifyPropertyChanged" /> to simplify models.
+    ///     Implementation of <see cref="System.ComponentModel.INotifyPropertyChanged" /> to simplify models.
     /// </summary>
     [DataContract, Serializable, DebuggerStepThrough]
     public abstract class PropertyChangedBase : INotifyPropertyChanged
     {
         /// <summary>
         ///     Multicast event for property change notifications.
-        /// </summary>
-        private PropertyChangedEventHandler _propertyChanged;
-
-        /// <summary>
         ///     Occurs when a property value changes.
         /// </summary>
-        public virtual event PropertyChangedEventHandler PropertyChanged
-        {
-            [MethodImpl(MethodImplOptions.Synchronized), DebuggerStepThrough] add { _propertyChanged += value; }
-            [MethodImpl(MethodImplOptions.Synchronized), DebuggerStepThrough] remove { _propertyChanged -= value; }
-        }
-
+        [field: NonSerialized]
+        public virtual event PropertyChangedEventHandler PropertyChanged;
+        
         /// <summary>
         ///     Allows triggering the <see cref="E:PropertyChanged" />
         ///     event using a lambda expression, thus avoiding strings. Keep in
@@ -94,7 +87,7 @@ namespace Cush.Common
         protected void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             // Use a variable to prevent race conditions.
-            var handler = _propertyChanged;
+            var handler = PropertyChanged;
             handler?.Invoke(sender, e);
         }
 
@@ -174,8 +167,8 @@ namespace Cush.Common
         /// <param name="delegate">The delegate to check for.</param>
         public bool IsSubscribedToNotification(Delegate @delegate)
         {
-            return (null != _propertyChanged) && 
-                _propertyChanged.GetInvocationList().Contains(@delegate);
+            return (null != PropertyChanged) && 
+                PropertyChanged.GetInvocationList().Contains(@delegate);
         }
 
 

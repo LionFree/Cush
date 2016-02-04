@@ -1,9 +1,10 @@
 ﻿using System;
+
 // ReSharper disable UnusedParameter.Local
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable MemberCanBePrivate.Global
 
-namespace Cush.Common.FileHandling.Progress
+namespace Cush.Common.FileHandling.Streams
 {
     /// <summary>
     ///     Contains the pertinent data for a ProgressStream Report event.

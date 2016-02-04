@@ -29,8 +29,7 @@ namespace Cush.TestHarness.WPF.Infrastructure
 
             var mruEntries = PopulateDebugEntries();
             var fileClerk = new FileClerk<DataFile>(logger,
-                new FileHandler<DataFile>(
-                    logger, new XmlFileReader(logger), new XmlFileWriter(logger))
+                new FileHandler<DataFile>(logger)
                 {
                     Filter = "Test Data Files (*.dat)|*.dat|All Files (*.*)|*.*",
                     DefaultExt = "dat",

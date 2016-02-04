@@ -14,9 +14,9 @@ namespace Cush.TestHarness.WPF.Model
     {
         private readonly FileHandler<T> _fileHandler;
         private readonly ILogger _logger;
-
-        public FileClerk(ILogger logger, FileReader reader, FileWriter writer)
-            : this(logger, new FileHandler<T>(logger, reader, writer))
+        
+        public FileClerk(ILogger logger)
+            : this(logger, new FileHandler<T>(logger))
         {
         }
 
@@ -24,6 +24,7 @@ namespace Cush.TestHarness.WPF.Model
         {
             _logger = logger;
             _fileHandler = handler;
+            //_defaultFileName = Strings.TEXT_DefaultFileName;
         }
 
         private int CurrentFileIndex
@@ -54,7 +55,7 @@ namespace Cush.TestHarness.WPF.Model
             try
             {
                 // Attempt to open the file.
-                var fileNumber = _fileHandler.Open(fileName, 0, FileProgressChanged);
+                var fileNumber = _fileHandler.Open<XmlFileOperator>(fileName, 0, FileProgressChanged);
 
                 // If the load failed completely, get out.
                 if (fileNumber != 0)
@@ -168,7 +169,7 @@ namespace Cush.TestHarness.WPF.Model
             var okToSave = okayToSaveChangesCallback(GetShortFileName(fileState));
             if (okToSave)
             {
-                _fileHandler.Save(CurrentFile, SaveType.Save);
+                _fileHandler.Save<XmlFileOperator>(CurrentFile, SaveType.Save);
             }
             return okToSave;
         }
@@ -213,7 +214,7 @@ namespace Cush.TestHarness.WPF.Model
 
         internal string Save(SaveType saveType)
         {
-            return _fileHandler.Save(CurrentFile, CurrentFileState.FullPath == "Untitled" ? SaveType.SaveAs : saveType);
+            return _fileHandler.Save<XmlFileOperator>(CurrentFile, CurrentFileState.FullPath == "Untitled" ? SaveType.SaveAs : saveType);
         }
 
         public string Save()

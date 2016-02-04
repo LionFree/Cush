@@ -1,11 +1,12 @@
 ﻿using System.ComponentModel;
 using System.IO;
 using Cush.Common.Exceptions;
+
 // ReSharper disable EventNeverSubscribedTo.Global
 // ReSharper disable VirtualMemberNeverOverriden.Global
 // ReSharper disable MemberCanBeProtected.Global
 
-namespace Cush.Common.FileHandling.Progress
+namespace Cush.Common.FileHandling.Streams
 {
     /// <summary>
     ///     Wraps another stream and provides reporting for when bytes are read or written to the stream.

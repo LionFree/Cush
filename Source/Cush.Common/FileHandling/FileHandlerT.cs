@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -26,8 +27,10 @@ namespace Cush.Common.FileHandling
     {
         public delegate void IOEventHandler(object sender, IOEventArgs e);
 
-        private readonly FileReader _fileReader;
-        private readonly FileWriter _fileWriter;
+        private readonly Dictionary<Type, FileOperator> _operators;
+
+        //private readonly FileReader _fileReader;
+        //private readonly FileWriter _fileWriter;
 
         private readonly ILogger _logger;
 
@@ -44,22 +47,47 @@ namespace Cush.Common.FileHandling
 
         private int _currentFileIndex;
 
-        public FileHandler(FileReader reader, FileWriter writer) : this(Loggers.Trace, reader, writer)
+        public FileHandler(ILogger logger)
+            : this(
+                logger, new List<FileOperator> {new XmlFileOperator(logger), new BinaryFileOperator(logger)})
         {
         }
 
-        public FileHandler(ILogger logger, FileReader reader, FileWriter writer):this(logger, reader, writer, new ObservableCollection<IFileState<T>>())
-        {
-        }
+        public FileHandler(ILogger logger, IEnumerable<FileOperator> operators) : this(logger, operators, new ObservableCollection<IFileState<T>>()) { }
 
-        internal FileHandler(ILogger logger, FileReader reader, FileWriter writer, ObservableCollection<IFileState<T>> files)
+        public FileHandler(ILogger logger, IEnumerable<FileOperator> operators, ObservableCollection<IFileState<T>> files) 
         {
             _logger = logger;
             Files = files;
-            _fileReader = reader;
-            _fileWriter = writer;
-            CancelFileOperations += _fileReader.CancelFileOperations;
+
+            _operators = new Dictionary<Type, FileOperator>();
+            foreach (var fileOp in operators)
+            {
+                CancelFileOperations+=fileOp.CancelFileOperations;
+                _operators.Add(fileOp.GetType(), fileOp);
+            }
         }
+
+
+        //public FileHandler(FileReader reader, FileWriter writer) : this(Loggers.Trace, reader, writer)
+        //{
+        //}
+
+        //public FileHandler(ILogger logger, FileReader reader, FileWriter writer):this(logger, reader, writer, new ObservableCollection<IFileState<T>>())
+        //{
+        //}
+
+        //internal FileHandler(ILogger logger, FileReader reader, FileWriter writer, ObservableCollection<IFileState<T>> files)
+        //{
+        //    _logger = logger;
+        //    Files = files;
+
+        //    _fileReader = reader;
+        //    _fileWriter = writer;
+            
+        //    CancelFileOperations += _fileReader.CancelFileOperations;
+        //    CancelFileOperations += _fileWriter.CancelFileOperations;
+        //}
 
         public string DefaultExt
         {
@@ -86,11 +114,9 @@ namespace Cush.Common.FileHandling
             get { return _openDialog.FileName; }
             set
             {
-                if (_openDialog.FileName != value)
-                {
-                    _openDialog.FileName = value;
-                    _saveDialog.FileName = value;
-                }
+                if (_openDialog.FileName == value) return;
+                _openDialog.FileName = value;
+                _saveDialog.FileName = value;
             }
         }
 
@@ -325,7 +351,8 @@ namespace Cush.Common.FileHandling
         }
 
 
-        private string AttemptSave(object dataFile,
+        private string AttemptSave(FileOperator fileop,
+            T dataFile,
             string saveName,
             ProgressChangedEventHandler callback)
         {
@@ -339,12 +366,12 @@ namespace Cush.Common.FileHandling
                         const string message = "File must have a valid filename.";
                         MessageBox.Show(message, header, MessageBoxButton.OK, MessageBoxImage.Exclamation);
 
-                        return AttemptSave(dataFile, null, callback);
+                        return AttemptSave(fileop, dataFile, null, callback);
                     }
 
                     if (saveName == DefaultFileName)
                     {
-                        return AttemptSave(dataFile, null, callback);
+                        return AttemptSave(fileop, dataFile, null, callback);
                     }
 
                     // Fire the Writing event so that the app can 
@@ -352,7 +379,7 @@ namespace Cush.Common.FileHandling
                     OnReadWriteStarting(new IOEventArgs(FileAction.Save, -1, saveName));
 
                     // Attempt to save the data.
-                    var goodSave = _fileWriter.Write(dataFile, saveName, callback);
+                    var goodSave = fileop.Write(dataFile, saveName, callback);
 
                     // Fire the WriteDone event so that the app can
                     // close the progress dialog.
@@ -376,7 +403,7 @@ namespace Cush.Common.FileHandling
 
                     if (saveName != null)
                     {
-                        return AttemptSave(dataFile, saveName, callback);
+                        return AttemptSave(fileop, dataFile, saveName, callback);
                     }
                 }
                 return null;
@@ -508,24 +535,40 @@ namespace Cush.Common.FileHandling
         }
 
         // This routine makes sure that the filename is legit, then opens it
-        public int Open(string fileName)
+        public int Open<TOperator>(string fileName) where TOperator : FileOperator
         {
-            return Open(fileName, -1, false, null);
+            return Open(_operators[typeof(TOperator)], fileName);
+        }
+        public int Open(FileOperator fileop, string fileName)
+        {
+            return Open(fileop, fileName, -1, false, null);
         }
 
-        public int Open(string fileName, ProgressChangedEventHandler callback)
+        public int Open<TOperator>(string fileName, ProgressChangedEventHandler callback) where TOperator:FileOperator
         {
-            return Open(fileName, -1, false, callback);
+            return Open(_operators[typeof(TOperator)], fileName, -1, false, callback);
+        }
+        public int Open(FileOperator fileop, string fileName, ProgressChangedEventHandler callback)
+        {
+            return Open(fileop, fileName, -1, false, callback);
         }
 
-        public int Open(string fileName, int fileIndex)
+        public int Open<TOperator>(string fileName, int fileIndex) where TOperator : FileOperator
         {
-            return Open(fileName, fileIndex, true, null);
+            return Open(_operators[typeof(TOperator)], fileName, fileIndex, true, null);
+        }
+        public int Open(FileOperator fileop, string fileName, int fileIndex)
+        {
+            return Open(fileop, fileName, fileIndex, true, null);
         }
 
-        public int Open(string fileName, int fileIndex, ProgressChangedEventHandler callback)
+        public int Open<TOperator>(string fileName, int fileIndex, ProgressChangedEventHandler callback) where TOperator : FileOperator
         {
-            return Open(fileName, fileIndex, true, callback);
+            return Open(_operators[typeof(TOperator)], fileName, fileIndex, true, callback);
+        }
+        public int Open(FileOperator fileop, string fileName, int fileIndex, ProgressChangedEventHandler callback)
+        {
+            return Open(fileop, fileName, fileIndex, true, callback);
         }
 
         internal event EventHandler CancelFileOperations;
@@ -536,7 +579,7 @@ namespace Cush.Common.FileHandling
         }
 
         [SuppressMessage("ReSharper", "UnusedParameter.Local")]
-        private int Open(string fileName, int fileIndex, bool userSentIndex, ProgressChangedEventHandler callback)
+        private int Open(FileOperator fileop, string fileName, int fileIndex, bool userSentIndex, ProgressChangedEventHandler callback)
         {
             ThrowHelper.IfNullOrEmptyThenThrow(() => fileName);
             if ((fileIndex < 0) && (userSentIndex)) throw new ArgumentException("fileIndex cannot be negative.");
@@ -545,7 +588,7 @@ namespace Cush.Common.FileHandling
             if (!FileAlreadyOpen(fileName))
             {
                 // Load it.
-                var result = ReadFile(fileName, fileIndex, callback);
+                var result = ReadFile(fileop, fileName, fileIndex, callback);
 
                 if (result)
                 {
@@ -573,7 +616,7 @@ namespace Cush.Common.FileHandling
 
         // This routine actually reads the file
 
-        public bool ReadFile(string fileName, int fileIndex = -1, ProgressChangedEventHandler callback = null)
+        public bool ReadFile(FileOperator fileop, string fileName, int fileIndex = -1, ProgressChangedEventHandler callback = null)
         {
             if (string.IsNullOrEmpty(fileName)) throw new ArgumentNullException();
 
@@ -585,7 +628,7 @@ namespace Cush.Common.FileHandling
                 {
                     OnReadWriteStarting(new IOEventArgs(FileAction.Open, file.Length, fileName));
 
-                    var input = _fileReader.Read<T>(fileName, callback);
+                    var input = fileop.Read<T>(fileName, callback);
 
                     if (input != null)
                     {
@@ -618,8 +661,11 @@ namespace Cush.Common.FileHandling
             return result;
         }
 
-
-        public string Save(T dataFile, SaveType saveType, ProgressChangedEventHandler callback = null)
+        public string Save<TOperator>(T dataFile, SaveType saveType, ProgressChangedEventHandler callback = null) where TOperator : FileOperator
+        {
+            return Save(_operators[typeof(TOperator)], dataFile, saveType, callback);
+        }
+        public string Save(FileOperator fileop, T dataFile, SaveType saveType, ProgressChangedEventHandler callback = null)
         {
             try
             {
@@ -638,7 +684,7 @@ namespace Cush.Common.FileHandling
                 }
 
                 // Attempt the save.
-                var newName = AttemptSave(dataFile, fileName, callback);
+                var newName = AttemptSave(fileop, dataFile, fileName, callback);
 
 
                 // Write the new name, if it changed.

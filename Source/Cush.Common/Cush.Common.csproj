@@ -20,6 +20,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.XML" />
     <Reference Include="WindowsBase" />
@@ -55,18 +56,20 @@
     </Compile>
     <Compile Include="Exceptions\ThrowHelper.cs" />
     <Compile Include="Extensions\PathExtensions.cs" />
+    <Compile Include="FileHandling\FileOperator.cs" />
+    <Compile Include="FileHandling\FileOperatorT.cs" />
+    <Compile Include="FileHandling\Implementations\BinaryFileOperator.cs" />
     <Compile Include="FileHandling\Enums\FileAction.cs" />
     <Compile Include="Events\FileEventArgs.cs" />
     <Compile Include="FileHandling\FileHandlerT.cs" />
-    <Compile Include="FileHandling\FileReader.cs" />
     <Compile Include="FileHandling\FileStateT.cs" />
-    <Compile Include="FileHandling\FileWriter.cs" />
     <Compile Include="FileHandling\IFileState.cs" />
     <Compile Include="Events\IOEventArgs.cs" />
+    <Compile Include="FileHandling\Implementations\XmlFileOperator.cs" />
     <Compile Include="FileHandling\MRUEntry.cs" />
-    <Compile Include="FileHandling\OutputStream.cs" />
-    <Compile Include="FileHandling\Progress\ProgressStream.cs" />
-    <Compile Include="FileHandling\Progress\ProgressStreamReportEventArgs.cs" />
+    <Compile Include="FileHandling\Streams\CushFileStream.cs" />
+    <Compile Include="FileHandling\Streams\ProgressStream.cs" />
+    <Compile Include="FileHandling\Streams\ProgressStreamReportEventArgs.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Extensions\EventExtensions.cs" />
     <Compile Include="FileHandling\XmlSerializerT.cs" />
