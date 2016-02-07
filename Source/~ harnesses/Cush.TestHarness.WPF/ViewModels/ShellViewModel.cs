@@ -23,14 +23,17 @@ namespace Cush.TestHarness.WPF.ViewModels
         private readonly ILogger _logger;
         private readonly ObservableCollection<MRUEntry> _mruList;
         private readonly PageProvider _pages;
+        private readonly MRUUserSettingsHandler _mruHandler;
 
         private ContentControl _content;
-
-        internal ShellViewModel(ILogger logger, FileClerk<DataFile> fileHandler, 
+        
+        internal ShellViewModel(ILogger logger, FileClerk<DataFile> fileHandler,
+            ref MRUUserSettingsHandler mruSettingsHandler,
             PageProvider pages, ViewModelProvider viewModels)
         {
             _logger = logger;
-            _mruList = new ObservableCollection<MRUEntry>();
+            _mruHandler = mruSettingsHandler;
+            _mruList = mruSettingsHandler.Read();//new ObservableCollection<MRUEntry>();
 
             fileHandler.FileOpenedEvent += FileOpenedEvent;
             fileHandler.FileClosedEvent += FileClosedEvent;
@@ -63,7 +66,7 @@ namespace Cush.TestHarness.WPF.ViewModels
 
         public bool IsForwardButtonVisible => (!IsFileMenuVisible) && (_fileHandler.CurrentFile != null);
 
-        public object PageSwapRequested => new RelayCommand(nameof(PageSwapRequested), param =>
+        public object PageSwapRequested => new RelayCommand(() =>
         {
             Content = (IsForwardButtonVisible ? (ContentControl)_pages.ActivityPage : (ContentControl)_pages.StartPage);
         });
@@ -167,28 +170,23 @@ namespace Cush.TestHarness.WPF.ViewModels
 
         internal void WriteMRUList(IEnumerable<MRUEntry> mruList)
         {
-            // TODO: Move to viewModel
-            //ShellWindow.UpdateLayout();
-            //// Get the MRU list from the MRU control.
-            //ObservableCollection<MRUEntry> mruList = ShellWindow.FileMenuContent.MRUMenu.Files;
-
             try
             {
-                // Get the app.config section.
-                var mruListSection = MRUListSection.Open();
+                //// Get the app.config section.
+                //var mruListSection = MRUListSection.Open();
 
-                // Clear the section's MRU List.
-                mruListSection.MRUList.Clear();
+                //// Clear the section's MRU List.
+                //mruListSection.MRUList.Clear();
 
-                // Populate the section with MRUEntries.
-                foreach (var item in mruList)
-                {
-                    var temp = new MRUEntryElement {FullPath = item.FullPath, Pinned = item.Pinned};
-                    mruListSection.MRUList.Add(temp);
-                }
+                //// Populate the section with MRUEntries.
+                //foreach (var item in mruList)
+                //{
+                //    var temp = new MRUEntryElement {FullPath = item.FullPath, Pinned = item.Pinned};
+                //    mruListSection.MRUList.Add(temp);
+                //}
 
                 // Save the full configuration file and force save even if the file was not modified.
-                mruListSection.Save();
+                _mruHandler.Save(mruList);
             }
             catch (Exception ex)
             {

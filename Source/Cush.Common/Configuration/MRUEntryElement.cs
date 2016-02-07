@@ -1,66 +1,54 @@
 ﻿using System.Configuration;
+using Cush.Common.FileHandling;
 
 namespace Cush.Common.Configuration
 {
     public class MRUEntryElement : ConfigurationElement
     {
-        #region Constructors
+        private const string PathProperty = "fullPath";
+        private const string PinnedProperty = "pinned";
+        private const string TagProperty = "tag";
 
-        /// <summary>
-        /// Predefines the valid properties and prepares
-        /// the property collection.
-        /// </summary>
-        static MRUEntryElement()
+        public MRUEntryElement() : this(string.Empty, false, string.Empty)
+        {}
+
+        public MRUEntryElement(MRUEntry entry):this(entry.FullPath, entry.Pinned, entry.Tag) { }
+
+        public MRUEntryElement(string fullPath, bool pinned, string tag)
         {
-            // Predefine properties here
-            SPropFullPath = new ConfigurationProperty("fullPath", typeof(string), null, ConfigurationPropertyOptions.IsRequired);
-
-            SPropPinned = new ConfigurationProperty("pinned", typeof(bool), false, ConfigurationPropertyOptions.IsRequired);
-
-            SProperties = new ConfigurationPropertyCollection { SPropFullPath, SPropPinned };
+            FullPath = fullPath;
+            Pinned = pinned;
+            Tag = tag;
         }
 
-        #endregion
-
-
-        #region Static Fields
-        private static readonly ConfigurationProperty SPropFullPath;
-        private static readonly ConfigurationProperty SPropPinned;
-
-        private static readonly ConfigurationPropertyCollection SProperties;
-        #endregion
-
-        #region Properties
         /// <summary>
-        /// Gets the Name setting.
+        /// Gets the FullPath setting.
         /// </summary>
-        [ConfigurationProperty("fullPath", IsRequired = true)]
+        [ConfigurationProperty(PathProperty, IsRequired = true)]
         public string FullPath
         {
-            get { return (string)base[SPropFullPath]; }
-            set { base[SPropFullPath] = value; }
+            get { return (string)this[PathProperty]; }
+            set { this[PathProperty] = value; }
         }
 
         /// <summary>
-        /// Gets the Type setting.
+        /// Gets the Pinned setting.
         /// </summary>
-        [ConfigurationProperty("pinned")]
+        [ConfigurationProperty(PinnedProperty, IsRequired = false, DefaultValue = false)]
         public bool Pinned
         {
-            get { return (bool)base[SPropPinned]; }
-            set { base[SPropPinned] = value; }
+            get { return (bool)this[PinnedProperty]; }
+            set { this[PinnedProperty] = value; }
         }
-
 
         /// <summary>
-        /// Override the Properties collection and return our custom one.
+        /// Gets the Tag setting.
         /// </summary>
-        protected override ConfigurationPropertyCollection Properties
+        [ConfigurationProperty(TagProperty, IsRequired = true)]
+        public string Tag
         {
-            get { return SProperties; }
+            get { return (string)this[TagProperty]; }
+            set { this[TagProperty] = value; }
         }
-        #endregion
-
-
     }
 }

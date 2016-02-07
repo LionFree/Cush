@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Reflection;
 using System.Windows;
+using Cush.Common.Configuration;
 using Cush.Common.FileHandling;
 using Cush.Common.Logging;
 using Cush.TestHarness.WPF.Model;
@@ -10,6 +13,7 @@ using Cush.TestHarness.WPF.ViewModels;
 using Cush.TestHarness.WPF.Views;
 using Cush.TestHarness.WPF.Views.Dialogs;
 using Cush.TestHarness.WPF.Views.Pages;
+using Cush.WPF;
 using Cush.WPF.ColorSchemes;
 using Cush.WPF.Controls;
 
@@ -25,9 +29,13 @@ namespace Cush.TestHarness.WPF.Infrastructure
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         internal static Engine ComposeObjectGraph(ILogger logger)
         {
+            TestThing(logger);
+
             ColorSchemeManager.ComposeColorSchemeExtensions(logger);
 
             var mruEntries = PopulateDebugEntries();
+            var mruSettings = new MRUUserSettingsHandler(logger);
+            
             var fileClerk = new FileClerk<DataFile>(logger,
                 new FileHandler<DataFile>(logger)
                 {
@@ -37,6 +45,7 @@ namespace Cush.TestHarness.WPF.Infrastructure
                 }
                 );
 
+            
             var viewModels = new ViewModelProvider
             {
                 ActivityPageViewModel = new ActivityPageViewModel(fileClerk),
@@ -49,7 +58,7 @@ namespace Cush.TestHarness.WPF.Infrastructure
                 StartPage = new StartPage(viewModels.StartPageViewModel)
             };
 
-            var shellView = new ShellView(new ShellViewModel(logger, fileClerk,
+            var shellView = new ShellView(new ShellViewModel(logger, fileClerk, ref mruSettings,
                 pages, viewModels));
 
             var dialogs = new DialogPack { 
@@ -61,6 +70,38 @@ namespace Cush.TestHarness.WPF.Infrastructure
             shellView.SetDialogs(dialogs);
 
             return new Implementation(shellView, logger);
+        }
+
+        private static void TestThing(ILogger logger)
+        {
+            var mruEntries = PopulateDebugEntries();
+
+            var mruHandler = new MRUUserSettingsHandler(logger);
+            var existing = mruHandler.Read();
+            Trace.WriteLine($"Existing count (before save): {existing.Count}");
+
+            mruHandler.Save(mruEntries);
+            existing = mruHandler.Read();
+            Trace.WriteLine($"Existing count (after save): {existing.Count}");
+
+            //mruHandler.Clear();
+            //existing = mruHandler.Read();
+            //Trace.WriteLine($"Existing count (after save and clear): {existing.Count}");
+
+            mruHandler.Remove(mruEntries[3]);
+            mruHandler.Save();
+            existing = mruHandler.Read();
+            Trace.WriteLine($"Existing count (after removing one): {existing.Count}");
+
+
+
+            Environment.Exit(0);
+
+        }
+
+        private static void TestWithNoParameters()
+        {
+            Trace.WriteLine(nameof(TestWithNoParameters));
         }
 
         private static ObservableCollection<MRUEntry> PopulateDebugEntries()

@@ -34,9 +34,9 @@
     <Compile Include="BaseClasses\KeyedItem.cs" />
     <Compile Include="BaseClasses\PropertyChangedBase.cs" />
     <Compile Include="BaseClasses\ThreadSafeObservableCollectionT.cs" />
-    <Compile Include="Configuration\MRUEntryCollection.cs" />
-    <Compile Include="Configuration\MRUEntryElement.cs" />
-    <Compile Include="Configuration\MRUListSection.cs" />
+    <Compile Include="Configuration\MRUList.cs" />
+    <Compile Include="Configuration\MRUUserSettings.cs" />
+    <Compile Include="Configuration\MRUUserSettingsHandler.cs" />
     <Compile Include="Crypto\CryptoAlgorithm.cs" />
     <Compile Include="Crypto\CryptoHasher.cs" />
     <Compile Include="Crypto\SecureStringHelper.cs" />
@@ -56,6 +56,7 @@
     </Compile>
     <Compile Include="Exceptions\ThrowHelper.cs" />
     <Compile Include="Extensions\PathExtensions.cs" />
+    <Compile Include="FileHandling\FileHandlerOptions.cs" />
     <Compile Include="FileHandling\FileOperator.cs" />
     <Compile Include="FileHandling\FileOperatorT.cs" />
     <Compile Include="FileHandling\Implementations\BinaryFileOperator.cs" />

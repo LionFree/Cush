@@ -8,7 +8,7 @@ namespace Cush.WPF
     ///     to other objects by invoking delegates.
     ///     The default return value for the CanExecute method is 'true'.
     /// </summary>
-    public class RelayCommand : CommandBase
+    public class RelayCommand<T> : CommandBase
     {
         /// <summary>
         ///     Initializes a new instance of <see cref="RelayCommand" />.
@@ -19,7 +19,7 @@ namespace Cush.WPF
         /// </param>
         /// <param name="name">The name of the command.  Used for debugging.</param>
         /// <remarks><seealso cref="M:CanExecute" /> will always return true.</remarks>
-        public RelayCommand(Action action, string name = null, [CallerMemberName] string caller = null)
+        public RelayCommand(Action<T> action, string name = null, [CallerMemberName] string caller = null)
             : base(action, null, name, caller)
         {
         }
@@ -33,26 +33,32 @@ namespace Cush.WPF
         /// </param>
         /// <param name="canExecute">The execution status logic.</param>
         /// <param name="name">The name of the command.  Used for debugging.</param>
-        public RelayCommand(Action action, Predicate<object> canExecute, string name = null,
+        public RelayCommand(Action<T> action, Predicate<object> canExecute, string name = null,
             [CallerMemberName] string caller = null)
             : base(action, canExecute, name, caller)
         {
         }
 
-        public override void Execute(object parameter)
-        {
-            Execute();
-        }
 
-        /// <summary>
-        ///     Occurs when changes occur that affect whether or not the command should execute.
-        /// </summary>
         /// <summary>
         ///     Defines the method to be called when the command is invoked.
         /// </summary>
-        public void Execute()
+        /// <param name="parameter1">
+        ///     Data used by the command. If the command does not require data to be passed, this object can be
+        ///     set to <see langword="null" />.
+        /// </param>
+        public void Execute(T parameter1)
         {
-            ((Action)WrappedAction).Invoke();
+            ((Action<T>)WrappedAction).Invoke(parameter1);
+        }
+
+        public override void Execute(object parameter)
+        {
+            var castToType = (parameter == null) 
+                ? default(T) 
+                : (T) parameter;
+
+            Execute(castToType);
         }
     }
 }

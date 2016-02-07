@@ -157,7 +157,10 @@ namespace Cush.WPF.Controls
 
             window.SizeChanged += sizeHandler;
 
-            window.DialogContainer.Children.Add(dialog); //add the dialog to the container
+            if (!window.DialogContainer.Children.Contains(dialog))
+            {
+                window.DialogContainer.Children.Add(dialog); //add the dialog to the container
+            }
 
             dialog.OnShown();
 

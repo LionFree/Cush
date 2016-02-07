@@ -94,20 +94,17 @@ namespace Cush.TestHarness.WPF.ViewModels
             }
         }
 
-        public RelayCommand OKCommand => new RelayCommand(nameof(OKCommand), param => Commit());
+        public RelayCommand OKCommand => new RelayCommand(Commit);
 
         public RelayCommand ClearFilesCommand
         {
             get
             {
-                return new RelayCommand(nameof(ClearFilesCommand), param => Trace.WriteLine("Clear Files Clicked."));
+                return new RelayCommand(() => Trace.WriteLine("Clear Files Clicked."));
             }
         }
 
-        public RelayCommand CancelCommand
-        {
-            get { return new RelayCommand(nameof(CancelCommand), param => RefreshSettings()); }
-        }
+        public RelayCommand CancelCommand => new RelayCommand(RefreshSettings);
 
         public FontFamily SelectedFontFamily
         {

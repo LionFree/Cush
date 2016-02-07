@@ -28,13 +28,13 @@ namespace Cush.TestHarness.WPF.ViewModels
             set { SetProperty(ref _files, value); }
         }
 
-        public ICommand OnOpenOtherFileRequested=> new RelayCommand(nameof(OpenOtherFileRequested), param => RaiseEvent(OpenOtherFileRequested));
-        public ICommand OnOpenRecentFileRequested => new RelayCommand(nameof(OpenRecentFileRequested), OnOpenRecentFile);
-        public ICommand OnNewFileRequested=> new RelayCommand(nameof(OnNewFileRequested), param => RaiseEvent(NewFileRequested));
-        public ICommand OnImportFileRequested=> new RelayCommand(nameof(OnImportFileRequested), param => Trace.WriteLine("Import File clicked."));
-        public ICommand OnMergeFilesRequested=> new RelayCommand(nameof(OnMergeFilesRequested), param => Trace.WriteLine("Merge Files clicked."));
+        public ICommand OnOpenOtherFileRequested => new RelayCommand(() => RaiseEvent(OpenOtherFileRequested));
+        public ICommand OnOpenRecentFileRequested => new RelayCommand<object>(OnOpenRecentFile);
+        public ICommand OnNewFileRequested=> new RelayCommand(() => RaiseEvent(NewFileRequested));
+        public ICommand OnImportFileRequested => new RelayCommand(() => Trace.WriteLine("Import File clicked."));
+        public ICommand OnMergeFilesRequested => new RelayCommand(() => Trace.WriteLine("Merge Files clicked."));
 
-        public ICommand OnOpenACopyRequested => new RelayCommand(nameof(OnOpenACopyRequested), OpenACopy);
+        public ICommand OnOpenACopyRequested => new RelayCommand<object>(OpenACopy);
 
         private void OpenACopy(object obj)
         {

@@ -8,7 +8,12 @@ namespace Cush.Common.FileHandling
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public enum FileAction
     {
+        None,
+        Create,
+        Import,
         Save,
-        Open
+        Open,
+        Export,
+        Delete
     }
 }

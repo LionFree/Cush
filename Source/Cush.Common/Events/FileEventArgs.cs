@@ -14,6 +14,8 @@ namespace Cush.Common
         public string Fullpath { get; set; }
         public bool Pinned { get; set; }
         public string TargetCommand { get; set; }
+        public FileAction LastAction { get; set; }
         public MRUEntry MRUEntry { get; set; }
+        public object Tag { get; set; }
     }
 }

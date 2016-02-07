@@ -8,7 +8,7 @@ namespace Cush.WPF
     ///     to other objects by invoking delegates.
     ///     The default return value for the CanExecute method is 'true'.
     /// </summary>
-    public class RelayCommand : CommandBase
+    public class RelayCommand<T1, T2> : CommandBase
     {
         /// <summary>
         ///     Initializes a new instance of <see cref="RelayCommand" />.
@@ -19,7 +19,7 @@ namespace Cush.WPF
         /// </param>
         /// <param name="name">The name of the command.  Used for debugging.</param>
         /// <remarks><seealso cref="M:CanExecute" /> will always return true.</remarks>
-        public RelayCommand(Action action, string name = null, [CallerMemberName] string caller = null)
+        public RelayCommand(Action<T1, T2> action, string name = null, [CallerMemberName] string caller = null)
             : base(action, null, name, caller)
         {
         }
@@ -33,7 +33,7 @@ namespace Cush.WPF
         /// </param>
         /// <param name="canExecute">The execution status logic.</param>
         /// <param name="name">The name of the command.  Used for debugging.</param>
-        public RelayCommand(Action action, Predicate<object> canExecute, string name = null,
+        public RelayCommand(Action<T1, T2> action, Predicate<object> canExecute, string name = null,
             [CallerMemberName] string caller = null)
             : base(action, canExecute, name, caller)
         {
@@ -41,18 +41,23 @@ namespace Cush.WPF
 
         public override void Execute(object parameter)
         {
-            Execute();
+            Execute((T1) parameter, default(T2));
         }
 
         /// <summary>
-        ///     Occurs when changes occur that affect whether or not the command should execute.
-        /// </summary>
-        /// <summary>
         ///     Defines the method to be called when the command is invoked.
         /// </summary>
-        public void Execute()
+        /// <param name="parameter1">
+        ///     Data used by the command. If the command does not require data to be passed, this object can be
+        ///     set to <see langword="null" />.
+        /// </param>
+        /// <param name="parameter2">
+        ///     Data used by the command. If the command does not require data to be passed, this object can be
+        ///     set to <see langword="null" />.
+        /// </param>
+        public void Execute(T1 parameter1, T2 parameter2)
         {
-            ((Action)WrappedAction).Invoke();
+            ((Action<T1, T2>) WrappedAction).Invoke(parameter1, parameter2);
         }
     }
 }

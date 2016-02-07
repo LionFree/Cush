@@ -26,7 +26,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseClasses\CollectionDebugView`1.cs" />
+    <Compile Include="BaseClasses\CommandBase.cs" />
     <Compile Include="BaseClasses\CommandCanExecuteParameter.cs" />
+    <Compile Include="BaseClasses\RelayCommand`2.cs" />
+    <Compile Include="BaseClasses\RelayCommand`1.cs" />
     <Compile Include="BaseClasses\RelayCommand.cs" />
     <Compile Include="BaseClasses\ResourceContainer.cs" />
     <Compile Include="BaseClasses\ResourceExtension.cs" />

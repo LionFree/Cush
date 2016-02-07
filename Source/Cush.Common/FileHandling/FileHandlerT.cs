@@ -27,18 +27,18 @@ namespace Cush.Common.FileHandling
     {
         public delegate void IOEventHandler(object sender, IOEventArgs e);
 
-        private readonly Dictionary<Type, FileOperator> _operators;
-
         //private readonly FileReader _fileReader;
         //private readonly FileWriter _fileWriter;
 
         private readonly ILogger _logger;
 
         private readonly OpenFileDialog _openDialog = new OpenFileDialog {FileName = ""};
+
+        private readonly Dictionary<Type, FileOperator> _operators;
         private readonly SaveFileDialog _saveDialog = new SaveFileDialog {FileName = ""};
 
-        public readonly DependencyProperty FileProgressProperty =
-            DependencyProperty.Register("FileProgress", typeof (int), typeof (FileHandler<T>),
+        public static readonly DependencyProperty FileProgressProperty =
+            DependencyProperty.Register("FileProgress", typeof(int), typeof(FileHandler<T>),
                 new PropertyMetadata(0));
 
         public readonly DependencyProperty FilesProperty =
@@ -46,48 +46,74 @@ namespace Cush.Common.FileHandling
                 new FrameworkPropertyMetadata(null, OnFileCollectionChanged));
 
         private int _currentFileIndex;
+        private FileHandlerOptions _options;
 
         public FileHandler(ILogger logger)
-            : this(
-                logger, new List<FileOperator> {new XmlFileOperator(logger), new BinaryFileOperator(logger)})
+            : this(logger, new FileHandlerOptions())
         {
         }
 
-        public FileHandler(ILogger logger, IEnumerable<FileOperator> operators) : this(logger, operators, new ObservableCollection<IFileState<T>>()) { }
+        public FileHandler(ILogger logger, FileHandlerOptions options)
+            : this(
+                logger,
+                new List<FileOperator>
+                {
+                    new XmlFileOperator(logger),
+                    new BinaryFileOperator(logger)
+                }, options)
+        {
+        }
 
-        public FileHandler(ILogger logger, IEnumerable<FileOperator> operators, ObservableCollection<IFileState<T>> files) 
+        public FileHandler(ILogger logger, IEnumerable<FileOperator> operators)
+            : this(logger, operators, new ObservableCollection<IFileState<T>>(), new FileHandlerOptions())
+        {
+        }
+
+        public FileHandler(ILogger logger, IEnumerable<FileOperator> operators, FileHandlerOptions options)
+            : this(logger, operators, new ObservableCollection<IFileState<T>>(), options)
+        {
+        }
+
+        public FileHandler(ILogger logger, IEnumerable<FileOperator> operators,
+            ObservableCollection<IFileState<T>> files, FileHandlerOptions options = null)
         {
             _logger = logger;
             Files = files;
+            Options = options;
 
             _operators = new Dictionary<Type, FileOperator>();
             foreach (var fileOp in operators)
             {
-                CancelFileOperations+=fileOp.CancelFileOperations;
+                CancelFileOperations += fileOp.CancelFileOperations;
                 _operators.Add(fileOp.GetType(), fileOp);
             }
         }
 
-
-        //public FileHandler(FileReader reader, FileWriter writer) : this(Loggers.Trace, reader, writer)
-        //{
-        //}
-
-        //public FileHandler(ILogger logger, FileReader reader, FileWriter writer):this(logger, reader, writer, new ObservableCollection<IFileState<T>>())
-        //{
-        //}
-
-        //internal FileHandler(ILogger logger, FileReader reader, FileWriter writer, ObservableCollection<IFileState<T>> files)
-        //{
-        //    _logger = logger;
-        //    Files = files;
-
-        //    _fileReader = reader;
-        //    _fileWriter = writer;
-            
-        //    CancelFileOperations += _fileReader.CancelFileOperations;
-        //    CancelFileOperations += _fileWriter.CancelFileOperations;
-        //}
+        public FileHandlerOptions Options
+        {
+            get
+            {
+                return new FileHandlerOptions
+                {
+                    DefaultExt = DefaultExt,
+                    FileName = FileName,
+                    Filter = Filter,
+                    ShowReadOnly = ShowReadOnly,
+                    OverwritePrompt = OverwritePrompt
+                };
+            }
+            set
+            {
+                if (_options == value) return;
+                _options = value;
+                DefaultExt = _options.DefaultExt;
+                FileName = _options.FileName;
+                Filter = _options.Filter;
+                ShowReadOnly = _options.ShowReadOnly;
+                OverwritePrompt = _options.OverwritePrompt;
+                DefaultFileName = _options.FileName;
+            }
+        }
 
         public string DefaultExt
         {
@@ -151,16 +177,13 @@ namespace Cush.Common.FileHandling
 
         public int CurrentFileIndex
         {
-            get
-            {
-                return _currentFileIndex;
-            }
+            get { return _currentFileIndex; }
             set
             {
                 if (_currentFileIndex == value) return;
                 _currentFileIndex = value;
                 OnPropertyChanged(nameof(CurrentFileIndex));
-            } 
+            }
         }
 
         public T CurrentFile
@@ -213,6 +236,8 @@ namespace Cush.Common.FileHandling
             get { return (ObservableCollection<IFileState<T>>) GetValue(FilesProperty); }
             set { SetValue(FilesProperty, value); }
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         ///     Occurs when an element of the Files collection changes.
@@ -310,22 +335,6 @@ namespace Cush.Common.FileHandling
         {
             ReadWriteStarting?.Invoke(this, e);
         }
-
-        ///// <summary>
-        /////     Occurs when the file read/write progress changes.
-        ///// </summary>
-        //[SuppressMessage("ReSharper", "EventNeverSubscribedTo.Global")]
-        //public event ProgressChangedEventHandler ProgressChanged;
-
-        ///// <summary>
-        /////     Is invoked whenever application code or internal processes call <see cref="M:Read" /> or <see cref="M:Save" />.
-        ///// </summary>
-        ///// <param name="sender"></param>
-        ///// <param name="e"></param>
-        //private void OnProgressChanged(object sender, ProgressChangedEventArgs e)
-        //{
-        //    ProgressChanged?.Invoke(this, e);
-        //}
 
         /// <summary>
         ///     Sets the dirtybit of the current file.
@@ -463,9 +472,12 @@ namespace Cush.Common.FileHandling
                 switch (action)
                 {
                     case FileAction.Save:
+                    case FileAction.Export:
                         dialog = _saveDialog;
+
                         break;
 
+                    case FileAction.Import:
                     case FileAction.Open:
                         dialog = _openDialog;
                         break;
@@ -537,17 +549,19 @@ namespace Cush.Common.FileHandling
         // This routine makes sure that the filename is legit, then opens it
         public int Open<TOperator>(string fileName) where TOperator : FileOperator
         {
-            return Open(_operators[typeof(TOperator)], fileName);
+            return Open(_operators[typeof (TOperator)], fileName);
         }
+
         public int Open(FileOperator fileop, string fileName)
         {
             return Open(fileop, fileName, -1, false, null);
         }
 
-        public int Open<TOperator>(string fileName, ProgressChangedEventHandler callback) where TOperator:FileOperator
+        public int Open<TOperator>(string fileName, ProgressChangedEventHandler callback) where TOperator : FileOperator
         {
-            return Open(_operators[typeof(TOperator)], fileName, -1, false, callback);
+            return Open(_operators[typeof (TOperator)], fileName, -1, false, callback);
         }
+
         public int Open(FileOperator fileop, string fileName, ProgressChangedEventHandler callback)
         {
             return Open(fileop, fileName, -1, false, callback);
@@ -555,17 +569,20 @@ namespace Cush.Common.FileHandling
 
         public int Open<TOperator>(string fileName, int fileIndex) where TOperator : FileOperator
         {
-            return Open(_operators[typeof(TOperator)], fileName, fileIndex, true, null);
+            return Open(_operators[typeof (TOperator)], fileName, fileIndex, true, null);
         }
+
         public int Open(FileOperator fileop, string fileName, int fileIndex)
         {
             return Open(fileop, fileName, fileIndex, true, null);
         }
 
-        public int Open<TOperator>(string fileName, int fileIndex, ProgressChangedEventHandler callback) where TOperator : FileOperator
+        public int Open<TOperator>(string fileName, int fileIndex, ProgressChangedEventHandler callback)
+            where TOperator : FileOperator
         {
-            return Open(_operators[typeof(TOperator)], fileName, fileIndex, true, callback);
+            return Open(_operators[typeof (TOperator)], fileName, fileIndex, true, callback);
         }
+
         public int Open(FileOperator fileop, string fileName, int fileIndex, ProgressChangedEventHandler callback)
         {
             return Open(fileop, fileName, fileIndex, true, callback);
@@ -579,7 +596,8 @@ namespace Cush.Common.FileHandling
         }
 
         [SuppressMessage("ReSharper", "UnusedParameter.Local")]
-        private int Open(FileOperator fileop, string fileName, int fileIndex, bool userSentIndex, ProgressChangedEventHandler callback)
+        private int Open(FileOperator fileop, string fileName, int fileIndex, bool userSentIndex,
+            ProgressChangedEventHandler callback)
         {
             ThrowHelper.IfNullOrEmptyThenThrow(() => fileName);
             if ((fileIndex < 0) && (userSentIndex)) throw new ArgumentException("fileIndex cannot be negative.");
@@ -616,7 +634,8 @@ namespace Cush.Common.FileHandling
 
         // This routine actually reads the file
 
-        public bool ReadFile(FileOperator fileop, string fileName, int fileIndex = -1, ProgressChangedEventHandler callback = null)
+        public bool ReadFile(FileOperator fileop, string fileName, int fileIndex = -1,
+            ProgressChangedEventHandler callback = null)
         {
             if (string.IsNullOrEmpty(fileName)) throw new ArgumentNullException();
 
@@ -661,11 +680,14 @@ namespace Cush.Common.FileHandling
             return result;
         }
 
-        public string Save<TOperator>(T dataFile, SaveType saveType, ProgressChangedEventHandler callback = null) where TOperator : FileOperator
+        public string Save<TOperator>(T dataFile, SaveType saveType, ProgressChangedEventHandler callback = null)
+            where TOperator : FileOperator
         {
-            return Save(_operators[typeof(TOperator)], dataFile, saveType, callback);
+            return Save(_operators[typeof (TOperator)], dataFile, saveType, callback);
         }
-        public string Save(FileOperator fileop, T dataFile, SaveType saveType, ProgressChangedEventHandler callback = null)
+
+        public string Save(FileOperator fileop, T dataFile, SaveType saveType,
+            ProgressChangedEventHandler callback = null)
         {
             try
             {
@@ -728,8 +750,6 @@ namespace Cush.Common.FileHandling
             }
             return false;
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)

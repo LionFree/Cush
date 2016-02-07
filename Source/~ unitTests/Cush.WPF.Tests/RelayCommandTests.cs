@@ -10,17 +10,17 @@ namespace Cush.WPF.Tests
     {
         internal class MockClass
         {
-            private RelayCommand _command1;
-            private RelayCommand _command2;
+            private RelayCommand<object> _command1;
+            private RelayCommand<object, object> _command2;
 
-            public RelayCommand SingleParameterCommand
+            public RelayCommand<object> SingleParameterCommand
             {
-                get { return _command1 ?? (_command1 = new RelayCommand("SingleParameter", Delegate1)); }
+                get { return _command1 ?? (_command1 = new RelayCommand<object>(Delegate1)); }
             }
 
-            public RelayCommand DoubleParameterCommand
+            public RelayCommand<object, object> DoubleParameterCommand
             {
-                get { return _command2 ?? (_command2 = new RelayCommand("DoubleParameter", Delegate2)); }
+                get { return _command2 ?? (_command2 = new RelayCommand<object, object>(Delegate2)); }
             }
 
             public object ParameterValue1 { get; private set; }
@@ -56,7 +56,7 @@ namespace Cush.WPF.Tests
         {
             var expected = new Random().Next(0, 2) == 1;
 
-            var sut = new RelayCommand("name", Delegate1, o => expected);
+            var sut = new RelayCommand<object>(Delegate1, o => expected);
 
             Assert.AreEqual(expected, sut.CanExecute(null));
         }
@@ -70,7 +70,7 @@ namespace Cush.WPF.Tests
                 eventFired = true;
             });
 
-            var sut = new RelayCommand("name", Delegate1, CanChange);
+            var sut = new RelayCommand<object>(Delegate1, CanChange);
             sut.CanExecuteChanged += handler;
 
             sut.RaiseCanExecuteChanged();
@@ -83,7 +83,7 @@ namespace Cush.WPF.Tests
         [Test]
         public void Given_DoubleActionIsNull_When_Constructed_Then_ExceptionIsThrown()
         {
-            Assert.Throws<ArgumentNullException>(() => new RelayCommand("crabby", (Action<object, object>) null));
+            Assert.Throws<ArgumentNullException>(() => new RelayCommand<object, object>(null));
         }
 
         [Test]
@@ -91,7 +91,7 @@ namespace Cush.WPF.Tests
         {
             var expected = "DoubleParameter";
 
-            var sut = new RelayCommand(expected, Delegate1);
+            var sut = new RelayCommand<object>(Delegate1, expected);
 
             Assert.AreEqual(expected, sut.Name);
         }
@@ -112,26 +112,14 @@ namespace Cush.WPF.Tests
         [Test]
         public void Given_NoCanExecute_When_AskedForCanExecute_CanExecuteReturnsTrue()
         {
-            var sut = new RelayCommand("name", Delegate1);
+            var sut = new RelayCommand<object>(Delegate1);
             Assert.IsTrue(sut.CanExecute(null));
         }
 
         [Test]
         public void Given_SingleActionIsNull_When_Constructed_Then_ExceptionIsThrown()
         {
-            Assert.Throws<ArgumentNullException>(() => new RelayCommand("crabby", (Action<object>) null));
-        }
-
-        [Test]
-        public void Given_SingleNameIsEmpty_When_Constructed_Then_ExceptionIsThrown()
-        {
-            Assert.Throws<ArgumentException>(() => new RelayCommand(string.Empty, Delegate1));
-        }
-
-        [Test]
-        public void Given_SingleNameIsNull_When_Constructed_Then_ExceptionIsThrown()
-        {
-            Assert.Throws<ArgumentNullException>(() => new RelayCommand(null, Delegate1));
+            Assert.Throws<ArgumentNullException>(() => new RelayCommand<object>(null));
         }
 
         [Test]
@@ -139,7 +127,7 @@ namespace Cush.WPF.Tests
         {
             var expected = "SingleParameter";
 
-            var sut = new RelayCommand(expected, Delegate2);
+            var sut = new RelayCommand<object, object>(Delegate2, expected);
 
             Assert.AreEqual(expected, sut.Name);
         }

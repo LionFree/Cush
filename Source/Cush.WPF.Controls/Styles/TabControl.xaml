@@ -250,5 +250,103 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
+    <Style x:Key="CushTabSeparatorStyle" TargetType="{x:Type TabItem}" BasedOn="{StaticResource CushTabItemStyle}">
+        <Setter Property="IsEnabled" Value="False" />
+        <Setter Property="IsHitTestVisible" Value="False" />
+        <Setter Property="Header">
+            <Setter.Value>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition SharedSizeGroup="HeaderSizeGroup" />
+                    </Grid.ColumnDefinitions>
+                    <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" 
+                                   Background="{DynamicResource AccentColorBrush}" Height="2" />
+                </Grid>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CushTabItemButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="MinWidth" Value="5" />
+        <Setter Property="MinHeight" Value="5" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource BlackBrush}" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border x:Name="Border"
+                            HorizontalAlignment="Stretch"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            Background="{TemplateBinding Background}"
+                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                        <DockPanel HorizontalAlignment="Stretch"
+                                   VerticalAlignment="Stretch">
+                            <DockPanel.Resources>
+                                <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+                            </DockPanel.Resources>
+                            <controls:ContentControlEx x:Name="ContentSite"
+                                                       Content="{TemplateBinding Content}"
+                                                       FontSize="{TemplateBinding helpers:ControlsHelper.HeaderFontSize}"
+                                                       FontStretch="{TemplateBinding helpers:ControlsHelper.HeaderFontStretch}"
+                                                       FontWeight="{TemplateBinding helpers:ControlsHelper.HeaderFontWeight}"
+                                                       Foreground="{TemplateBinding Foreground}"
+                                                       SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                                       Padding="{TemplateBinding Padding}"
+                                                       RecognizesAccessKey="True"
+                                                       ContentCharacterCasing="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(helpers:ControlsHelper.ContentCharacterCasing)}"
+                                                       DockPanel.Dock="Top" />
+                            <Rectangle x:Name="Underline"
+                                       Margin="0, 1, 0, 0"
+                                       Height="2"
+                                       HorizontalAlignment="Stretch"
+                                       Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabControl}}, 
+                                           Path=(helpers:TabControlHelper.IsUnderlined), Converter={StaticResource BooleanToVisibilityConverter}}"
+                                       DockPanel.Dock="Bottom" />
+                        </DockPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="TabItem.IsSelected" Value="true">
+                            <Setter Property="TextElement.Foreground" TargetName="ContentSite" Value="{DynamicResource AccentColorBrush}" />
+                            <Setter Property="Fill" TargetName="Underline" Value="{DynamicResource AccentColorBrush}" />
+                        </Trigger>
+                        <Trigger Property="TabItem.IsSelected" Value="false">
+                            <Setter Property="TextElement.Foreground" TargetName="ContentSite" Value="{DynamicResource GrayNormalBrush}" />
+                            <Setter Property="Fill" TargetName="Underline" Value="{DynamicResource GrayNormalBrush}" />
+                        </Trigger>
+                        <Trigger SourceName="ContentSite" Property="IsMouseOver" Value="True">
+                            <Setter Property="TextElement.Foreground" TargetName="ContentSite" Value="{DynamicResource GrayHoverBrush}" />
+                            <Setter Property="Fill" TargetName="Underline" Value="{DynamicResource GrayHoverBrush}" />
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver"
+                                           SourceName="ContentSite"
+                                           Value="True" />
+                                <Condition Property="TabItem.IsSelected"
+                                           Value="True" />
+                            </MultiTrigger.Conditions>
+                            <Setter Property="TextElement.Foreground"
+                                    TargetName="ContentSite"
+                                    Value="{DynamicResource HighlightBrush}" />
+                            <Setter Property="Fill"
+                                    TargetName="Underline"
+                                    Value="{DynamicResource HighlightBrush}" />
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>
