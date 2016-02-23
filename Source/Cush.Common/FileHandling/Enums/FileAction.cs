@@ -1,11 +1,12 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Cush.Common.FileHandling
 {
     /// <summary>
     /// Specifies the action being taken on a file.
     /// </summary>
-    [SuppressMessage("ReSharper", "UnusedMember.Global")]
+    [SuppressMessage("ReSharper", "UnusedMember.Global"), Flags]
     public enum FileAction
     {
         None,
