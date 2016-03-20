@@ -1,27 +1,32 @@
 ﻿using System;
+using System.Xml.Serialization;
 
 namespace Cush.Common
 {
-    public class KeyedItem : IKeyedItem
+    [Serializable]
+    public class ObservableKeyedItem : BindableBase, IKeyedItem
     {
-        protected KeyedItem(string displayName) : this(Guid.NewGuid(), displayName)
+        protected ObservableKeyedItem(string displayName)
         {
-        }
-
-        protected KeyedItem(Guid guid, string displayName)
-        {
-            Guid = guid;
+            Guid = Guid.NewGuid();
             DisplayName = displayName;
         }
 
         public Guid Guid { get; }
 
-        public string DisplayName { get; }
+        private string _displayName;
+
+        [XmlAttribute("DisplayName")]
+        public string DisplayName
+        {
+            get { return _displayName; }
+            set { SetProperty(ref _displayName, value, nameof(DisplayName)); }
+        }
 
         public override bool Equals(object obj)
         {
-            // If parameter is null or cannot be cast to KeyedItem, then return false.
-            var p = obj as KeyedItem;
+            // If parameter is null or cannot be cast to this type, then return false.
+            var p = obj as ObservableKeyedItem;
             if (p == null)
             {
                 return false;
@@ -31,7 +36,7 @@ namespace Cush.Common
             return (Guid == p.Guid);
         }
 
-        public bool Equals(KeyedItem p)
+        public bool Equals(IKeyedItem p)
         {
             // If parameter is null return false:
             if (p == null)
